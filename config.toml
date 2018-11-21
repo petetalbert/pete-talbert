@@ -10,7 +10,7 @@ googleAnalytics = ""
 disqusShortname = ""
 disable_mathjax = false
 
-pygmentsstyle      = "vs"
+pygmentsstyle      = "manni"
 pygmentscodefences = true
 
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
