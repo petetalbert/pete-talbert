@@ -1,0 +1,23 @@
+---
+title: Can I write SQL in R Markdown?
+author: ''
+date: '2018-11-13'
+slug: can-i-write-sql-in-r-markdown
+categories:
+  - R
+  - SQL
+tags: []
+---
+
+Hello!
+
+This is just a quick test as to how a SQL snipet shows in a markdown file and on a website. See below.
+
+```{sql, eval = FALSE, echo = TRUE}
+select personID
+	, endYear
+	, grade
+	, ROW_NUMBER() over (partition by personID order by endYear, case when grade  = 'KG' then '00' else grade end) as rowNum
+from #enroll3
+```
+
