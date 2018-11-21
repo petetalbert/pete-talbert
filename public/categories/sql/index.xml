@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Sql on Standard Error</title>
+    <link>/categories/sql/</link>
+    <description>Recent content in Sql on Standard Error</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 15 Nov 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/sql/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Connecting to MS SQL Server in R</title>
+      <link>/post/connecting-to-ms-sql-server-in-r/</link>
+      <pubDate>Thu, 15 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/connecting-to-ms-sql-server-in-r/</guid>
+      <description>There are dozens of ways to connect to an MS SQL Server database in R. You can use a number of packages, and within those packages, there are various methods for connecting and running SQL queries via an R script.
+The easiest method I’ve found for a traditional Windows user with access to an MS SQL Server instance is what I’m going to demonstrate.
+Setting up a System DSNIn Windows, if you hit the start menu and search for “odbc”, you’ll get an app called “ODBC Data Source Administrator (64-bit).</description>
+    </item>
+    
+    <item>
+      <title>Can I write SQL in R Markdown?</title>
+      <link>/post/can-i-write-sql-in-r-markdown/</link>
+      <pubDate>Tue, 13 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/can-i-write-sql-in-r-markdown/</guid>
+      <description>Hello!
+This is just a quick test as to how a SQL snipet shows in a markdown file and on a website. See below.
+select personID, endYear, grade, ROW_NUMBER() over (partition by personID order by endYear, case when grade = &amp;#39;KG&amp;#39; then &amp;#39;00&amp;#39; else grade end) as rowNumfrom #enroll3</description>
+    </item>
+    
+  </channel>
+</rss>

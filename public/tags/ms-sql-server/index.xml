@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ms Sql Server on Standard Error</title>
+    <link>/tags/ms-sql-server/</link>
+    <description>Recent content in Ms Sql Server on Standard Error</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 15 Nov 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/ms-sql-server/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Connecting to MS SQL Server in R</title>
+      <link>/post/connecting-to-ms-sql-server-in-r/</link>
+      <pubDate>Thu, 15 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/connecting-to-ms-sql-server-in-r/</guid>
+      <description>There are dozens of ways to connect to an MS SQL Server database in R. You can use a number of packages, and within those packages, there are various methods for connecting and running SQL queries via an R script.
+The easiest method I’ve found for a traditional Windows user with access to an MS SQL Server instance is what I’m going to demonstrate.
+Setting up a System DSNIn Windows, if you hit the start menu and search for “odbc”, you’ll get an app called “ODBC Data Source Administrator (64-bit).</description>
+    </item>
+    
+  </channel>
+</rss>

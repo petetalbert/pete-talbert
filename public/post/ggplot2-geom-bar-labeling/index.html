@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  
+
+  <link rel="icon" type="image/png" href="../../favicon.png">
+
+  <title>
+    
+    
+     ggplot2 geom_bar labeling 
+    
+  </title>
+  <link rel="canonical" href="../../post/ggplot2-geom-bar-labeling/">
+
+  <link rel="stylesheet" href="../../css/fonts.css" />
+  <link rel="stylesheet" href="../../css/style.css" />
+
+  
+</head>
+
+<body>
+<section id=nav>
+  <h1><a href="../../">Standard Error</a></h1>
+  <ul>
+    
+    <li><a href="https://nanx.me">Home</a></li>
+    
+    <li><a href="https://github.com/petetalbert">GitHub</a></li>
+    
+    <li><a href="https://www.linkedin.com/in/petetalbert">LinkedIn</a></li>
+    
+    <li><a href="https://twitter.com/petetalbert">Twitter</a></li>
+    
+    <li><a href="../../index.xml">RSS</a></li>
+    
+  </ul>
+</section>
+
+
+<section id=content>
+  <h1> ggplot2 geom_bar labeling </h1>
+
+  <div id=sub-header>
+     · 2018/11/16 · 2 minute read
+  </div>
+
+  <div class="entry-content">
+    
+
+
+<p>In educational data analysis, I am constantly looking at counts and proportions. I’ve found the easiest way to display these results with categorical variables like demographics is to use stacked bar charts and especially 100% stacked charts.</p>
+<p>I am using much of what is discussed <a href="https://rstudio-pubs-static.s3.amazonaws.com/329677_8f579b9e46284caeb9d3a72b7fdb7ac3.html">here</a> out of the context of <code>ggplotAssist</code>.</p>
+<div id="ggplot2" class="section level3">
+<h3>ggplot2</h3>
+<p>First, for this post, I am using the following packages and <code>mtcars</code> as a dataset. I always make sure my dataframes are tibbles (probably not necessary).</p>
+</div>
+<div id="simple-stacked-bar-with-labelling" class="section level3">
+<h3>Simple stacked bar with labelling</h3>
+<p>The first step is just to create the plot like so:</p>
+<pre class="r"><code>mtcars %&gt;% 
+  ggplot(aes(x = factor(cyl), fill = factor(gear))) +
+  geom_bar(position = &quot;stack&quot;) +
+  labs(
+    title = &quot;Car Cylinders by Gear&quot;,
+    x = &quot;Cylinder&quot;,
+    fill = &quot;Gear&quot;
+  )</code></pre>
+<p><img src="../../post/2018-11-16-ggplot2-geom-bar-labeling_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>This is simple enough. <code>x</code> is cylinders, <code>fill</code> is gears, and we are stacking in <code>geom_bar</code>. What if I wanted to label the counts? Below is the same code, with a <code>geom_text</code> line.</p>
+<pre class="r"><code>mtcars %&gt;% 
+  ggplot(aes(x = factor(cyl), fill = factor(gear))) +
+  geom_bar(position = &quot;stack&quot;) +
+  geom_text(aes(label = ..count..), stat = &quot;count&quot;, position = position_stack(0.5), size = 3) + #add this line here
+  labs(
+    title = &quot;Car Cylinders by Gear&quot;,
+    x = &quot;Cylinder&quot;,
+    fill = &quot;Gear&quot;
+  )</code></pre>
+<p><img src="../../post/2018-11-16-ggplot2-geom-bar-labeling_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>The <code>geom_text</code> line is counting the gears within cylinders for us and then the <code>position_stack(0.5)</code> is putting it half-way in each fill. Nice!</p>
+</div>
+<div id="stacked-bar" class="section level3">
+<h3>100% stacked bar</h3>
+<p>The only difference here initially, before we label, is just changing <code>position = &quot;stack&quot;</code> to <code>position = &quot;fill&quot;</code>.</p>
+<pre class="r"><code>mtcars %&gt;% 
+  ggplot(aes(x = factor(cyl), fill = factor(gear))) +
+  geom_bar(position = &quot;fill&quot;) + #changed to &quot;fill&quot;
+  labs(
+    title = &quot;Car Cylinders by Gear&quot;,
+    x = &quot;Cylinder&quot;,
+    fill = &quot;Gear&quot;
+  )</code></pre>
+<p><img src="../../post/2018-11-16-ggplot2-geom-bar-labeling_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Easy enough. Now comes the tricky part: how do we get the percentages in there as labels? There may be a long, nasty way to do it all within <code>geom_text</code>, but I’ve found just making a dataframe first of your counts and ratios, and then calling that within <code>geom_text</code> to be easiest.</p>
+<p>Here’s my dataframe with counts and ratios:</p>
+<pre class="r"><code>percentData &lt;- mtcars %&gt;% 
+  group_by(cyl) %&gt;% 
+  count(gear) %&gt;%
+  mutate(ratio = scales::percent(n/sum(n)))</code></pre>
+<p>Then just call it, and again position it half-way in each fill:</p>
+<pre class="r"><code>mtcars %&gt;% 
+  ggplot(aes(x = factor(cyl), fill = factor(gear))) +
+  geom_bar(position = &quot;fill&quot;) +
+  geom_text(data = percentData, aes(y = n, label = ratio), position = position_fill(vjust = 0.5), size = 3) + #call percentData. Also, I reduced the text size a little.
+  labs(
+    title = &quot;Car Cylinders by Gear&quot;,
+    x = &quot;Cylinder&quot;,
+    fill = &quot;Gear&quot;
+  )</code></pre>
+<p><img src="../../post/2018-11-16-ggplot2-geom-bar-labeling_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+
+  </div>
+
+  <div id=links>
+    
+      <a class="basic-alignment left" href="../../post/connecting-to-ms-sql-server-in-r/">&laquo; Connecting to MS SQL Server in R</a>
+    
+    
+  </div>
+</section>
+
+<section id="comments">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+      
+      
+      if (window.location.hostname == "localhost")
+                return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = '';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+  
+  
+
+
+</body>
+</html>
+

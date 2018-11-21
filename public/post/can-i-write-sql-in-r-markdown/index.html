@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  
+
+  <link rel="icon" type="image/png" href="../../favicon.png">
+
+  <title>
+    
+    
+     Can I write SQL in R Markdown? 
+    
+  </title>
+  <link rel="canonical" href="../../post/can-i-write-sql-in-r-markdown/">
+
+  <link rel="stylesheet" href="../../css/fonts.css" />
+  <link rel="stylesheet" href="../../css/style.css" />
+
+  
+</head>
+
+<body>
+<section id=nav>
+  <h1><a href="../../">Standard Error</a></h1>
+  <ul>
+    
+    <li><a href="https://nanx.me">Home</a></li>
+    
+    <li><a href="https://github.com/petetalbert">GitHub</a></li>
+    
+    <li><a href="https://www.linkedin.com/in/petetalbert">LinkedIn</a></li>
+    
+    <li><a href="https://twitter.com/petetalbert">Twitter</a></li>
+    
+    <li><a href="../../index.xml">RSS</a></li>
+    
+  </ul>
+</section>
+
+
+<section id=content>
+  <h1> Can I write SQL in R Markdown? </h1>
+
+  <div id=sub-header>
+     · 2018/11/13 · 1 minute read
+  </div>
+
+  <div class="entry-content">
+    
+
+
+<p>Hello!</p>
+<p>This is just a quick test as to how a SQL snipet shows in a markdown file and on a website. See below.</p>
+<pre class="sql"><code>select personID
+    , endYear
+    , grade
+    , ROW_NUMBER() over (partition by personID order by endYear, case when grade  = &#39;KG&#39; then &#39;00&#39; else grade end) as rowNum
+from #enroll3</code></pre>
+
+  </div>
+
+  <div id=links>
+    
+      <a class="basic-alignment left" href="../../post/tanka-theme-demo/">&laquo; Tanka Theme Demo</a>
+    
+    
+      <a class="basic-alignment left" href="../../post/connecting-to-ms-sql-server-in-r/">Connecting to MS SQL Server in R &raquo;</a>
+    
+  </div>
+</section>
+
+<section id="comments">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+      
+      
+      if (window.location.hostname == "localhost")
+                return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = '';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+  
+  
+
+
+</body>
+</html>
+

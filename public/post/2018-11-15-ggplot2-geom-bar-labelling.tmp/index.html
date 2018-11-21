@@ -1,0 +1,62 @@
+<p>In educational data analysis, I am constantly looking at counts and proportions. I’ve found the easiest way to display these results with categorical variables like demographics is to use stacked bar charts and especially 100% stacked charts.</p>
+<p>I am using much of what is discussed <a href="https://rstudio-pubs-static.s3.amazonaws.com/329677_8f579b9e46284caeb9d3a72b7fdb7ac3.html">here</a> out of the context of <code>ggplotAssist</code>.</p>
+<div id="ggplot2" class="section level4">
+<h4><span class="header-section-number">0.0.0.1</span> ggplot2</h4>
+<p>First, for this post, I am using the following packages and <code>mtcars</code> as a dataset. I always make sure my dataframes are tibbles (probably not necessary).</p>
+</div>
+<div id="simple-stacked-bar-with-labelling" class="section level4">
+<h4><span class="header-section-number">0.0.0.2</span> Simple stacked bar with labelling</h4>
+<p>The first step is just to create the plot like so:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">mtcars <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">factor</span>(cyl), <span class="dt">fill =</span> <span class="kw">factor</span>(gear))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">position =</span> <span class="st">&quot;stack&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">    <span class="dt">title =</span> <span class="st">&quot;Car Cylinders by Gear&quot;</span>,</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">    <span class="dt">x =</span> <span class="st">&quot;Cylinder&quot;</span>,</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">    <span class="dt">fill =</span> <span class="st">&quot;Gear&quot;</span></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">  )</a></code></pre></div>
+<p><img src="2018-11-15-ggplot2-geom-bar-labelling_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>This is simple enough. <code>x</code> is cylinders, <code>fill</code> is gears, and we are stacking in <code>geom_bar</code>. What if I wanted to label the counts? Below is the same code, with a <code>geom_text</code> line.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">mtcars <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">factor</span>(cyl), <span class="dt">fill =</span> <span class="kw">factor</span>(gear))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">position =</span> <span class="st">&quot;stack&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">label =</span> ..count..), <span class="dt">stat =</span> <span class="st">&quot;count&quot;</span>, <span class="dt">position =</span> <span class="kw">position_stack</span>(<span class="fl">0.5</span>), <span class="dt">size =</span> <span class="dv">3</span>) <span class="op">+</span><span class="st"> </span><span class="co">#add this line here</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">    <span class="dt">title =</span> <span class="st">&quot;Car Cylinders by Gear&quot;</span>,</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">    <span class="dt">x =</span> <span class="st">&quot;Cylinder&quot;</span>,</a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">    <span class="dt">fill =</span> <span class="st">&quot;Gear&quot;</span></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">  )</a></code></pre></div>
+<p><img src="2018-11-15-ggplot2-geom-bar-labelling_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>The <code>geom_text</code> line is counting the gears within cylinders for us and then the <code>position_stack(0.5)</code> is putting it half-way in each fill. Nice!</p>
+</div>
+<div id="stacked-bar" class="section level4">
+<h4><span class="header-section-number">0.0.0.3</span> 100% stacked bar</h4>
+<p>The only difference here initially, before we label, is just changing <code>position = &quot;stack&quot;</code> to <code>position = &quot;fill&quot;</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">mtcars <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">factor</span>(cyl), <span class="dt">fill =</span> <span class="kw">factor</span>(gear))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">position =</span> <span class="st">&quot;fill&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="co">#changed to &quot;fill&quot;</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">    <span class="dt">title =</span> <span class="st">&quot;Car Cylinders by Gear&quot;</span>,</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">    <span class="dt">x =</span> <span class="st">&quot;Cylinder&quot;</span>,</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">    <span class="dt">fill =</span> <span class="st">&quot;Gear&quot;</span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">  )</a></code></pre></div>
+<p><img src="2018-11-15-ggplot2-geom-bar-labelling_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Easy enough. Now comes the tricky part: how do we get the percentages in there as labels? There may be a long, nasty way to do it all within <code>geom_text</code>, but I’ve found just making a dataframe first of your counts and ratios, and then calling that within <code>geom_text</code> to be easiest.</p>
+<p>Here’s my dataframe with counts and ratios:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">percentData &lt;-<span class="st"> </span>mtcars <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="st">  </span><span class="kw">count</span>(gear) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ratio =</span> scales<span class="op">::</span><span class="kw">percent</span>(n<span class="op">/</span><span class="kw">sum</span>(n)))</a></code></pre></div>
+<p>Then just call it, and again position it half-way in each fill:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">mtcars <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">factor</span>(cyl), <span class="dt">fill =</span> <span class="kw">factor</span>(gear))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">position =</span> <span class="st">&quot;fill&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">data =</span> percentData, <span class="kw">aes</span>(<span class="dt">y =</span> n, <span class="dt">label =</span> ratio), <span class="dt">position =</span> <span class="kw">position_fill</span>(<span class="dt">vjust =</span> <span class="fl">0.5</span>), <span class="dt">size =</span> <span class="dv">3</span>) <span class="op">+</span><span class="st"> </span><span class="co">#call percentData. Also, I reduced the text size a little.</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">    <span class="dt">title =</span> <span class="st">&quot;Car Cylinders by Gear&quot;</span>,</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">    <span class="dt">x =</span> <span class="st">&quot;Cylinder&quot;</span>,</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">    <span class="dt">fill =</span> <span class="st">&quot;Gear&quot;</span></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">  )</a></code></pre></div>
+<p><img src="2018-11-15-ggplot2-geom-bar-labelling_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>That’s it! Gears with 8 cylinder vehicles have only 3 gears. Hope this is helpful!</p>
+</div>
