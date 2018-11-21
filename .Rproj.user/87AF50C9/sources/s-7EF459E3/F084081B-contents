@@ -1,5 +1,5 @@
 baseurl = "/"
-title = "Standard Error"
+title = "Pete Talbert"
 author = "Pete Talbert"
 relativeurls = true
 canonifyurls = true
@@ -16,7 +16,7 @@ pygmentscodefences = true
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
 [params]
-  sitename = "Standard Error"
+  sitename = "Pete Talbert"
 
 [[menu.main]]
     name = "Home"
