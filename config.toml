@@ -6,13 +6,13 @@ canonifyurls = true
 languagecode = "en"
 theme = "hugo-tanka"
 
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+
 googleAnalytics = ""
 disqusShortname = ""
 disable_mathjax = false
-
-pygmentsCodefences = true
-pygmentsCodefencesGuessSyntax = true
-pygmentsStyle = "manni"
 
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
