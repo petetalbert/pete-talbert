@@ -86,7 +86,7 @@ I think the easiest thing to do, is to just do your aggregation earlier in your 
 ```{r}
 testScoreMore %>% 
   group_by(personID, testName, testSubject) %>% 
-  summarize(scaleScore =  mean(scaleScore)) %>% 
+  summarize(scaleScore =  max(scaleScore)) %>% 
   spread(key = testSubject, value = scaleScore)
 ```
 
@@ -95,7 +95,7 @@ Cool! Hey, now that we have columns for each subject, is there a relationship be
 ```{r}
 testScoreMore %>% 
   group_by(personID, testName, testSubject) %>% 
-  summarize(scaleScore =  mean(scaleScore)) %>% 
+  summarize(scaleScore =  max(scaleScore)) %>% 
   spread(key = testSubject, value = scaleScore) %>% 
   ggplot(aes(x = Math, y = Reading)) +
   geom_point() +
