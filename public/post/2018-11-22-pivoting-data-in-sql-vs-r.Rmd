@@ -1,0 +1,98 @@
+---
+title: Pivoting data in SQL vs. R
+author: ''
+date: '2018-11-22'
+slug: pivoting-data-in-sql-vs-r
+categories:
+  - SQL
+  - R
+tags:
+  - ms-sql-server
+  - pivot
+  - tidyverse
+  - spread
+---
+
+## Intro
+
+Often with education data, I need to pivot data to go from long format to wide.
+
+```{r  message=FALSE}
+library(tidyverse)
+library(DBI)
+library(odbc)
+library(DT)
+
+con <- dbConnect(odbc::odbc(), "nicodemus")
+
+query <- dbSendQuery(con, "select * from Demo.dbo.tbl_testScore")
+testScore <- dbFetch(query)
+
+testScore <- as_tibble(testScore)
+datatable(testScore, options = list(dom = 't'))
+```
+
+Above is a very simple table of test scores where `personID` is the unique identifier, and records duplicate by `testSubject`. How would I break out `testSubject` as columns and put the `scaleScore` in each row? Like say then to plot on a scatterplot?
+
+## Pivoting in SQL
+
+In `SQL`, the syntax is the following. It's important to note (as opposed to the `diplyr` option later) that this is an *aggregate* function. So the `pivot` function requires some aggregate function like `MAX()`, `MIN()`, `SUM()`, `AVG()`, etc. You choose the column to pivot out and then the field you want to place under those new columns given some aggregation. Since I know I only have one record for each student + test subject combination, I chose `MAX()` to just give me that one score.
+
+```{sql connection = con, output.var = "testScorePiv"}
+select *
+from Demo.dbo.tbl_testScore
+pivot(
+  MAX(scaleScore) for testSubject in ([Math],[Reading]) --aggregate function of one column for another column, listing the unique possibilities in brackets.
+) piv
+```
+
+```{r, echo = FALSE}
+datatable(testScorePiv, options = list(dom = 't'))
+```
+
+There you have it! Pretty straight-forward. One major downside to pivoting in `SQL` is that you need to know exactly the unique values of the pivoting column. In our example, I had to hardcode `Math` and `Reading` in the brackets. But what if the pivoting column has an unknown number of values, or the data changes?
+
+It makes sense that a database programming language wouldn't have the function automatically pivot out all the values, as RDBMS's are highly structed.
+
+## Pivoting in R with diplyr
+
+In the `dplyr` package you can use the `spread()` and `gather()` function to pivot and unpivot columns. `spread()` requires that you put the pivoted column in `key` and the value you want to place in the pivoted columns in `value`.
+
+```{r, eval = FALSE}
+testScore %>% 
+  spread(key = testSubject, value = scaleScore)
+```
+
+```{r, echo = FALSE}
+datatable(testScore %>% spread(key = testSubject, value = scaleScore), 
+          options = list(dom = 't'))
+```
+
+What I struggled with the most initially with this function (coming from the `SQL` world) was that there needs to be unique values in the field you choose for `value`. The `SQL` solution, on the other hand, has you put an aggregate function in to ensure unique values in the new pivoted columns.
+
+### What if you don't have unique values to pivot in R?
+
+Let's say in our example that a student had two Math and two Reading scores and you needed to average for each subject for each student. See the table below where the last student has two more records.
+
+```{r}
+testScore <- testScore %>% 
+  add_row(personID = 1002, testName = "MCA-III", testSubject = "Math", scaleScore = 363) %>%
+  add_row(personID = 1002, testName = "MCA-III", testSubject = "Reading", scaleScore = 395) 
+  
+```
+
+```{r, eval = FALSE}
+datatable(testScore, options = list(dom = 't'))
+```
+
+I think the easiest thing to do, is to just do your aggregation earlier in your pipe chain, and then do your `spread()` after.
+
+```{r}
+testScore %>% 
+  group_by(personID, testName, testSubject) %>% 
+  summarize(scaleScore =  mean(scaleScore)) %>% 
+  spread(key = testSubject, value = scaleScore)
+```
+
+Cool!
+

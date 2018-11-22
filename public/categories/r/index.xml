@@ -6,10 +6,20 @@
     <description>Recent content in R on Pete Talbert</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 15 Nov 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 22 Nov 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Pivoting data in SQL vs. R</title>
+      <link>/post/pivoting-data-in-sql-vs-r/</link>
+      <pubDate>Thu, 22 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/pivoting-data-in-sql-vs-r/</guid>
+      <description>IntroOften with education data, I need to pivot data to go from long format to wide.
+library(tidyverse)library(DBI)library(odbc)library(DT)con &amp;lt;- dbConnect(odbc::odbc(), &amp;quot;nicodemus&amp;quot;)query &amp;lt;- dbSendQuery(con, &amp;quot;select * from Demo.dbo.tbl_testScore&amp;quot;)testScore &amp;lt;- dbFetch(query)testScore &amp;lt;- as_tibble(testScore)datatable(testScore, options = list(dom = &amp;#39;t&amp;#39;)){&#34;x&#34;:{&#34;filter&#34;:&#34;none&#34;,&#34;data&#34;:[[&#34;1&#34;,&#34;2&#34;,&#34;3&#34;,&#34;4&#34;,&#34;5&#34;,&#34;6&#34;],[1000,1000,1001,1001,1002,1002],[&#34;MCA-III&#34;,&#34;MCA-III&#34;,&#34;MCA-III&#34;,&#34;MCA-III&#34;,&#34;MCA-III&#34;,&#34;MCA-III&#34;],[&#34;Math&#34;,&#34;Reading&#34;,&#34;Math&#34;,&#34;Reading&#34;,&#34;Math&#34;,&#34;Reading&#34;],[344,350,323,312,375,383]],&#34;container&#34;:&#34;\n \n \n  \n personID\n testName\n testSubject\n scaleScore\n \n \n&#34;,&#34;options&#34;:{&#34;dom&#34;:&#34;t&#34;,&#34;columnDefs&#34;:[{&#34;className&#34;:&#34;dt-right&#34;,&#34;targets&#34;:[1,4]},{&#34;orderable&#34;:false,&#34;targets&#34;:0}],&#34;order&#34;:[],&#34;autoWidth&#34;:false,&#34;orderClasses&#34;:false}},&#34;evals&#34;:[],&#34;jsHooks&#34;:[]}Above is a very simple table of test scores where personID is the unique identifier, and records duplicate by testSubject.</description>
+    </item>
     
     <item>
       <title>Connecting to MS SQL Server in R</title>

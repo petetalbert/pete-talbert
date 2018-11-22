@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  
+
+  <link rel="icon" type="image/png" href="../../favicon.png">
+  
+  <title>
+    
+    
+     Pivoting data in SQL vs. R 
+    
+  </title>
+  <link rel="canonical" href="../../post/pivoting-data-in-sql-vs-r/">
+
+  <link rel="stylesheet" href="../../css/fonts.css" />
+  <link rel="stylesheet" href="../../css/style.css" />
+
+  
+</head>
+
+<body>
+<section id=nav>
+  <h1><a href="../../">Pete Talbert</a></h1>
+  <ul>
+    
+    <li><a href="../../about">About</a></li>
+    
+    <li><a href="https://github.com/petetalbert">GitHub</a></li>
+    
+    <li><a href="https://www.linkedin.com/in/petetalbert">LinkedIn</a></li>
+    
+    <li><a href="https://twitter.com/petetalbert">Twitter</a></li>
+    
+    <li><a href="../../index.xml">RSS</a></li>
+    
+  </ul>
+</section>
+
+<link rel="stylesheet" href="../../css/github.css" rel="stylesheet" id="theme-stylesheet">
+<script src="../../js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<section id=content>
+  <h1> Pivoting data in SQL vs. R </h1>
+
+  <div id=sub-header>
+     · 2018/11/22 · 3 minute read
+  </div>
+
+  <div class="entry-content">
+    
+<script src="../../rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="../../rmarkdown-libs/jquery/jquery.min.js"></script>
+<link href="../../rmarkdown-libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+<script src="../../rmarkdown-libs/datatables-binding/datatables.js"></script>
+<link href="../../rmarkdown-libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="../../rmarkdown-libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="../../rmarkdown-libs/dt-core/js/jquery.dataTables.min.js"></script>
+<link href="../../rmarkdown-libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="../../rmarkdown-libs/crosstalk/js/crosstalk.min.js"></script>
+
+
+<div id="intro" class="section level2">
+<h2>Intro</h2>
+<p>Often with education data, I need to pivot data to go from long format to wide.</p>
+<pre class="r"><code>library(tidyverse)
+library(DBI)
+library(odbc)
+library(DT)
+
+con &lt;- dbConnect(odbc::odbc(), &quot;nicodemus&quot;)
+
+query &lt;- dbSendQuery(con, &quot;select * from Demo.dbo.tbl_testScore&quot;)
+testScore &lt;- dbFetch(query)
+
+testScore &lt;- as_tibble(testScore)
+datatable(testScore, options = list(dom = &#39;t&#39;))</code></pre>
+<div id="htmlwidget-1" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1000,1000,1001,1001,1002,1002],["MCA-III","MCA-III","MCA-III","MCA-III","MCA-III","MCA-III"],["Math","Reading","Math","Reading","Math","Reading"],[344,350,323,312,375,383]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>personID<\/th>\n      <th>testName<\/th>\n      <th>testSubject<\/th>\n      <th>scaleScore<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[1,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p>Above is a very simple table of test scores where <code>personID</code> is the unique identifier, and records duplicate by <code>testSubject</code>. How would I break out <code>testSubject</code> as columns and put the <code>scaleScore</code> in each row? Like say then to plot on a scatterplot?</p>
+</div>
+<div id="pivoting-in-sql" class="section level2">
+<h2>Pivoting in SQL</h2>
+<p>In <code>SQL</code>, the syntax is the following. It’s important to note (as opposed to the <code>diplyr</code> option later) that this is an <em>aggregate</em> function. So the <code>pivot</code> function requires some aggregate function like <code>MAX()</code>, <code>MIN()</code>, <code>SUM()</code>, <code>AVG()</code>, etc. You choose the column to pivot out and then the field you want to place under those new columns given some aggregation. Since I know I only have one record for each student + test subject combination, I chose <code>MAX()</code> to just give me that one score.</p>
+<pre class="sql"><code>select *
+from Demo.dbo.tbl_testScore
+pivot(
+  MAX(scaleScore) for testSubject in ([Math],[Reading]) --aggregate function of one column for another column, listing the unique possibilities in brackets.
+) piv</code></pre>
+<div id="htmlwidget-2" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"filter":"none","data":[["1","2","3"],[1000,1001,1002],["MCA-III","MCA-III","MCA-III"],[344,323,375],[350,312,383]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>personID<\/th>\n      <th>testName<\/th>\n      <th>Math<\/th>\n      <th>Reading<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[1,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p>There you have it! Pretty straight-forward. One major downside to pivoting in <code>SQL</code> is that you need to know exactly the unique values of the pivoting column. In our example, I had to hardcode <code>Math</code> and <code>Reading</code> in the brackets. But what if the pivoting column has an unknown number of values, or the data changes?</p>
+<p>It makes sense that a database programming language wouldn’t have the function automatically pivot out all the values, as RDBMS’s are highly structed.</p>
+</div>
+<div id="pivoting-in-r-with-diplyr" class="section level2">
+<h2>Pivoting in R with diplyr</h2>
+<p>In the <code>dplyr</code> package you can use the <code>spread()</code> and <code>gather()</code> function to pivot and unpivot columns. <code>spread()</code> requires that you put the pivoted column in <code>key</code> and the value you want to place in the pivoted columns in <code>value</code>.</p>
+<pre class="r"><code>testScore %&gt;% 
+  spread(key = testSubject, value = scaleScore)</code></pre>
+<div id="htmlwidget-3" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3">{"x":{"filter":"none","data":[["1","2","3"],[1000,1001,1002],["MCA-III","MCA-III","MCA-III"],[344,323,375],[350,312,383]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>personID<\/th>\n      <th>testName<\/th>\n      <th>Math<\/th>\n      <th>Reading<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[1,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p>What I struggled with the most initially with this function (coming from the <code>SQL</code> world) was that there needs to be unique values in the field you choose for <code>value</code>. The <code>SQL</code> solution, on the other hand, has you put an aggregate function in to ensure unique values in the new pivoted columns.</p>
+<div id="what-if-you-dont-have-unique-values-to-pivot-in-r" class="section level3">
+<h3>What if you don’t have unique values to pivot in R?</h3>
+<p>Let’s say in our example that a student had two Math and two Reading scores and you needed to average for each subject for each student. See the table below where the last student has two more records.</p>
+<pre class="r"><code>testScore &lt;- testScore %&gt;% 
+  add_row(personID = 1002, testName = &quot;MCA-III&quot;, testSubject = &quot;Math&quot;, scaleScore = 363) %&gt;%
+  add_row(personID = 1002, testName = &quot;MCA-III&quot;, testSubject = &quot;Reading&quot;, scaleScore = 395) </code></pre>
+<pre class="r"><code>datatable(testScore, options = list(dom = &#39;t&#39;))</code></pre>
+<p>I think the easiest thing to do, is to just do your aggregation earlier in your pipe chain, and then do your <code>spread()</code> after.</p>
+<pre class="r"><code>testScore %&gt;% 
+  group_by(personID, testName, testSubject) %&gt;% 
+  summarize(scaleScore =  mean(scaleScore)) %&gt;% 
+  spread(key = testSubject, value = scaleScore)</code></pre>
+<pre><code>## # A tibble: 3 x 4
+## # Groups:   personID, testName [3]
+##   personID testName  Math Reading
+##      &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;
+## 1     1000 MCA-III    344     350
+## 2     1001 MCA-III    323     312
+## 3     1002 MCA-III    369     389</code></pre>
+<p>Cool!</p>
+</div>
+</div>
+
+  </div>
+
+  <div id=links>
+    
+      <a class="basic-alignment left" href="../../post/ggplot2-geom-bar-labeling/">&laquo; ggplot2 geom_bar labeling</a>
+    
+    
+  </div>
+</section>
+
+<section id="comments">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+      
+      
+      if (window.location.hostname == "localhost")
+                return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = '';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+  
+  
+<script src="../../js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+  
+</body>
+</html>
+
