@@ -13,15 +13,6 @@ tags:
   - spread
 ---
 
-<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
-<script src="/rmarkdown-libs/jquery/jquery.min.js"></script>
-<link href="/rmarkdown-libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
-<script src="/rmarkdown-libs/datatables-binding/datatables.js"></script>
-<link href="/rmarkdown-libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="/rmarkdown-libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="/rmarkdown-libs/dt-core/js/jquery.dataTables.min.js"></script>
-<link href="/rmarkdown-libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
-<script src="/rmarkdown-libs/crosstalk/js/crosstalk.min.js"></script>
 
 
 <div id="intro" class="section level2">
@@ -31,6 +22,7 @@ tags:
 library(DBI)
 library(odbc)
 library(DT)
+library(knitr)
 
 con &lt;- dbConnect(odbc::odbc(), &quot;nicodemus&quot;)
 
@@ -38,9 +30,27 @@ query &lt;- dbSendQuery(con, &quot;select * from Demo.dbo.tbl_testScore&quot;)
 testScore &lt;- dbFetch(query)
 
 testScore &lt;- as_tibble(testScore)
-datatable(testScore, options = list(dom = &#39;t&#39;))</code></pre>
-<div id="htmlwidget-1" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1000,1000,1001,1001,1002,1002],["MCA-III","MCA-III","MCA-III","MCA-III","MCA-III","MCA-III"],["Math","Reading","Math","Reading","Math","Reading"],[344,350,323,312,375,383]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>personID<\/th>\n      <th>testName<\/th>\n      <th>testSubject<\/th>\n      <th>scaleScore<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[1,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+
+testScore</code></pre>
+<pre><code>## # A tibble: 16 x 4
+##    personID testName testSubject scaleScore
+##       &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;            &lt;dbl&gt;
+##  1     1000 MCA-III  Math               344
+##  2     1000 MCA-III  Reading            350
+##  3     1001 MCA-III  Math               323
+##  4     1001 MCA-III  Reading            312
+##  5     1002 MCA-III  Math               375
+##  6     1002 MCA-III  Reading            383
+##  7     1003 MCA-III  Math               311
+##  8     1003 MCA-III  Reading            302
+##  9     1004 MCA-III  Math               355
+## 10     1004 MCA-III  Reading            352
+## 11     1005 MCA-III  Math               323
+## 12     1005 MCA-III  Reading            320
+## 13     1006 MCA-III  Math               312
+## 14     1006 MCA-III  Reading            309
+## 15     1007 MCA-III  Math               356
+## 16     1007 MCA-III  Reading            365</code></pre>
 <p>Above is a very simple table of test scores where <code>personID</code> is the unique identifier, and records duplicate by <code>testSubject</code>. How would I break out <code>testSubject</code> as columns and put the <code>scaleScore</code> in each row? Like say then to plot on a scatterplot?</p>
 </div>
 <div id="pivoting-in-sql" class="section level2">
@@ -51,8 +61,17 @@ from Demo.dbo.tbl_testScore
 pivot(
   MAX(scaleScore) for testSubject in ([Math],[Reading]) --aggregate function of one column for another column, listing the unique possibilities in brackets.
 ) piv</code></pre>
-<div id="htmlwidget-2" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-2">{"x":{"filter":"none","data":[["1","2","3"],[1000,1001,1002],["MCA-III","MCA-III","MCA-III"],[344,323,375],[350,312,383]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>personID<\/th>\n      <th>testName<\/th>\n      <th>Math<\/th>\n      <th>Reading<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[1,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<pre><code>## # A tibble: 8 x 4
+##   personID testName  Math Reading
+##      &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;
+## 1     1000 MCA-III    344     350
+## 2     1001 MCA-III    323     312
+## 3     1002 MCA-III    375     383
+## 4     1003 MCA-III    311     302
+## 5     1004 MCA-III    355     352
+## 6     1005 MCA-III    323     320
+## 7     1006 MCA-III    312     309
+## 8     1007 MCA-III    356     365</code></pre>
 <p>There you have it! Pretty straight-forward. One major downside to pivoting in <code>SQL</code> is that you need to know exactly the unique values of the pivoting column. In our example, I had to hardcode <code>Math</code> and <code>Reading</code> in the brackets. But what if the pivoting column has an unknown number of values, or the data changes?</p>
 <p>It makes sense that a database programming language wouldn’t have the function automatically pivot out all the values, as RDBMS’s are highly structed.</p>
 </div>
@@ -61,28 +80,70 @@ pivot(
 <p>In the <code>dplyr</code> package you can use the <code>spread()</code> and <code>gather()</code> function to pivot and unpivot columns. <code>spread()</code> requires that you put the pivoted column in <code>key</code> and the value you want to place in the pivoted columns in <code>value</code>.</p>
 <pre class="r"><code>testScore %&gt;% 
   spread(key = testSubject, value = scaleScore)</code></pre>
-<div id="htmlwidget-3" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-3">{"x":{"filter":"none","data":[["1","2","3"],[1000,1001,1002],["MCA-III","MCA-III","MCA-III"],[344,323,375],[350,312,383]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>personID<\/th>\n      <th>testName<\/th>\n      <th>Math<\/th>\n      <th>Reading<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[1,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
-<p>What I struggled with the most initially with this function (coming from the <code>SQL</code> world) was that there needs to be unique values in the field you choose for <code>value</code>. The <code>SQL</code> solution, on the other hand, has you put an aggregate function in to ensure unique values in the new pivoted columns.</p>
-<div id="what-if-you-dont-have-unique-values-to-pivot-in-r" class="section level3">
-<h3>What if you don’t have unique values to pivot in R?</h3>
-<p>Let’s say in our example that a student had two Math and two Reading scores and you needed to average for each subject for each student. See the table below where the last student has two more records.</p>
-<pre class="r"><code>testScore &lt;- testScore %&gt;% 
-  add_row(personID = 1002, testName = &quot;MCA-III&quot;, testSubject = &quot;Math&quot;, scaleScore = 363) %&gt;%
-  add_row(personID = 1002, testName = &quot;MCA-III&quot;, testSubject = &quot;Reading&quot;, scaleScore = 395) </code></pre>
-<pre class="r"><code>datatable(testScore, options = list(dom = &#39;t&#39;))</code></pre>
-<p>I think the easiest thing to do, is to just do your aggregation earlier in your pipe chain, and then do your <code>spread()</code> after.</p>
-<pre class="r"><code>testScore %&gt;% 
-  group_by(personID, testName, testSubject) %&gt;% 
-  summarize(scaleScore =  mean(scaleScore)) %&gt;% 
-  spread(key = testSubject, value = scaleScore)</code></pre>
-<pre><code>## # A tibble: 3 x 4
-## # Groups:   personID, testName [3]
+<pre><code>## # A tibble: 8 x 4
 ##   personID testName  Math Reading
 ##      &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;
 ## 1     1000 MCA-III    344     350
 ## 2     1001 MCA-III    323     312
-## 3     1002 MCA-III    369     389</code></pre>
-<p>Cool!</p>
+## 3     1002 MCA-III    375     383
+## 4     1003 MCA-III    311     302
+## 5     1004 MCA-III    355     352
+## 6     1005 MCA-III    323     320
+## 7     1006 MCA-III    312     309
+## 8     1007 MCA-III    356     365</code></pre>
+<p>Same result as above with <code>SQL</code>. What I struggled with the most initially with this function (coming from the <code>SQL</code> world) was that there needs to be unique values in the field you choose for <code>value</code>. The <code>SQL</code> solution, on the other hand, has you put an aggregate function in to ensure unique values in the new pivoted columns.</p>
+<div id="what-if-you-dont-have-unique-values-to-pivot-in-r" class="section level3">
+<h3>What if you don’t have unique values to pivot in R?</h3>
+<p>Let’s say in our example that a student had two Math and two Reading scores and you needed to average for each subject for each student. See the table below where the last student has two more records.</p>
+<pre class="r"><code>testScoreMore &lt;- testScore %&gt;% 
+  add_row(personID = 1007, testName = &quot;MCA-III&quot;, testSubject = &quot;Math&quot;, scaleScore = 363) %&gt;%
+  add_row(personID = 1007, testName = &quot;MCA-III&quot;, testSubject = &quot;Reading&quot;, scaleScore = 395)</code></pre>
+<pre><code>## # A tibble: 18 x 4
+##    personID testName testSubject scaleScore
+##       &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;            &lt;dbl&gt;
+##  1     1000 MCA-III  Math               344
+##  2     1000 MCA-III  Reading            350
+##  3     1001 MCA-III  Math               323
+##  4     1001 MCA-III  Reading            312
+##  5     1002 MCA-III  Math               375
+##  6     1002 MCA-III  Reading            383
+##  7     1003 MCA-III  Math               311
+##  8     1003 MCA-III  Reading            302
+##  9     1004 MCA-III  Math               355
+## 10     1004 MCA-III  Reading            352
+## 11     1005 MCA-III  Math               323
+## 12     1005 MCA-III  Reading            320
+## 13     1006 MCA-III  Math               312
+## 14     1006 MCA-III  Reading            309
+## 15     1007 MCA-III  Math               356
+## 16     1007 MCA-III  Reading            365
+## 17     1007 MCA-III  Math               363
+## 18     1007 MCA-III  Reading            395</code></pre>
+<p>I think the easiest thing to do, is to just do your aggregation earlier in your pipe chain, and then do your <code>spread()</code> after.</p>
+<pre class="r"><code>testScoreMore %&gt;% 
+  group_by(personID, testName, testSubject) %&gt;% 
+  summarize(scaleScore =  mean(scaleScore)) %&gt;% 
+  spread(key = testSubject, value = scaleScore)</code></pre>
+<pre><code>## # A tibble: 8 x 4
+## # Groups:   personID, testName [8]
+##   personID testName  Math Reading
+##      &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;
+## 1     1000 MCA-III   344      350
+## 2     1001 MCA-III   323      312
+## 3     1002 MCA-III   375      383
+## 4     1003 MCA-III   311      302
+## 5     1004 MCA-III   355      352
+## 6     1005 MCA-III   323      320
+## 7     1006 MCA-III   312      309
+## 8     1007 MCA-III   360.     380</code></pre>
+<p>Cool! Hey, now that we have columns for each subject, is there a relationship between them?</p>
+<pre class="r"><code>testScoreMore %&gt;% 
+  group_by(personID, testName, testSubject) %&gt;% 
+  summarize(scaleScore =  mean(scaleScore)) %&gt;% 
+  spread(key = testSubject, value = scaleScore) %&gt;% 
+  ggplot(aes(x = Math, y = Reading)) +
+  geom_point() +
+  geom_smooth(method = &quot;lm&quot;, se = FALSE)</code></pre>
+<p><img src="/post/2018-11-22-pivoting-data-in-sql-vs-r_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 </div>
 </div>
