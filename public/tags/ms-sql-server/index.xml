@@ -12,13 +12,13 @@
     
     
     <item>
-      <title>Pivoting data in SQL vs. R</title>
+      <title>Pivoting Data in SQL vs. R</title>
       <link>/post/pivoting-data-in-sql-vs-r/</link>
       <pubDate>Thu, 22 Nov 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/pivoting-data-in-sql-vs-r/</guid>
-      <description>IntroOften with education data, I need to pivot data to go from long format to wide.
-library(tidyverse)library(DBI)library(odbc)library(DT)library(knitr)con &amp;lt;- dbConnect(odbc::odbc(), &amp;quot;nicodemus&amp;quot;)query &amp;lt;- dbSendQuery(con, &amp;quot;select * from Demo.dbo.tbl_testScore&amp;quot;)testScore &amp;lt;- dbFetch(query)testScore &amp;lt;- as_tibble(testScore)testScore## # A tibble: 16 x 4## personID testName testSubject scaleScore## &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;dbl&amp;gt;## 1 1000 MCA-III Math 344## 2 1000 MCA-III Reading 350## 3 1001 MCA-III Math 323## 4 1001 MCA-III Reading 312## 5 1002 MCA-III Math 375## 6 1002 MCA-III Reading 383## 7 1003 MCA-III Math 311## 8 1003 MCA-III Reading 302## 9 1004 MCA-III Math 355## 10 1004 MCA-III Reading 352## 11 1005 MCA-III Math 323## 12 1005 MCA-III Reading 320## 13 1006 MCA-III Math 312## 14 1006 MCA-III Reading 309## 15 1007 MCA-III Math 356## 16 1007 MCA-III Reading 365Above is a very simple table of test scores where personID is the unique identifier, and records duplicate by testSubject.</description>
+      <description>IntroOften with education data, I need to pivot data to go from long format to wide. For instance, I often have test scores for different test subjects of a single assessment. For one student, I will have to rows, one for one subject and one for another. This also happens for strands and domains of a test.
+library(tidyverse)library(DBI)library(odbc)library(DT)library(knitr)con &amp;lt;- dbConnect(odbc::odbc(), &amp;quot;nicodemus&amp;quot;)query &amp;lt;- dbSendQuery(con, &amp;quot;select * from Demo.</description>
     </item>
     
     <item>

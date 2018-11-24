@@ -1,5 +1,5 @@
 ---
-title: ggplot2 geom_bar labeling
+title: ggplot2 geom_bar Labeling
 author: ''
 date: '2018-11-16'
 slug: ggplot2-geom-bar-labeling

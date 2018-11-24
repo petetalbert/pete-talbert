@@ -11,7 +11,7 @@ theme = "hugo-tanka"
   tag = "tags"
 
 googleAnalytics = ""
-disqusShortname = ""
+disqusShortname = "petetalbert-rbind-io"
 disable_mathjax = false
 
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
@@ -23,6 +23,9 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
   highlightjsCDN = "//cdn.bootcss.com"
   highlightjsLang = ["r", "yaml","sql"]
   highlightjsTheme = "github"
+  
+  author = "Pete Talbert"
+  dateform = "November 2, 2006"
 
 [[menu.main]]
     name = "About"

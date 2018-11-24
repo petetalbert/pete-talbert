@@ -14,7 +14,7 @@
   <title>
     
     
-     Pivoting data in SQL vs. R 
+     Pivoting Data in SQL vs. R 
     
   </title>
   <link rel="canonical" href="../../post/pivoting-data-in-sql-vs-r/">
@@ -49,10 +49,10 @@
 
 
 <section id=content>
-  <h1> Pivoting data in SQL vs. R </h1>
+  <h1> Pivoting Data in SQL vs. R </h1>
 
   <div id=sub-header>
-     · 2018/11/22 · 5 minute read
+     · November 22, 2018 · 6 minute read
   </div>
 
   <div class="entry-content">
@@ -61,7 +61,7 @@
 
 <div id="intro" class="section level2">
 <h2>Intro</h2>
-<p>Often with education data, I need to pivot data to go from long format to wide.</p>
+<p>Often with education data, I need to pivot data to go from long format to wide. For instance, I often have test scores for different test subjects of a single assessment. For one student, I will have to rows, one for one subject and one for another. This also happens for strands and domains of a test.</p>
 <pre class="r"><code>library(tidyverse)
 library(DBI)
 library(odbc)
@@ -95,11 +95,11 @@ testScore</code></pre>
 ## 14     1006 MCA-III  Reading            309
 ## 15     1007 MCA-III  Math               356
 ## 16     1007 MCA-III  Reading            365</code></pre>
-<p>Above is a very simple table of test scores where <code>personID</code> is the unique identifier, and records duplicate by <code>testSubject</code>. How would I break out <code>testSubject</code> as columns and put the <code>scaleScore</code> in each row? Like say then to plot on a scatterplot?</p>
+<p>Above is a very simple table of test scores where <code>personID</code> is the unique identifier, and records duplicate by <code>testSubject</code> for each student. How would I break out <code>testSubject</code> as columns and put the <code>scaleScore</code> in the values of those columns? Like say then to plot on a scatterplot?</p>
 </div>
 <div id="pivoting-in-sql" class="section level2">
 <h2>Pivoting in SQL</h2>
-<p>In <code>SQL</code>, the syntax is the following. It’s important to note (as opposed to the <code>diplyr</code> option later) that this is an <em>aggregate</em> function. So the <code>pivot</code> function requires some aggregate function like <code>MAX()</code>, <code>MIN()</code>, <code>SUM()</code>, <code>AVG()</code>, etc. You choose the column to pivot out and then the field you want to place under those new columns given some aggregation. Since I know I only have one record for each student + test subject combination, I chose <code>MAX()</code> to just give me that one score.</p>
+<p>In SQL, the syntax is the following. It’s important to note (as opposed to the <code>dplyr</code> option later) that this is an <em>aggregate</em> function. So the <code>pivot</code> function requires some aggregate like <code>MAX()</code>, <code>MIN()</code>, <code>SUM()</code>, or <code>AVG()</code>. You choose the column to pivot out and then the values you want to place in those new columns given some aggregation. Since I know I only have one record for each student + test subject combination, I chose <code>MAX()</code> to just give me that one score.</p>
 <pre class="sql"><code>select *
 from Demo.dbo.tbl_testScore
 pivot(
@@ -116,12 +116,12 @@ pivot(
 ## 6     1005 MCA-III    323     320
 ## 7     1006 MCA-III    312     309
 ## 8     1007 MCA-III    356     365</code></pre>
-<p>There you have it! Pretty straight-forward. One major downside to pivoting in <code>SQL</code> is that you need to know exactly the unique values of the pivoting column. In our example, I had to hardcode <code>Math</code> and <code>Reading</code> in the brackets. But what if the pivoting column has an unknown number of values, or the data changes?</p>
-<p>It makes sense that a database programming language wouldn’t have the function automatically pivot out all the values, as RDBMS’s are highly structed.</p>
+<p>There you have it! Pretty straight-forward. One major downside to pivoting in SQL is that you need to know exactly the unique values of the pivoting column. In our example, I had to hardcode <code>Math</code> and <code>Reading</code> in the brackets, and I knew that this test only has these two subjects. But what if the pivoting column has an unknown number of values, or the data changes?</p>
+<p>It makes sense that a database programming language wouldn’t have the function to automatically pivot out all the values, as RDBMS’s are highly structed.</p>
 </div>
-<div id="pivoting-in-r-with-diplyr" class="section level2">
-<h2>Pivoting in R with diplyr</h2>
-<p>In the <code>dplyr</code> package you can use the <code>spread()</code> and <code>gather()</code> function to pivot and unpivot columns. <code>spread()</code> requires that you put the pivoted column in <code>key</code> and the value you want to place in the pivoted columns in <code>value</code>.</p>
+<div id="pivoting-in-r-with-dplyr" class="section level2">
+<h2>Pivoting in R with dplyr</h2>
+<p>In the <code>dplyr</code> package you can use the <code>spread()</code> and <code>gather()</code> function to pivot and unpivot columns respectively. <code>spread()</code> requires that you put the pivoted column in <code>key</code> and the values you want to place in the pivoted columns in <code>value</code>.</p>
 <pre class="r"><code>testScore %&gt;% 
   spread(key = testSubject, value = scaleScore)</code></pre>
 <pre><code>## # A tibble: 8 x 4
@@ -135,10 +135,10 @@ pivot(
 ## 6     1005 MCA-III    323     320
 ## 7     1006 MCA-III    312     309
 ## 8     1007 MCA-III    356     365</code></pre>
-<p>Same result as above with <code>SQL</code>. What I struggled with the most initially with this function (coming from the <code>SQL</code> world) was that there needs to be unique values in the field you choose for <code>value</code>. The <code>SQL</code> solution, on the other hand, has you put an aggregate function in to ensure unique values in the new pivoted columns.</p>
+<p>Same result as above with SQL. What I struggled with the most initially with this function (coming from the SQL world) was that there must be only one value to put in the pivoted columns; otherwise, it erors. The SQL solution, on the other hand, has you put an aggregate function, so that if it meets two values, it has an aggregation to get to one.</p>
 <div id="what-if-you-dont-have-unique-values-to-pivot-in-r" class="section level3">
 <h3>What if you don’t have unique values to pivot in R?</h3>
-<p>Let’s say in our example that a student had two Math and two Reading scores and you needed to average for each subject for each student. See the table below where the last student has two more records.</p>
+<p>Let’s say in our example that a student had <em>two</em> Math and Reading scores and you needed to take the maximum for each subject. See the table below where the last student has two more records.</p>
 <pre class="r"><code>testScoreMore &lt;- testScore %&gt;% 
   add_row(personID = 1007, testName = &quot;MCA-III&quot;, testSubject = &quot;Math&quot;, scaleScore = 363) %&gt;%
   add_row(personID = 1007, testName = &quot;MCA-III&quot;, testSubject = &quot;Reading&quot;, scaleScore = 395)</code></pre>
@@ -163,10 +163,14 @@ pivot(
 ## 16     1007 MCA-III  Reading            365
 ## 17     1007 MCA-III  Math               363
 ## 18     1007 MCA-III  Reading            395</code></pre>
-<p>I think the easiest thing to do, is to just do your aggregation earlier in your pipe chain, and then do your <code>spread()</code> after.</p>
+<p>If I try to run the same code as above it gives an error:</p>
 <pre class="r"><code>testScoreMore %&gt;% 
-  group_by(personID, testName, testSubject) %&gt;% 
-  summarize(scaleScore =  max(scaleScore)) %&gt;% 
+  spread(key = testSubject, value = scaleScore)</code></pre>
+<pre><code>## Error: Duplicate identifiers for rows (15, 17), (16, 18)</code></pre>
+<p>I think the easiest solution is to just do your aggregation with <code>group_by()</code> and <code>summarize()</code> earlier in the pipeline, and then do your <code>spread()</code> after.</p>
+<pre class="r"><code>testScoreMore %&gt;% 
+  group_by(personID, testName, testSubject) %&gt;% #get to unique identifiers with these two lines.
+  summarize(scaleScore =  max(scaleScore)) %&gt;% #using max here.
   spread(key = testSubject, value = scaleScore)</code></pre>
 <pre><code>## # A tibble: 8 x 4
 ## # Groups:   personID, testName [8]
@@ -188,7 +192,7 @@ pivot(
   ggplot(aes(x = Math, y = Reading)) +
   geom_point() +
   geom_smooth(method = &quot;lm&quot;, se = FALSE)</code></pre>
-<p><img src="../../post/2018-11-22-pivoting-data-in-sql-vs-r_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="../../post/2018-11-22-pivoting-data-in-sql-vs-r_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 </div>
 </div>
 
@@ -196,7 +200,7 @@ pivot(
 
   <div id=links>
     
-      <a class="basic-alignment left" href="../../post/ggplot2-geom-bar-labeling/">&laquo; ggplot2 geom_bar labeling</a>
+      <a class="basic-alignment left" href="../../post/ggplot2-geom-bar-labeling/">&laquo; ggplot2 geom_bar Labeling</a>
     
     
   </div>
