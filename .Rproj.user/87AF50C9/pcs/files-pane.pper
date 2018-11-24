@@ -1,8 +1,8 @@
 {
-    "path" : "~/R/Blog/standard-error/themes/hugo-tanka/static/css",
+    "path" : "~/R/Blog/standard-error/themes/hugo-tanka/static",
     "sortOrder" : [
         {
-            "ascending" : true,
+            "ascending" : false,
             "columnIndex" : 2
         }
     ]
