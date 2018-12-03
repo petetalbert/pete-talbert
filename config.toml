@@ -10,7 +10,7 @@ theme = "hugo-tanka"
   category = "categories"
   tag = "tags"
 
-googleAnalytics = ""
+googleAnalytics = "UA-130291758-1"
 disqusShortname = "petetalbert-rbind-io"
 disable_mathjax = false
 
