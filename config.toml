@@ -6,13 +6,13 @@ canonifyurls = true
 languagecode = "en"
 theme = "hugo-tanka"
 
-[taxonomies]
-  category = "categories"
-  tag = "tags"
-
 googleAnalytics = "UA-130291758-1"
 disqusShortname = "petetalbert-rbind-io"
 disable_mathjax = false
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
 
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
