@@ -11,7 +11,7 @@ tags: []
 
 Hello!
 
-This is just a quick test as to how a SQL snipet shows in a markdown file and on a website. See below.
+This is my very first post; just a quick test as to how a SQL snippet shows in a markdown file and on a website. See below.
 
 ```{sql, eval = FALSE, echo = TRUE}
 select personID

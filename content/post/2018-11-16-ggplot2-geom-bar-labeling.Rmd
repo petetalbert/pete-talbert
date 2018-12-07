@@ -15,9 +15,8 @@ I am using much of what is discussed [here](https://rstudio-pubs-static.s3.amazo
 
 First, for this post, I am using the following packages and `mtcars` as a dataset. I always make sure my dataframes are tibbles (probably not necessary).
 
-```{r message=FALSE, include=FALSE}
+```{r message=FALSE}
 library(tidyverse)
-library(knitr)
 library(scales)
 
 mtcars <- as_tibble(mtcars)

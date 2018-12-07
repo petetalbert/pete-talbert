@@ -21,7 +21,6 @@ Often with education data, I need to pivot data to go from long format to wide. 
 library(tidyverse)
 library(DBI)
 library(odbc)
-library(DT)
 library(knitr)
 
 con <- dbConnect(odbc::odbc(), "nicodemus")

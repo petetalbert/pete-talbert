@@ -50,7 +50,7 @@ Setting up a System DSNIn Windows, if you hit the start menu and search for “
       
       <guid>/post/can-i-write-sql-in-r-markdown/</guid>
       <description>Hello!
-This is just a quick test as to how a SQL snipet shows in a markdown file and on a website. See below.
+This is my very first post; just a quick test as to how a SQL snippet shows in a markdown file and on a website. See below.
 select personID, endYear, grade, ROW_NUMBER() over (partition by personID order by endYear, case when grade = &amp;#39;KG&amp;#39; then &amp;#39;00&amp;#39; else grade end) as rowNumfrom #enroll3</description>
     </item>
     

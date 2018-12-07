@@ -6,9 +6,12 @@
     <description>Recent content on Pete Talbert</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 22 Nov 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+  </channel>
+</rss>="self" type="application/rss+xml" />
     
     
     <item>
@@ -51,10 +54,10 @@ Setting up a System DSNIn Windows, if you hit the start menu and search for “
       <guid>/about/</guid>
       <description>Hello! My name is Pete Talbert, and I work as a data analyst in Minnesota. I have only been doing this line of work for 3 years, and I have worked exclusively in education settings, both higher ed and K-12.
 Education M.A. in Organizational Leadership, Policy, and Development, 2017
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Evaluation Studies
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Minor in Educational Psychology, Quantitative Methods in Education (QME)
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;University of Minnesota - Twin Cities
-B.A. in Philosophy, 2010
-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;University of Minnesota - Twin Cities</description>
+B.A. in Philosophy, 2010</description>
     </item>
     
     <item>
@@ -64,7 +67,7 @@ B.A. in Philosophy, 2010
       
       <guid>/post/can-i-write-sql-in-r-markdown/</guid>
       <description>Hello!
-This is just a quick test as to how a SQL snipet shows in a markdown file and on a website. See below.
+This is my very first post; just a quick test as to how a SQL snippet shows in a markdown file and on a website. See below.
 select personID, endYear, grade, ROW_NUMBER() over (partition by personID order by endYear, case when grade = &amp;#39;KG&amp;#39; then &amp;#39;00&amp;#39; else grade end) as rowNumfrom #enroll3</description>
     </item>
     
