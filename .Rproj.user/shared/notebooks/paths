@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 C:/Users/petet/Documents/R/Blog/standard-error/config.toml="98841CD1"
 C:/Users/petet/Documents/R/Blog/standard-error/content/about.md="BC45D2FD"
 C:/Users/petet/Documents/R/Blog/standard-error/content/post/2018-11-13-can-i-write-sql-in-r-markdown.Rmd="ACB43728"
@@ -21,3 +22,17 @@ C:/Users/petet/Documents/R/Blog/standard-error/themes/hugo-tanka/static/css/styl
 C:/Users/petet/Documents/R/Blog/standard-error/themes/hugo-tanka/static/css/xcode.css="C1EDD1B3"
 C:/Users/petet/Documents/R/Blog/standard-error/themes/hugo-tanka/static/js/highlight.pack.js="B31342D"
 C:/Users/petet/Documents/R/Blog/standard-error/themes/hugo-tanka/theme.toml="3399F3A4"
+=======
+L:/Assessment_Data/Data/R/Blog/standard-error/config.toml="A8F3AD42"
+L:/Assessment_Data/Data/R/Blog/standard-error/content/about.md="8964BC30"
+L:/Assessment_Data/Data/R/Blog/standard-error/content/post/2018-11-13-can-i-write-sql-in-r-markdown.Rmd="1C6258E3"
+L:/Assessment_Data/Data/R/Blog/standard-error/content/post/2018-11-16-ggplot2-geom-bar-labeling.Rmd="6E87CBE4"
+L:/Assessment_Data/Data/R/Blog/standard-error/content/post/2018-11-22-pivoting-data-in-sql-vs-r.Rmd="5B053A9A"
+L:/Assessment_Data/Data/R/Blog/standard-error/themes/hugo-tanka/layouts/_default/single.html="AB05201"
+L:/Assessment_Data/Data/R/Blog/standard-error/themes/hugo-tanka/layouts/index.html="D099A8D6"
+L:/Assessment_Data/Data/R/Blog/standard-error/themes/hugo-tanka/layouts/partials/disqus.html="5AE80DD3"
+L:/Assessment_Data/Data/R/Blog/standard-error/themes/hugo-tanka/layouts/partials/footer.html="A8945B34"
+L:/Assessment_Data/Data/R/Blog/standard-error/themes/hugo-tanka/layouts/partials/header.html="786958F"
+L:/Assessment_Data/Data/R/Blog/standard-error/themes/hugo-tanka/static/css/github.css="6BE03F6"
+L:/Assessment_Data/Data/R/Blog/standard-error/themes/hugo-tanka/theme.toml="14908397"
+>>>>>>> 6893e24b928b0e552a8942c0792118569610a280
