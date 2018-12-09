@@ -1,6 +1,10 @@
 {
-    "path" : "~/R/Blog/standard-error/themes/hugo-tanka/static",
+    "path" : "~/R/Blog/standard-error/themes/hugo-tanka/static/css",
     "sortOrder" : [
+        {
+            "ascending" : false,
+            "columnIndex" : 4
+        },
         {
             "ascending" : false,
             "columnIndex" : 2
