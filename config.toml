@@ -22,7 +22,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
   highlightjsVersion = "9.11.0"
   highlightjsCDN = "//cdn.bootcss.com"
   highlightjsLang = ["r", "yaml","sql"]
-  highlightjsTheme = "github-gist"
+  highlightjsTheme = "github"
   
   author = "Pete Talbert"
   dateform = "November 2, 2006"
