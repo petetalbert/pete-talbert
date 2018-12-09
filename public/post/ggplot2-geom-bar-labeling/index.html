@@ -80,7 +80,7 @@ mtcars &lt;- as_tibble(mtcars)</code></pre>
     x = &quot;Cylinder&quot;,
     fill = &quot;Gear&quot;
   )</code></pre>
-<p><img src="2018-11-16-ggplot2-geom-bar-labeling_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="../../post/2018-11-16-ggplot2-geom-bar-labeling_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>This is simple enough. <code>x</code> is cylinders, <code>fill</code> is gears, and we are stacking in <code>geom_bar</code>. What if I wanted to label the counts? Below is the same code, with a <code>geom_text</code> line.</p>
 <pre class="r"><code>mtcars %&gt;% 
   ggplot(aes(x = factor(cyl), fill = factor(gear))) +
@@ -91,7 +91,7 @@ mtcars &lt;- as_tibble(mtcars)</code></pre>
     x = &quot;Cylinder&quot;,
     fill = &quot;Gear&quot;
   )</code></pre>
-<p><img src="2018-11-16-ggplot2-geom-bar-labeling_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="../../post/2018-11-16-ggplot2-geom-bar-labeling_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>The <code>geom_text</code> line is counting the gears within cylinders for us and then the <code>position_stack(0.5)</code> is putting it half-way in each fill. Nice!</p>
 </div>
 <div id="stacked-bar" class="section level3">
@@ -105,7 +105,7 @@ mtcars &lt;- as_tibble(mtcars)</code></pre>
     x = &quot;Cylinder&quot;,
     fill = &quot;Gear&quot;
   )</code></pre>
-<p><img src="2018-11-16-ggplot2-geom-bar-labeling_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="../../post/2018-11-16-ggplot2-geom-bar-labeling_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>Easy enough. Now comes the tricky part: how do we get the percentages in there as labels? There may be a long, nasty way to do it all within <code>geom_text</code>, but I’ve found just making a dataframe first of your counts and ratios, and then calling that within <code>geom_text</code> to be easiest.</p>
 <p>Here’s my dataframe with counts and ratios:</p>
 <pre class="r"><code>percentData &lt;- mtcars %&gt;% 
@@ -122,7 +122,7 @@ mtcars &lt;- as_tibble(mtcars)</code></pre>
     x = &quot;Cylinder&quot;,
     fill = &quot;Gear&quot;
   )</code></pre>
-<p><img src="2018-11-16-ggplot2-geom-bar-labeling_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="../../post/2018-11-16-ggplot2-geom-bar-labeling_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 </div>
 
   </div>
