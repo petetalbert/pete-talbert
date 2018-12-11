@@ -10,13 +10,13 @@ tags:
   - regression
 ---
 
-So I'm very much a noob when it comes to any formal programming. So I feel like my first real practice should be with for loops, which are a staple of programming concepts.
+I'm very much a beginner when it comes to any formal programming. So I feel like my first real practice should be with for loops, which are a staple of programming concepts.
 
 Much of what is below is taken from Hadley Wickham's *R for Data Science*, in particular, Chapter 21 on [iteration](https://r4ds.had.co.nz/iteration.html).
 
 ## Baumann dataset
 
-I'm going to use the one of the datasets that comes with the `car` package, called `Baumann`. According to the `carData` [package overview](https://cran.r-project.org/web/packages/carData/carData.pdf), data are "from an experimental study conducted by Baumann and Jones, as reported by Moore and McCabe (1993). Students were randomly assigned to one of three experimental groups." Seeing as though it is education data, I felt it was appropriate for this blog. I load it and make it a `tibble` below.
+I'm going to use the one of the datasets that comes with the `car` package, called `Baumann`. According to the `carData` [package documentation](https://www.rdocumentation.org/packages/carData/versions/3.0-2/topics/Baumann), data are "from an experimental study conducted by Baumann and Jones, as reported by Moore and McCabe (1993). Students were randomly assigned to one of three experimental groups." `group` is a factor with three levels: `Basal`, traditional method of teaching; `DRTA`, an innovative method; `Strat`, another innovative method. Seeing as though it is education data, I felt it was appropriate for this blog. I load it and make it a `tibble` below.
 
 ```{r, message=FALSE}
 library(tidyverse)
