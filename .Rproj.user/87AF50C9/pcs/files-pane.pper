@@ -1,5 +1,5 @@
 {
-    "path" : "~/R/Blog/standard-error/themes/hugo-tanka/layouts/_default",
+    "path" : "~/R/Blog/standard-error/content/post",
     "sortOrder" : [
         {
             "ascending" : true,

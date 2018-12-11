@@ -16,7 +16,7 @@ Much of what is below is taken from Hadley Wickham's *R for Data Science*, in pa
 
 ## Baumann dataset
 
-I'm going to use the one of the datasets that comes with the `car` package, called `Baumann`. According to the `carData` [package overview](https://cran.r-project.org/web/packages/carData/carData.pdf), data are "from an experimental study conducted by Baumann and Jones, as reported by Moore and McCabe (1993) students were randomly assigned to one of three experimental groups." Seeing as though it is education data, I felt it was appropriate for this blog. I load it and make it a `tibble` below.
+I'm going to use the one of the datasets that comes with the `car` package, called `Baumann`. According to the `carData` [package overview](https://cran.r-project.org/web/packages/carData/carData.pdf), data are "from an experimental study conducted by Baumann and Jones, as reported by Moore and McCabe (1993). Students were randomly assigned to one of three experimental groups." Seeing as though it is education data, I felt it was appropriate for this blog. I load it and make it a `tibble` below.
 
 ```{r, message=FALSE}
 library(tidyverse)
