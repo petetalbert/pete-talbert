@@ -1,0 +1,152 @@
+---
+title: Pivoting Data in SQL vs. R
+author: ''
+date: '2018-11-22'
+slug: pivoting-data-in-sql-vs-r
+categories:
+  - SQL
+  - R
+tags:
+  - ms-sql-server
+  - pivot
+  - tidyverse
+  - spread
+---
+
+
+
+<div id="intro" class="section level2">
+<h2>Intro</h2>
+<p>Often with education data, I need to pivot data to go from long format to wide. For instance, I often have test scores for different test subjects of a single assessment. For one student, I will have to rows, one for one subject and one for another. This also happens for strands and domains of a test.</p>
+<pre class="r"><code>library(tidyverse)
+library(DBI)
+library(odbc)
+library(knitr)
+
+con &lt;- dbConnect(odbc::odbc(), &quot;nicodemus&quot;)
+
+query &lt;- dbSendQuery(con, &quot;select * from Demo.dbo.tbl_testScore&quot;)
+testScore &lt;- dbFetch(query)
+
+testScore &lt;- as_tibble(testScore)
+
+testScore</code></pre>
+<pre><code>## # A tibble: 16 x 4
+##    personID testName testSubject scaleScore
+##       &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;            &lt;dbl&gt;
+##  1     1000 MCA-III  Math               344
+##  2     1000 MCA-III  Reading            350
+##  3     1001 MCA-III  Math               323
+##  4     1001 MCA-III  Reading            312
+##  5     1002 MCA-III  Math               375
+##  6     1002 MCA-III  Reading            383
+##  7     1003 MCA-III  Math               311
+##  8     1003 MCA-III  Reading            302
+##  9     1004 MCA-III  Math               355
+## 10     1004 MCA-III  Reading            352
+## 11     1005 MCA-III  Math               323
+## 12     1005 MCA-III  Reading            320
+## 13     1006 MCA-III  Math               312
+## 14     1006 MCA-III  Reading            309
+## 15     1007 MCA-III  Math               356
+## 16     1007 MCA-III  Reading            365</code></pre>
+<p>Above is a very simple table of test scores where <code>personID</code> is the unique identifier, and records duplicate by <code>testSubject</code> for each student. How would I break out <code>testSubject</code> as columns and put the <code>scaleScore</code> in the values of those columns? Like say then to plot on a scatterplot?</p>
+</div>
+<div id="pivoting-in-sql" class="section level2">
+<h2>Pivoting in SQL</h2>
+<p>In SQL, the syntax is the following. It’s important to note (as opposed to the <code>dplyr</code> option later) that this is an <em>aggregate</em> function. So the <code>pivot</code> function requires some aggregate like <code>MAX()</code>, <code>MIN()</code>, <code>SUM()</code>, or <code>AVG()</code>. You choose the column to pivot out and then the values you want to place in those new columns given some aggregation. Since I know I only have one record for each student + test subject combination, I chose <code>MAX()</code> to just give me that one score.</p>
+<pre class="sql"><code>select *
+from Demo.dbo.tbl_testScore
+pivot(
+  MAX(scaleScore) for testSubject in ([Math],[Reading]) --aggregate function of one column for another column, listing the unique possibilities in brackets.
+) piv</code></pre>
+<pre><code>## # A tibble: 8 x 4
+##   personID testName  Math Reading
+##      &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;
+## 1     1000 MCA-III    344     350
+## 2     1001 MCA-III    323     312
+## 3     1002 MCA-III    375     383
+## 4     1003 MCA-III    311     302
+## 5     1004 MCA-III    355     352
+## 6     1005 MCA-III    323     320
+## 7     1006 MCA-III    312     309
+## 8     1007 MCA-III    356     365</code></pre>
+<p>There you have it! Pretty straight-forward. One major downside to pivoting in SQL is that you need to know exactly the unique values of the pivoting column. In our example, I had to hardcode <code>Math</code> and <code>Reading</code> in the brackets, and I knew that this test only has these two subjects. But what if the pivoting column has an unknown number of values, or the data changes?</p>
+<p>It makes sense that a database programming language wouldn’t have the function to automatically pivot out all the values, as RDBMS’s are highly structed.</p>
+</div>
+<div id="pivoting-in-r-with-dplyr" class="section level2">
+<h2>Pivoting in R with dplyr</h2>
+<p>In the <code>dplyr</code> package you can use the <code>spread()</code> and <code>gather()</code> function to pivot and unpivot columns respectively. <code>spread()</code> requires that you put the pivoted column in <code>key</code> and the values you want to place in the pivoted columns in <code>value</code>.</p>
+<pre class="r"><code>testScore %&gt;% 
+  spread(key = testSubject, value = scaleScore)</code></pre>
+<pre><code>## # A tibble: 8 x 4
+##   personID testName  Math Reading
+##      &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;
+## 1     1000 MCA-III    344     350
+## 2     1001 MCA-III    323     312
+## 3     1002 MCA-III    375     383
+## 4     1003 MCA-III    311     302
+## 5     1004 MCA-III    355     352
+## 6     1005 MCA-III    323     320
+## 7     1006 MCA-III    312     309
+## 8     1007 MCA-III    356     365</code></pre>
+<p>Same result as above with SQL. What I struggled with the most initially with this function (coming from the SQL world) was that there must be only one value to put in the pivoted columns; otherwise, it erors. The SQL solution, on the other hand, has you put an aggregate function, so that if it meets two values, it has an aggregation to get to one.</p>
+<div id="what-if-you-dont-have-unique-values-to-pivot-in-r" class="section level3">
+<h3>What if you don’t have unique values to pivot in R?</h3>
+<p>Let’s say in our example that a student had <em>two</em> Math and Reading scores and you needed to take the maximum for each subject. See the table below where the last student has two more records.</p>
+<pre class="r"><code>testScoreMore &lt;- testScore %&gt;% 
+  add_row(personID = 1007, testName = &quot;MCA-III&quot;, testSubject = &quot;Math&quot;, scaleScore = 363) %&gt;%
+  add_row(personID = 1007, testName = &quot;MCA-III&quot;, testSubject = &quot;Reading&quot;, scaleScore = 395)</code></pre>
+<pre><code>## # A tibble: 18 x 4
+##    personID testName testSubject scaleScore
+##       &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;            &lt;dbl&gt;
+##  1     1000 MCA-III  Math               344
+##  2     1000 MCA-III  Reading            350
+##  3     1001 MCA-III  Math               323
+##  4     1001 MCA-III  Reading            312
+##  5     1002 MCA-III  Math               375
+##  6     1002 MCA-III  Reading            383
+##  7     1003 MCA-III  Math               311
+##  8     1003 MCA-III  Reading            302
+##  9     1004 MCA-III  Math               355
+## 10     1004 MCA-III  Reading            352
+## 11     1005 MCA-III  Math               323
+## 12     1005 MCA-III  Reading            320
+## 13     1006 MCA-III  Math               312
+## 14     1006 MCA-III  Reading            309
+## 15     1007 MCA-III  Math               356
+## 16     1007 MCA-III  Reading            365
+## 17     1007 MCA-III  Math               363
+## 18     1007 MCA-III  Reading            395</code></pre>
+<p>If I try to run the same code as above it gives an error:</p>
+<pre class="r"><code>testScoreMore %&gt;% 
+  spread(key = testSubject, value = scaleScore)</code></pre>
+<pre><code>## Error: Duplicate identifiers for rows (15, 17), (16, 18)</code></pre>
+<p>I think the easiest solution is to just do your aggregation with <code>group_by()</code> and <code>summarize()</code> earlier in the pipeline, and then do your <code>spread()</code> after.</p>
+<pre class="r"><code>testScoreMore %&gt;% 
+  group_by(personID, testName, testSubject) %&gt;% #get to unique identifiers with these two lines.
+  summarize(scaleScore =  max(scaleScore)) %&gt;% #using max here.
+  spread(key = testSubject, value = scaleScore)</code></pre>
+<pre><code>## # A tibble: 8 x 4
+## # Groups:   personID, testName [8]
+##   personID testName  Math Reading
+##      &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;
+## 1     1000 MCA-III    344     350
+## 2     1001 MCA-III    323     312
+## 3     1002 MCA-III    375     383
+## 4     1003 MCA-III    311     302
+## 5     1004 MCA-III    355     352
+## 6     1005 MCA-III    323     320
+## 7     1006 MCA-III    312     309
+## 8     1007 MCA-III    363     395</code></pre>
+<p>Cool! Hey, now that we have columns for each subject, is there a relationship between them?</p>
+<pre class="r"><code>testScoreMore %&gt;% 
+  group_by(personID, testName, testSubject) %&gt;% 
+  summarize(scaleScore =  max(scaleScore)) %&gt;% 
+  spread(key = testSubject, value = scaleScore) %&gt;% 
+  ggplot(aes(x = Math, y = Reading)) +
+  geom_point() +
+  geom_smooth(method = &quot;lm&quot;, se = FALSE)</code></pre>
+<p><img src="/post/2018-11-22-pivoting-data-in-sql-vs-r_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+</div>

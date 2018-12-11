@@ -8,8 +8,18 @@
   </url>
   
   <url>
+    <loc>/post/pivoting-data-in-sql-vs-r/</loc>
+    <lastmod>2018-11-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/post/ggplot2-geom-bar-labeling/</loc>
     <lastmod>2018-11-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/connecting-to-ms-sql-server-in-r/</loc>
+    <lastmod>2018-11-15T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -39,8 +49,20 @@
   </url>
   
   <url>
+    <loc>/tags/ms-sql-server/</loc>
+    <lastmod>2018-11-22T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/</loc>
     <lastmod>2018-12-10T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/pivot/</loc>
+    <lastmod>2018-11-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -63,14 +85,26 @@
   </url>
   
   <url>
+    <loc>/tags/spread/</loc>
+    <lastmod>2018-11-22T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/categories/sql/</loc>
-    <lastmod>2018-11-13T00:00:00+00:00</lastmod>
+    <lastmod>2018-11-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/tags/</loc>
     <lastmod>2018-12-10T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/tidyverse/</loc>
+    <lastmod>2018-11-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
