@@ -1,0 +1,87 @@
+---
+title: Learning For Loops in R
+author: Pete Talbert
+date: '2018-12-10'
+slug: learning-for-loops-in-r
+categories:
+  - R
+tags:
+  - for-loop
+  - regression
+---
+
+So I'm very much a noob when it comes to any formal programming. So I feel like my first real practice should be with for loops, which are a staple of programming concepts.
+
+Much of what is below is taken from Hadley Wickham's *R for Data Science*, in particular, Chapter 21 on [iteration](https://r4ds.had.co.nz/iteration.html).
+
+## Baumann dataset
+
+I'm going to use the one of the datasets that comes with the `car` package, called `Baumann`. According to the `carData` [package overview](https://cran.r-project.org/web/packages/carData/carData.pdf), data are "from an experimental study conducted by Baumann and Jones, as reported by Moore and McCabe (1993) students were randomly assigned to one of three experimental groups." Seeing as though it is education data, I felt it was appropriate for this blog. I load it and make it a `tibble` below.
+
+```{r, message=FALSE}
+library(tidyverse)
+library(car)
+
+baumann <- carData::Baumann %>% 
+  as_tibble()
+
+baumann
+```
+
+## For loops
+
+I really like Hadley's explanation of for loops as having three parts:
+
+1. An output for the results to go in.
+2. The sequence that gets "looped" over.
+3. And the body that does the actual work.
+
+For our example, I just wanted to get the median for all the numeric test data (removing the `group` variable).
+
+```{r, median}
+output <- vector("double", ncol(baumann) - 1)    # 1. output; putting the data in a double vector.
+for (i in seq_along(baumann[, -1])) {            # 2. sequence; sequencing along the baumann dataframe (except the first column).
+  output[[i]] <- median(baumann[, -1][[i]])      # 3. body; applying the median function to each column (except the first column).
+}
+
+output
+```
+
+That wasn't so diffcult! Let's try a different version of the same for loop where instead of getting the median and putting it in a double vector, I'm running a correlation test with the first pretest and putting each one in a list. I just print the first correlation test as an example.
+
+```{r, list of cor.tests}
+output <- vector("list", ncol(baumann) - 2)                              # 1. list vector this time.
+for (i in seq_along(baumann[, c(-1, -2)])) {                             # 2. same as above but removing the second column as I don't want a correlation with itself.
+  output[[i]] <- cor.test(baumann$pretest.1, baumann[, c(-1, -2)][[i]])  # 3. running cor.test instead of median.
+}
+
+output[[1]] #just printing first item in the list.
+```
+
+## Using purrr to extract list elements
+
+Now what if I wanted to extract certain elements from all these correlation tests? `purrr`'s `map` functions is a great alternative to base R's `lapply`. I'm still attempting to understand how exactly these functions work, but in the meantime, it's easy enough to make a tibble of important statistics from each correlation for use in a simple plot.
+
+```{r}
+library(purrr)
+
+cor_summary <- tibble(
+  x = colnames(baumann[c(-1, -2)]),
+  r = map_dbl(output, "estimate"),
+  statistic = map_dbl(output, "statistic"),
+  p_value = map_dbl(output, "p.value")
+)
+
+cor_summary
+
+cor_summary %>% 
+  ggplot(aes(x = x, y = r)) +
+  geom_col()
+```
+
+
+
+
+
+
+

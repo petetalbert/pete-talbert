@@ -25,7 +25,6 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
   highlightjsTheme = "github"
   
   author = "Pete Talbert"
-  dateform = "November 2, 2006"
 
 [[menu.main]]
     name = "About"

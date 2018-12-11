@@ -1,13 +1,13 @@
 {
-    "path" : "~/R/Blog/standard-error/themes/hugo-tanka/static/css",
+    "path" : "~/R/Blog/standard-error/themes/hugo-tanka/layouts/_default",
     "sortOrder" : [
         {
-            "ascending" : false,
-            "columnIndex" : 4
+            "ascending" : true,
+            "columnIndex" : 2
         },
         {
             "ascending" : false,
-            "columnIndex" : 2
+            "columnIndex" : 4
         }
     ]
 }

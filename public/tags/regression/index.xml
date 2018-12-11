@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Regression on Pete Talbert</title>
+    <link>/tags/regression/</link>
+    <description>Recent content in Regression on Pete Talbert</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 10 Dec 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/regression/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Learning For Loops in R</title>
+      <link>/post/learning-for-loops-in-r/</link>
+      <pubDate>Mon, 10 Dec 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/learning-for-loops-in-r/</guid>
+      <description>So I’m very much a noob when it comes to any formal programming. So I feel like my first real practice should be with for loops, which are a staple of programming concepts.
+Much of what is below is taken from Hadley Wickham’s R for Data Science, in particular, Chapter 21 on iteration.
+Baumann datasetI’m going to use the one of the datasets that comes with the car package, called Baumann.</description>
+    </item>
+    
+  </channel>
+</rss>

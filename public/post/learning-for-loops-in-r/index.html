@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  
+
+  <link rel="icon" type="image/png" href="../../favicon.png">
+  
+  <title>
+    
+    
+     Learning For Loops in R 
+    
+  </title>
+  <link rel="canonical" href="../../post/learning-for-loops-in-r/">
+
+  <link rel="stylesheet" href="../../css/fonts.css" />
+  <link rel="stylesheet" href="../../css/style.css" />
+
+  
+</head>
+
+<body>
+<section id=nav>
+  <h1><a href="../../">Pete Talbert</a></h1>
+  <ul>
+    
+    <li><a href="../../about">About</a></li>
+    
+    <li><a href="https://github.com/petetalbert">GitHub</a></li>
+    
+    <li><a href="https://www.linkedin.com/in/petetalbert">LinkedIn</a></li>
+    
+    <li><a href="https://twitter.com/petetalbert">Twitter</a></li>
+    
+    <li><a href="../../index.xml">RSS</a></li>
+    
+  </ul>
+</section>
+
+<link rel="stylesheet" href="../../css/github.css" rel="stylesheet" id="theme-stylesheet">
+<script src="../../js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<section id=content>
+  <h1> Learning For Loops in R </h1>
+
+  <div id=sub-header>
+    Pete Talbert · 2018/12/10 · 4 minute read
+  </div>
+
+  <div class="entry-content">
+    
+
+
+<p>So I’m very much a noob when it comes to any formal programming. So I feel like my first real practice should be with for loops, which are a staple of programming concepts.</p>
+<p>Much of what is below is taken from Hadley Wickham’s <em>R for Data Science</em>, in particular, Chapter 21 on <a href="https://r4ds.had.co.nz/iteration.html">iteration</a>.</p>
+<div id="baumann-dataset" class="section level2">
+<h2>Baumann dataset</h2>
+<p>I’m going to use the one of the datasets that comes with the <code>car</code> package, called <code>Baumann</code>. According to the <code>carData</code> <a href="https://cran.r-project.org/web/packages/carData/carData.pdf">package overview</a>, data are “from an experimental study conducted by Baumann and Jones, as reported by Moore and McCabe (1993) students were randomly assigned to one of three experimental groups.” Seeing as though it is education data, I felt it was appropriate for this blog. I load it and make it a <code>tibble</code> below.</p>
+<pre class="r"><code>library(tidyverse)
+library(car)
+
+baumann &lt;- carData::Baumann %&gt;% 
+  as_tibble()
+
+baumann</code></pre>
+<pre><code>## # A tibble: 66 x 6
+##    group pretest.1 pretest.2 post.test.1 post.test.2 post.test.3
+##  * &lt;fct&gt;     &lt;int&gt;     &lt;int&gt;       &lt;int&gt;       &lt;int&gt;       &lt;int&gt;
+##  1 Basal         4         3           5           4          41
+##  2 Basal         6         5           9           5          41
+##  3 Basal         9         4           5           3          43
+##  4 Basal        12         6           8           5          46
+##  5 Basal        16         5          10           9          46
+##  6 Basal        15        13           9           8          45
+##  7 Basal        14         8          12           5          45
+##  8 Basal        12         7           5           5          32
+##  9 Basal        12         3           8           7          33
+## 10 Basal         8         8           7           7          39
+## # ... with 56 more rows</code></pre>
+</div>
+<div id="for-loops" class="section level2">
+<h2>For loops</h2>
+<p>I really like Hadley’s explanation of for loops as having three parts:</p>
+<ol style="list-style-type: decimal">
+<li>An output for the results to go in.</li>
+<li>The sequence that gets “looped” over.</li>
+<li>And the body that does the actual work.</li>
+</ol>
+<p>For our example, I just wanted to get the median for all the numeric test data (removing the <code>group</code> variable).</p>
+<pre class="r"><code>output &lt;- vector(&quot;double&quot;, ncol(baumann) - 1)    # 1. output; putting the data in a double vector.
+for (i in seq_along(baumann[, -1])) {            # 2. sequence; sequencing along the baumann dataframe (except the first column).
+  output[[i]] &lt;- median(baumann[, -1][[i]])      # 3. body; applying the median function to each column (except the first column).
+}
+
+output</code></pre>
+<pre><code>## [1]  9  5  8  6 45</code></pre>
+<p>That wasn’t so diffcult! Let’s try a different version of the same for loop where instead of getting the median and putting it in a double vector, I’m running a correlation test with the first pretest and putting each one in a list. I just print the first correlation test as an example.</p>
+<pre class="r"><code>output &lt;- vector(&quot;list&quot;, ncol(baumann) - 2)                              # 1. list vector this time.
+for (i in seq_along(baumann[, c(-1, -2)])) {                             # 2. same as above but removing the second column as I don&#39;t want a correlation with itself.
+  output[[i]] &lt;- cor.test(baumann$pretest.1, baumann[, c(-1, -2)][[i]])  # 3. running cor.test instead of median.
+}
+
+output[[1]] #just printing first item in the list.</code></pre>
+<pre><code>## 
+##  Pearson&#39;s product-moment correlation
+## 
+## data:  baumann$pretest.1 and baumann[, c(-1, -2)][[i]]
+## t = 2.8432, df = 64, p-value = 0.005988
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  0.1010371 0.5336592
+## sample estimates:
+##       cor 
+## 0.3348806</code></pre>
+</div>
+<div id="using-purrr-to-extract-list-elements" class="section level2">
+<h2>Using purrr to extract list elements</h2>
+<p>Now what if I wanted to extract certain elements from all these correlation tests? <code>purrr</code>’s <code>map</code> functions is a great alternative to base R’s <code>lapply</code>. I’m still attempting to understand how exactly these functions work, but in the meantime, it’s easy enough to make a tibble of important statistics from each correlation for use in a simple plot.</p>
+<pre class="r"><code>library(purrr)
+
+cor_summary &lt;- tibble(
+  x = colnames(baumann[c(-1, -2)]),
+  r = map_dbl(output, &quot;estimate&quot;),
+  statistic = map_dbl(output, &quot;statistic&quot;),
+  p_value = map_dbl(output, &quot;p.value&quot;)
+)
+
+cor_summary</code></pre>
+<pre><code>## # A tibble: 4 x 4
+##   x                 r statistic     p_value
+##   &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+## 1 pretest.2    0.335      2.84  0.00599    
+## 2 post.test.1  0.566      5.49  0.000000736
+## 3 post.test.2  0.0888     0.714 0.478      
+## 4 post.test.3 -0.0374    -0.299 0.766</code></pre>
+<pre class="r"><code>cor_summary %&gt;% 
+  ggplot(aes(x = x, y = r)) +
+  geom_col()</code></pre>
+<p><img src="../../post/2018-12-10-learning-for-loops-in-r_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+</div>
+
+  </div>
+
+  <div id=links>
+    
+      <a class="basic-alignment left" href="../../post/pivoting-data-in-sql-vs-r/">&laquo; Pivoting Data in SQL vs. R</a>
+    
+    
+  </div>
+</section>
+
+<section id="comments">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+      
+      
+      if (window.location.hostname == "localhost")
+                return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'petetalbert-rbind-io';
+      dsq.src = '//petetalbert-rbind-io.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+  
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-130291758-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-130291758-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+  
+<script src="../../js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+  
+</body>
+</html>
+
