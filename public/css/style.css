@@ -35,7 +35,7 @@ img {
 }
 pre, code {
   font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
-  background-color: #FFFFFF;
+  background-color: #f8f8f8;
 }
 code {
   font-size: 14px;
@@ -45,7 +45,7 @@ pre {
   margin-top: 0;
   margin-bottom: 16px;
   word-wrap: normal;
-  padding: 16px;
+  padding: 8px;
   overflow: auto;
   font-size: 85%;
   line-height: 1.45;

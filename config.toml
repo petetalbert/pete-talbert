@@ -22,7 +22,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
   highlightjsVersion = "9.13.1"
   highlightjsCDN = "//cdn.bootcss.com"
   highlightjsLang = ["r", "sql"]
-  highlightjsTheme = "arduino-light"
+  highlightjsTheme = "github"
   
   author = "Pete Talbert"
 
