@@ -13,8 +13,6 @@ tags:
   - spread
 ---
 
-## Intro
-
 Often with education data, I need to pivot data to go from long format to wide. For instance, I often have test scores for different test subjects of a single assessment. For one student, I will have to rows, one for one subject and one for another. This also happens for strands and domains of a test.
 
 ```{r  message=FALSE}

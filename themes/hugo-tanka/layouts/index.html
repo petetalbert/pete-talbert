@@ -6,8 +6,10 @@
       <li>
         <h2><a href="{{ .Permalink }}">{{ .Title }}</a></h2>
         <div id=date>
-          <time>{{ .Date.Format (.Site.Params.dateform | default "2006/01/02") }}</time>
+          <time>{{ .Date.Format (.Site.Params.dateform | default "January 2, 2006") }}</time>
         </div>
+        <p>{{ .Summary }} <a href="{{ .Permalink }}">Read More…</a></p>
+        
       </li>
     {{ end }}
   </ul>

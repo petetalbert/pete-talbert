@@ -9,6 +9,7 @@ theme = "hugo-tanka"
 googleAnalytics = "UA-130291758-1"
 disqusShortname = "petetalbert-rbind-io"
 disable_mathjax = false
+summaryLength = 30
 
 [taxonomies]
   category = "categories"

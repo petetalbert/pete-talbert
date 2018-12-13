@@ -17,9 +17,7 @@
       <pubDate>Mon, 10 Dec 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/learning-for-loops-in-r/</guid>
-      <description>I’m very much a beginner when it comes to any formal programming. So I feel like my first real practice should be with for loops, which are a staple of programming concepts.
-Much of what is below is taken from Hadley Wickham’s R for Data Science, in particular, Chapter 21 on iteration.
-Baumann datasetI’m going to use the one of the datasets that comes with the car package, called Baumann.</description>
+      <description>I’m very much a beginner when it comes to any formal programming. So I feel like my first real practice should be with for loops, which are a staple of programming concepts.</description>
     </item>
     
   </channel>

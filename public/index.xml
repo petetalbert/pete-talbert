@@ -17,9 +17,7 @@
       <pubDate>Mon, 10 Dec 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/learning-for-loops-in-r/</guid>
-      <description>I’m very much a beginner when it comes to any formal programming. So I feel like my first real practice should be with for loops, which are a staple of programming concepts.
-Much of what is below is taken from Hadley Wickham’s R for Data Science, in particular, Chapter 21 on iteration.
-Baumann datasetI’m going to use the one of the datasets that comes with the car package, called Baumann.</description>
+      <description>I’m very much a beginner when it comes to any formal programming. So I feel like my first real practice should be with for loops, which are a staple of programming concepts.</description>
     </item>
     
     <item>
@@ -28,8 +26,7 @@ Baumann datasetI’m going to use the one of the datasets that comes with the c
       <pubDate>Thu, 22 Nov 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/pivoting-data-in-sql-vs-r/</guid>
-      <description>IntroOften with education data, I need to pivot data to go from long format to wide. For instance, I often have test scores for different test subjects of a single assessment. For one student, I will have to rows, one for one subject and one for another. This also happens for strands and domains of a test.
-library(tidyverse)library(DBI)library(odbc)library(knitr)con &amp;lt;- dbConnect(odbc::odbc(), &amp;quot;nicodemus&amp;quot;)query &amp;lt;- dbSendQuery(con, &amp;quot;select * from Demo.</description>
+      <description>IntroOften with education data, I need to pivot data to go from long format to wide. For instance, I often have test scores for different test subjects of a single assessment.</description>
     </item>
     
     <item>
@@ -38,9 +35,7 @@ library(tidyverse)library(DBI)library(odbc)library(knitr)con &amp;lt;- dbCon
       <pubDate>Fri, 16 Nov 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/ggplot2-geom-bar-labeling/</guid>
-      <description>In educational data analysis, I am constantly looking at counts and proportions. I’ve found the easiest way to display these results with categorical variables like demographics is to use stacked bar charts and especially 100% stacked charts.
-I am using much of what is discussed here out of the context of ggplotAssist.
-ggplot2First, for this post, I am using the following packages and mtcars as a dataset. I always make sure my dataframes are tibbles (probably not necessary).</description>
+      <description>In educational data analysis, I am constantly looking at counts and proportions. I’ve found the easiest way to display these results with categorical variables like demographics is to use stacked bar charts and especially 100% stacked charts.</description>
     </item>
     
     <item>
@@ -49,9 +44,7 @@ ggplot2First, for this post, I am using the following packages and mtcars as a 
       <pubDate>Thu, 15 Nov 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/connecting-to-ms-sql-server-in-r/</guid>
-      <description>There are dozens of ways to connect to an MS SQL Server database in R. You can use a number of packages, and within those packages, there are various methods for connecting and running SQL queries via an R script.
-The easiest method I’ve found for a traditional Windows user with access to an MS SQL Server instance is what I’m going to demonstrate.
-Setting up a System DSNIn Windows, if you hit the start menu and search for “odbc”, you’ll get an app called “ODBC Data Source Administrator (64-bit).</description>
+      <description>There are dozens of ways to connect to an MS SQL Server database in R. You can use a number of packages, and within those packages, there are various methods for connecting and running SQL queries via an R script.</description>
     </item>
     
     <item>
@@ -60,12 +53,7 @@ Setting up a System DSNIn Windows, if you hit the start menu and search for “
       <pubDate>Tue, 13 Nov 2018 00:00:00 +0000</pubDate>
       
       <guid>/about/</guid>
-      <description>Hello! My name is Pete Talbert, and I work as a data analyst in Minnesota. I have only been doing this line of work for 3 years, and I have worked exclusively in education settings, both higher ed and K-12.
-Education M.A. in Organizational Leadership, Policy, and Development, 2017
-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Evaluation Studies
-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Minor in Educational Psychology, Quantitative Methods in Education (QME)
-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;University of Minnesota - Twin Cities
-B.A. in Philosophy, 2010</description>
+      <description>Hello! My name is Pete Talbert, and I work as a data analyst in Minnesota. I have only been doing this line of work for 3 years, and I have worked exclusively in education settings, both higher ed and K-12.</description>
     </item>
     
     <item>

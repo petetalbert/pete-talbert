@@ -17,8 +17,7 @@
       <pubDate>Thu, 22 Nov 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/pivoting-data-in-sql-vs-r/</guid>
-      <description>IntroOften with education data, I need to pivot data to go from long format to wide. For instance, I often have test scores for different test subjects of a single assessment. For one student, I will have to rows, one for one subject and one for another. This also happens for strands and domains of a test.
-library(tidyverse)library(DBI)library(odbc)library(knitr)con &amp;lt;- dbConnect(odbc::odbc(), &amp;quot;nicodemus&amp;quot;)query &amp;lt;- dbSendQuery(con, &amp;quot;select * from Demo.</description>
+      <description>IntroOften with education data, I need to pivot data to go from long format to wide. For instance, I often have test scores for different test subjects of a single assessment.</description>
     </item>
     
     <item>
@@ -27,9 +26,7 @@ library(tidyverse)library(DBI)library(odbc)library(knitr)con &amp;lt;- dbCon
       <pubDate>Thu, 15 Nov 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/connecting-to-ms-sql-server-in-r/</guid>
-      <description>There are dozens of ways to connect to an MS SQL Server database in R. You can use a number of packages, and within those packages, there are various methods for connecting and running SQL queries via an R script.
-The easiest method I’ve found for a traditional Windows user with access to an MS SQL Server instance is what I’m going to demonstrate.
-Setting up a System DSNIn Windows, if you hit the start menu and search for “odbc”, you’ll get an app called “ODBC Data Source Administrator (64-bit).</description>
+      <description>There are dozens of ways to connect to an MS SQL Server database in R. You can use a number of packages, and within those packages, there are various methods for connecting and running SQL queries via an R script.</description>
     </item>
     
     <item>
