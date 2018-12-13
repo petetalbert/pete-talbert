@@ -40,6 +40,7 @@ pre, code {
 code {
   font-size: 14px;
   padding: 4px;
+  background-color: #f8f8f8;
 }
 pre {
   margin-top: 0;
