@@ -19,6 +19,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
 [params]
   sitename = "Pete Talbert"
+  description = "A space to collect my random thoughts and learning in educational data analysis."
   
   highlightjsVersion = "9.13.1"
   highlightjsCDN = "//cdn.bootcss.com"
