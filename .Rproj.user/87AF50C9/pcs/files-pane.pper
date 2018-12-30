@@ -1,8 +1,8 @@
 {
-    "path" : "~/R/Blog/standard-error/content",
+    "path" : "~/R/Blog/standard-error/themes/hugo-tanka/layouts/partials",
     "sortOrder" : [
         {
-            "ascending" : false,
+            "ascending" : true,
             "columnIndex" : 2
         },
         {
