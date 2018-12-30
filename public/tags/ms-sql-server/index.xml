@@ -17,7 +17,7 @@
       <pubDate>Thu, 22 Nov 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/pivoting-data-in-sql-vs-r/</guid>
-      <description>IntroOften with education data, I need to pivot data to go from long format to wide. For instance, I often have test scores for different test subjects of a single assessment.</description>
+      <description>Often with education data, I need to pivot data to go from long format to wide. For instance, I often have test scores for different test subjects of a single assessment.</description>
     </item>
     
     <item>

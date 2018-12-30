@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="A space to collect my random thoughts and learning in educational data analysis.">
+
+  <link rel="icon" type="image/png" href="../../favicon.png">
+  
+  <title>
+    
+    
+     Working more with the Baumann dataset 
+    
+  </title>
+  <link rel="canonical" href="../../post/working-more-with-the-baumann-dataset/">
+
+  <link rel="stylesheet" href="../../css/fonts.css" />
+  <link rel="stylesheet" href="../../css/style.css" />
+
+  
+</head>
+
+<body>
+<section id=nav>
+  <h1><a href="../../">Pete Talbert</a></h1>
+  <ul>
+    
+    <li><a href="../../about">About</a></li>
+    
+    <li><a href="https://github.com/petetalbert">GitHub</a></li>
+    
+    <li><a href="https://www.linkedin.com/in/petetalbert">LinkedIn</a></li>
+    
+    <li><a href="https://twitter.com/petetalbert">Twitter</a></li>
+    
+    <li><a href="../../index.xml">RSS</a></li>
+    
+  </ul>
+</section>
+
+<link rel="stylesheet" href="../../css/github.css" rel="stylesheet" id="theme-stylesheet">
+<script src="../../js/highlight.pack.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+<section id=content>
+  <h1> Working more with the Baumann dataset </h1>
+
+  <div id=sub-header>
+    Pete Talbert · Saturday, December 29, 2018 · 4 minute read
+  </div>
+
+  <div class="entry-content">
+    
+
+
+<p>As a way to continue to teach myself statistics and learn new techniques (including some machine learning methods I am <em>very</em> unfamiliar with), I am taking Stanford’s self-paced <a href="https://lagunita.stanford.edu/courses/HumanitiesSciences/StatLearning/Winter2016/about">statistical learning course</a>. You can find the textbook for the course here; I have found it extremely insightful so far, seeing as the authors are some of the pioneers of modern data science methods today.</p>
+<p>In it, they talk in-depth about the bias-variance trade off. In general, more flexible models have higher variance; that is, models that fit training data too closely (highly flexible models) will vary considerably given new data. This is the case of <em>overfitting</em>, where the model is picking up random noise rather than the true signal or function. However, more flexible models have less bias, where bias refers to the error introduced by approximating a complicated relationship with a model that is far too simplistic. Ordinary least squares regression is typically used as the overly simplistic model that contains high bias.</p>
+<div id="comparing-two-models" class="section level3">
+<h3>Comparing two models</h3>
+<p>For this post, I will again use the <code>Baumann</code> dataset from the <code>car</code> package, as the data are test score data from an educational intervention.</p>
+<pre class="r"><code>library(tidyverse)
+library(car)
+library(broom)
+library(knitr)
+
+baumann &lt;- carData::Baumann %&gt;% 
+  as_tibble()
+
+baumann</code></pre>
+<pre><code>## # A tibble: 66 x 6
+##    group pretest.1 pretest.2 post.test.1 post.test.2 post.test.3
+##  * &lt;fct&gt;     &lt;int&gt;     &lt;int&gt;       &lt;int&gt;       &lt;int&gt;       &lt;int&gt;
+##  1 Basal         4         3           5           4          41
+##  2 Basal         6         5           9           5          41
+##  3 Basal         9         4           5           3          43
+##  4 Basal        12         6           8           5          46
+##  5 Basal        16         5          10           9          46
+##  6 Basal        15        13           9           8          45
+##  7 Basal        14         8          12           5          45
+##  8 Basal        12         7           5           5          32
+##  9 Basal        12         3           8           7          33
+## 10 Basal         8         8           7           7          39
+## # ... with 56 more rows</code></pre>
+<p>Below I make three plots, one for each intervention, and fit two models for each group: a simple linear regression in blue, and another linear regression with a cubic term.</p>
+<pre class="r"><code>baumann %&gt;% 
+  ggplot(aes(x = pretest.1, y = post.test.1)) +
+  geom_point() +
+  geom_smooth(method = &quot;lm&quot;, se = FALSE, aes(color = &quot;simple&quot;)) +
+  geom_smooth(method = &quot;lm&quot;, formula = y ~ I(x^3), se = FALSE, aes(color = &quot;cubic&quot;)) +
+  facet_wrap(~ group) +
+  scale_colour_manual(name = &quot;model&quot;, values=c(&quot;blue&quot;, &quot;green&quot;))</code></pre>
+<p><img src="../../post/2018-12-29-working-more-with-the-baumann-dataset_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>It looks like for the most part, the simple regression does no worse than the cubic term, but in the last panel for the <code>Strat</code> intervention, the relationship may be more cubic. How would we compare these models more closely?</p>
+<p>I think using the <code>purrr</code> and <code>broom</code> packages can really behoove us. If did this all manually, I would have to fit 2 x 3 = 6 separate models and compare the <code>summary</code> outputs for each. Instead, with the <code>tidyverse</code> packages, I can nest the data, fit the models and then unnest and use the <code>glance</code> function to analyze the model fit statistics in one easy-to-read table.</p>
+<p>The simple linear model:</p>
+<pre class="r"><code>#simple model
+lm.1 &lt;- baumann %&gt;%
+  nest(-group) %&gt;% 
+  mutate(
+    model = &quot;simple&quot;,
+    fit = map(data, ~ lm(post.test.1 ~ pretest.1, data = .x)),
+    glance = map(fit, glance)
+  ) %&gt;% 
+  unnest(glance, .drop = TRUE) %&gt;% 
+  select(c(1:3, 5:7)) #just selecting the relevant statistics from glance.
+
+#cubic model
+lm.2 &lt;- baumann %&gt;%
+  nest(-group) %&gt;% 
+  mutate(
+    model = &quot;cubic&quot;,
+    fit = map(data, ~ lm(post.test.1 ~ I(pretest.1^3), data = .x)),
+    glance = map(fit, glance)
+  ) %&gt;% 
+  unnest(glance, .drop = TRUE) %&gt;% 
+  select(c(1:3, 5:7)) #just selecting the relevant statistics from glance.
+
+#rbinding the two glance outputs
+models &lt;- rbind(lm.1, lm.2)
+models</code></pre>
+<pre><code>## # A tibble: 6 x 6
+##   group model  r.squared sigma statistic   p.value
+##   &lt;fct&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 Basal simple     0.251  2.45      6.70 0.0176   
+## 2 DRTA  simple     0.461  2.05     17.1  0.000512 
+## 3 Strat simple     0.557  2.68     25.1  0.0000667
+## 4 Basal cubic      0.326  2.33      9.69 0.00547  
+## 5 DRTA  cubic      0.426  2.12     14.8  0.000995 
+## 6 Strat cubic      0.575  2.62     27.1  0.0000433</code></pre>
+<p>Why not plot some of these outputs for easier interpretation?</p>
+<pre class="r"><code>models %&gt;% 
+  ggplot(aes(x = group, y = r.squared, fct_rev(model))) +
+  geom_bar(stat = &quot;identity&quot;, position = &quot;dodge&quot;)</code></pre>
+<p><img src="../../post/2018-12-29-working-more-with-the-baumann-dataset_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>models %&gt;% 
+  ggplot(aes(x = group, y = sigma, fill = fct_rev(model))) +
+  geom_bar(stat = &quot;identity&quot;, position = &quot;dodge&quot;) +
+  scale_fill_manual(&quot;model&quot;, values = c(&quot;cubic&quot; = &quot;green&quot;, &quot;simple&quot; = &quot;blue&quot;))</code></pre>
+<p><img src="../../post/2018-12-29-working-more-with-the-baumann-dataset_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>We can see briefly that the cubic model does well with <code>Strat</code> group in particular (like we saw in the initial scatterplot), but does not fit the data well for the <code>DRTA</code> intervention.</p>
+</div>
+
+  </div>
+
+  <div id=links>
+    
+      <a class="basic-alignment left" href="../../post/learning-for-loops-in-r/">&laquo; Learning For Loops in R</a>
+    
+    
+  </div>
+</section>
+
+<section id="comments">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+      
+      
+      if (window.location.hostname == "localhost")
+                return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'petetalbert-rbind-io';
+      dsq.src = '//petetalbert-rbind-io.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+  
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-130291758-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-130291758-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+  
+
+  
+</body>
+</html>
+

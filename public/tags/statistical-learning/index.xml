@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Regression on Pete Talbert</title>
-    <link>/tags/regression/</link>
-    <description>Recent content in Regression on Pete Talbert</description>
+    <title>Statistical Learning on Pete Talbert</title>
+    <link>/tags/statistical-learning/</link>
+    <description>Recent content in Statistical Learning on Pete Talbert</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Sat, 29 Dec 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/regression/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/statistical-learning/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -18,15 +18,6 @@
       
       <guid>/post/working-more-with-the-baumann-dataset/</guid>
       <description>As a way to continue to teach myself statistics and learn new techniques (including some machine learning methods I am very unfamiliar with), I am taking Stanford’s self-paced statistical learning course.</description>
-    </item>
-    
-    <item>
-      <title>Learning For Loops in R</title>
-      <link>/post/learning-for-loops-in-r/</link>
-      <pubDate>Mon, 10 Dec 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/post/learning-for-loops-in-r/</guid>
-      <description>I’m very much a beginner when it comes to any formal programming. So I feel like my first real practice should be with for loops, which are a staple of programming concepts.</description>
     </item>
     
   </channel>

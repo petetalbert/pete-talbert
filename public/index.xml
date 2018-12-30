@@ -6,10 +6,19 @@
     <description>Recent content on Pete Talbert</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 10 Dec 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 29 Dec 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Working more with the Baumann dataset</title>
+      <link>/post/working-more-with-the-baumann-dataset/</link>
+      <pubDate>Sat, 29 Dec 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/working-more-with-the-baumann-dataset/</guid>
+      <description>As a way to continue to teach myself statistics and learn new techniques (including some machine learning methods I am very unfamiliar with), I am taking Stanford’s self-paced statistical learning course.</description>
+    </item>
     
     <item>
       <title>Learning For Loops in R</title>
@@ -26,7 +35,7 @@
       <pubDate>Thu, 22 Nov 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/pivoting-data-in-sql-vs-r/</guid>
-      <description>IntroOften with education data, I need to pivot data to go from long format to wide. For instance, I often have test scores for different test subjects of a single assessment.</description>
+      <description>Often with education data, I need to pivot data to go from long format to wide. For instance, I often have test scores for different test subjects of a single assessment.</description>
     </item>
     
     <item>

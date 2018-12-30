@@ -41,7 +41,7 @@
     <item>
       <title>Regression</title>
       <link>/tags/regression/</link>
-      <pubDate>Mon, 10 Dec 2018 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 29 Dec 2018 00:00:00 +0000</pubDate>
       
       <guid>/tags/regression/</guid>
       <description></description>
@@ -53,6 +53,15 @@
       <pubDate>Thu, 22 Nov 2018 00:00:00 +0000</pubDate>
       
       <guid>/tags/spread/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Statistical Learning</title>
+      <link>/tags/statistical-learning/</link>
+      <pubDate>Sat, 29 Dec 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/statistical-learning/</guid>
       <description></description>
     </item>
     
