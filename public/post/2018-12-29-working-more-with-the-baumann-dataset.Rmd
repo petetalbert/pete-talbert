@@ -32,6 +32,14 @@ baumann
 
 Below I make three plots, one for each intervention, and fit two models for each group: a simple linear regression in blue, and another linear regression with a quadratic term.
 
+\begin{equation}
+y = \beta_0 + \beta_1 x + \varepsilon
+\end{equation}
+
+\begin{equation}
+y = \beta_0 + \beta_1 x + \beta_2 x^2 + \varepsilon
+\end{equation}
+
 ```{r}
 baumann %>% 
   ggplot(aes(x = pretest.1, y = post.test.1)) +

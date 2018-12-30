@@ -41,6 +41,12 @@ baumann</code></pre>
 ## 10 Basal         8         8           7           7          39
 ## # ... with 56 more rows</code></pre>
 <p>Below I make three plots, one for each intervention, and fit two models for each group: a simple linear regression in blue, and another linear regression with a quadratic term.</p>
+<p><span class="math display">\[\begin{equation}
+y = \beta_0 + \beta_1 x + \varepsilon
+\end{equation}\]</span></p>
+<p><span class="math display">\[\begin{equation}
+y = \beta_0 + \beta_1 x + \beta_2 x^2 + \varepsilon
+\end{equation}\]</span></p>
 <pre class="r"><code>baumann %&gt;% 
   ggplot(aes(x = pretest.1, y = post.test.1)) +
   geom_point() +
