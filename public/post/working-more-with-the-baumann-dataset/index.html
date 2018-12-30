@@ -59,8 +59,8 @@
     
 
 
-<p>As a way to continue to teach myself statistics and learn new techniques (including some machine learning methods I am <em>very</em> unfamiliar with), I am taking Stanford’s self-paced <a href="https://lagunita.stanford.edu/courses/HumanitiesSciences/StatLearning/Winter2016/about">statistical learning course</a>. You can find the textbook for the course here; I have found it extremely insightful so far, seeing as the authors are some of the pioneers of modern data science methods today.</p>
-<p>In it, they talk in-depth about the bias-variance trade off. In general, more flexible models have higher variance; that is, models that fit training data too closely (highly flexible models) will vary considerably given new data. This is the case of <em>overfitting</em>, where the model is picking up random noise rather than the true signal or function. However, more flexible models have less bias, where bias refers to the error introduced by approximating a complicated relationship with a model that is far too simplistic. Ordinary least squares regression is typically used as the overly simplistic model that contains high bias.</p>
+<p>As a way to continue to teach myself statistics and learn new techniques (including some machine learning methods I am <em>very</em> unfamiliar with), I am taking Stanford’s self-paced <a href="https://lagunita.stanford.edu/courses/HumanitiesSciences/StatLearning/Winter2016/about">statistical learning course</a>. You can find the textbook for the course <a href="http://www-bcf.usc.edu/~gareth/ISL/">here</a>; I have found it extremely insightful so far, seeing as the authors are some of the pioneers of modern data science methods today.</p>
+<p>In it, they talk in-depth about the bias-variance trade off. In general, more flexible models have higher variance; that is, models that fit training data too closely (highly flexible models) will vary considerably given new data. This is the case of <em>overfitting</em>, where the model is picking up random noise rather than the true signal or function. However, more flexible models have less bias, where bias refers to the error introduced by approximating a complicated relationship with a model that is far too simplistic. Ordinary least squares regression is typically used as the overly simplistic model that has high bias.</p>
 <div id="comparing-two-models" class="section level3">
 <h3>Comparing two models</h3>
 <p>For this post, I will again use the <code>Baumann</code> dataset from the <code>car</code> package, as the data are test score data from an educational intervention.</p>
@@ -87,17 +87,20 @@ baumann</code></pre>
 ##  9 Basal        12         3           8           7          33
 ## 10 Basal         8         8           7           7          39
 ## # ... with 56 more rows</code></pre>
-<p>Below I make three plots, one for each intervention, and fit two models for each group: a simple linear regression in blue, and another linear regression with a cubic term.</p>
+<p>Below I make three plots, one for each intervention, and fit two models for each group: a simple linear regression in blue, and another linear regression with a quadratic term.</p>
 <pre class="r"><code>baumann %&gt;% 
   ggplot(aes(x = pretest.1, y = post.test.1)) +
   geom_point() +
   geom_smooth(method = &quot;lm&quot;, se = FALSE, aes(color = &quot;simple&quot;)) +
-  geom_smooth(method = &quot;lm&quot;, formula = y ~ I(x^3), se = FALSE, aes(color = &quot;cubic&quot;)) +
+  geom_smooth(method = &quot;lm&quot;, formula = y ~ x + I(x^2), se = FALSE, aes(color = &quot;quadratic&quot;)) +
   facet_wrap(~ group) +
   scale_colour_manual(name = &quot;model&quot;, values=c(&quot;blue&quot;, &quot;green&quot;))</code></pre>
 <p><img src="../../post/2018-12-29-working-more-with-the-baumann-dataset_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
-<p>It looks like for the most part, the simple regression does no worse than the cubic term, but in the last panel for the <code>Strat</code> intervention, the relationship may be more cubic. How would we compare these models more closely?</p>
-<p>I think using the <code>purrr</code> and <code>broom</code> packages can really behoove us. If did this all manually, I would have to fit 2 x 3 = 6 separate models and compare the <code>summary</code> outputs for each. Instead, with the <code>tidyverse</code> packages, I can nest the data, fit the models and then unnest and use the <code>glance</code> function to analyze the model fit statistics in one easy-to-read table.</p>
+<p>It looks like for the most part, the simple regression does no worse than the quadratic term, but in the last panel for the <code>Strat</code> intervention, the relationship may be more curved. How would we compare these models more closely?</p>
+</div>
+<div id="nest-fit-unnest" class="section level3">
+<h3>Nest-Fit-Unnest</h3>
+<p>I think using the <code>purrr</code> and <code>broom</code> packages can really benefit us. Here, I’m borrowing from one of <code>broom</code>’s <a href="https://cran.r-project.org/web/packages/broom/vignettes/broom_and_dplyr.html">vignettes</a> called “broom and dplyr.” In it, they recommend a <code>nest-fit-unnest</code> workflow to create multiple simple models for comparison. If I fit all the models manually, I would have to fit 2 x 3 = 6 separate models and compare the <code>summary</code> outputs for each. Instead, with the <code>tidyverse</code> packages, I can nest the data, fit the models and then unnest and use the <code>glance</code> function to analyze the model fit statistics in one easy-to-read table.</p>
 <p>The simple linear model:</p>
 <pre class="r"><code>#simple model
 lm.1 &lt;- baumann %&gt;%
@@ -110,12 +113,12 @@ lm.1 &lt;- baumann %&gt;%
   unnest(glance, .drop = TRUE) %&gt;% 
   select(c(1:3, 5:7)) #just selecting the relevant statistics from glance.
 
-#cubic model
+#quadratic model
 lm.2 &lt;- baumann %&gt;%
   nest(-group) %&gt;% 
   mutate(
-    model = &quot;cubic&quot;,
-    fit = map(data, ~ lm(post.test.1 ~ I(pretest.1^3), data = .x)),
+    model = &quot;quadratic&quot;,
+    fit = map(data, ~ lm(post.test.1 ~ pretest.1 + I(pretest.1^2), data = .x)),
     glance = map(fit, glance)
   ) %&gt;% 
   unnest(glance, .drop = TRUE) %&gt;% 
@@ -125,26 +128,26 @@ lm.2 &lt;- baumann %&gt;%
 models &lt;- rbind(lm.1, lm.2)
 models</code></pre>
 <pre><code>## # A tibble: 6 x 6
-##   group model  r.squared sigma statistic   p.value
-##   &lt;fct&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 Basal simple     0.251  2.45      6.70 0.0176   
-## 2 DRTA  simple     0.461  2.05     17.1  0.000512 
-## 3 Strat simple     0.557  2.68     25.1  0.0000667
-## 4 Basal cubic      0.326  2.33      9.69 0.00547  
-## 5 DRTA  cubic      0.426  2.12     14.8  0.000995 
-## 6 Strat cubic      0.575  2.62     27.1  0.0000433</code></pre>
+##   group model     r.squared sigma statistic   p.value
+##   &lt;fct&gt; &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 Basal simple        0.251  2.45      6.70 0.0176   
+## 2 DRTA  simple        0.461  2.05     17.1  0.000512 
+## 3 Strat simple        0.557  2.68     25.1  0.0000667
+## 4 Basal quadratic     0.349  2.35      5.10 0.0169   
+## 5 DRTA  quadratic     0.463  2.10      8.17 0.00274  
+## 6 Strat quadratic     0.572  2.70     12.7  0.000316</code></pre>
 <p>Why not plot some of these outputs for easier interpretation?</p>
 <pre class="r"><code>models %&gt;% 
   ggplot(aes(x = group, y = r.squared, fill = fct_rev(model))) +
   geom_bar(stat = &quot;identity&quot;, position = &quot;dodge&quot;) +
-  scale_fill_manual(&quot;model&quot;, values = c(&quot;cubic&quot; = &quot;green&quot;, &quot;simple&quot; = &quot;blue&quot;))</code></pre>
+  scale_fill_manual(&quot;model&quot;, values = c(&quot;quadratic&quot; = &quot;green&quot;, &quot;simple&quot; = &quot;blue&quot;))</code></pre>
 <p><img src="../../post/2018-12-29-working-more-with-the-baumann-dataset_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <pre class="r"><code>models %&gt;% 
   ggplot(aes(x = group, y = sigma, fill = fct_rev(model))) +
   geom_bar(stat = &quot;identity&quot;, position = &quot;dodge&quot;) +
-  scale_fill_manual(&quot;model&quot;, values = c(&quot;cubic&quot; = &quot;green&quot;, &quot;simple&quot; = &quot;blue&quot;))</code></pre>
+  scale_fill_manual(&quot;model&quot;, values = c(&quot;quadratic&quot; = &quot;green&quot;, &quot;simple&quot; = &quot;blue&quot;))</code></pre>
 <p><img src="../../post/2018-12-29-working-more-with-the-baumann-dataset_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<p>We can see briefly that the cubic model does well with <code>Strat</code> group in particular (like we saw in the initial scatterplot), but does not fit the data well for the <code>DRTA</code> intervention.</p>
+<p>We can see briefly that the quadratic model does well with <code>Strat</code> group in particular (like we saw in the initial scatterplot), but does not fit the data well for the <code>DRTA</code> intervention. However, the sigma (or residual standard error) for the strat quadratic model was slightly higher, so we may not want that tradeoff.</p>
 </div>
 
   </div>

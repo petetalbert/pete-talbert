@@ -10,9 +10,9 @@ tags:
   - regression
 ---
 
-As a way to continue to teach myself statistics and learn new techniques (including some machine learning methods I am *very* unfamiliar with), I am taking Stanford's self-paced [statistical learning course](https://lagunita.stanford.edu/courses/HumanitiesSciences/StatLearning/Winter2016/about). You can find the textbook for the course here; I have found it extremely insightful so far, seeing as the authors are some of the pioneers of modern data science methods today. 
+As a way to continue to teach myself statistics and learn new techniques (including some machine learning methods I am *very* unfamiliar with), I am taking Stanford's self-paced [statistical learning course](https://lagunita.stanford.edu/courses/HumanitiesSciences/StatLearning/Winter2016/about). You can find the textbook for the course [here](http://www-bcf.usc.edu/~gareth/ISL/); I have found it extremely insightful so far, seeing as the authors are some of the pioneers of modern data science methods today. 
 
-In it, they talk in-depth about the bias-variance trade off. In general, more flexible models have higher variance; that is, models that fit training data too closely (highly flexible models) will vary considerably given new data. This is the case of *overfitting*, where the model is picking up random noise rather than the true signal or function. However, more flexible models have less bias, where bias refers to the error introduced by approximating a complicated relationship with a model that is far too simplistic. Ordinary least squares regression is typically used as the overly simplistic model that contains high bias.
+In it, they talk in-depth about the bias-variance trade off. In general, more flexible models have higher variance; that is, models that fit training data too closely (highly flexible models) will vary considerably given new data. This is the case of *overfitting*, where the model is picking up random noise rather than the true signal or function. However, more flexible models have less bias, where bias refers to the error introduced by approximating a complicated relationship with a model that is far too simplistic. Ordinary least squares regression is typically used as the overly simplistic model that has high bias.
 
 ### Comparing two models
 
@@ -30,21 +30,23 @@ baumann <- carData::Baumann %>%
 baumann
 ```
 
-Below I make three plots, one for each intervention, and fit two models for each group: a simple linear regression in blue, and another linear regression with a cubic term.
+Below I make three plots, one for each intervention, and fit two models for each group: a simple linear regression in blue, and another linear regression with a quadratic term.
 
 ```{r}
 baumann %>% 
   ggplot(aes(x = pretest.1, y = post.test.1)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, aes(color = "simple")) +
-  geom_smooth(method = "lm", formula = y ~ I(x^3), se = FALSE, aes(color = "cubic")) +
+  geom_smooth(method = "lm", formula = y ~ x + I(x^2), se = FALSE, aes(color = "quadratic")) +
   facet_wrap(~ group) +
   scale_colour_manual(name = "model", values=c("blue", "green"))
 ```
 
-It looks like for the most part, the simple regression does no worse than the cubic term, but in the last panel for the `Strat` intervention, the relationship may be more cubic. How would we compare these models more closely?
+It looks like for the most part, the simple regression does no worse than the quadratic term, but in the last panel for the `Strat` intervention, the relationship may be more curved. How would we compare these models more closely?
 
-I think using the `purrr` and `broom` packages can really behoove us. If did this all manually, I would have to fit 2 x 3 = 6 separate models and compare the `summary` outputs for each. Instead, with the `tidyverse` packages, I can nest the data, fit the models and then unnest and use the `glance` function to analyze the model fit statistics in one easy-to-read table.
+### Nest-Fit-Unnest
+
+I think using the `purrr` and `broom` packages can really benefit us. Here, I'm borrowing from one of `broom`'s [vignettes](https://cran.r-project.org/web/packages/broom/vignettes/broom_and_dplyr.html) called "broom and dplyr." In it, they recommend a `nest-fit-unnest` workflow to create multiple simple models for comparison. If I fit all the models manually, I would have to fit 2 x 3 = 6 separate models and compare the `summary` outputs for each. Instead, with the `tidyverse` packages, I can nest the data, fit the models and then unnest and use the `glance` function to analyze the model fit statistics in one easy-to-read table.
 
 The simple linear model:
 
@@ -60,12 +62,12 @@ lm.1 <- baumann %>%
   unnest(glance, .drop = TRUE) %>% 
   select(c(1:3, 5:7)) #just selecting the relevant statistics from glance.
 
-#cubic model
+#quadratic model
 lm.2 <- baumann %>%
   nest(-group) %>% 
   mutate(
-    model = "cubic",
-    fit = map(data, ~ lm(post.test.1 ~ I(pretest.1^3), data = .x)),
+    model = "quadratic",
+    fit = map(data, ~ lm(post.test.1 ~ pretest.1 + I(pretest.1^2), data = .x)),
     glance = map(fit, glance)
   ) %>% 
   unnest(glance, .drop = TRUE) %>% 
@@ -82,17 +84,17 @@ Why not plot some of these outputs for easier interpretation?
 models %>% 
   ggplot(aes(x = group, y = r.squared, fill = fct_rev(model))) +
   geom_bar(stat = "identity", position = "dodge") +
-  scale_fill_manual("model", values = c("cubic" = "green", "simple" = "blue"))
+  scale_fill_manual("model", values = c("quadratic" = "green", "simple" = "blue"))
 ```
 
 ```{r}
 models %>% 
   ggplot(aes(x = group, y = sigma, fill = fct_rev(model))) +
   geom_bar(stat = "identity", position = "dodge") +
-  scale_fill_manual("model", values = c("cubic" = "green", "simple" = "blue"))
+  scale_fill_manual("model", values = c("quadratic" = "green", "simple" = "blue"))
 ```
 
-We can see briefly that the cubic model does well with `Strat` group in particular (like we saw in the initial scatterplot), but does not fit the data well for the `DRTA` intervention.
+We can see briefly that the quadratic model does well with `Strat` group in particular (like we saw in the initial scatterplot), but does not fit the data well for the `DRTA` intervention. However, the sigma (or residual standard error) for the strat quadratic model was slightly higher, so we may not want that tradeoff.
 
 
 
