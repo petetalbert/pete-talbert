@@ -80,8 +80,9 @@ Why not plot some of these outputs for easier interpretation?
 
 ```{r}
 models %>% 
-  ggplot(aes(x = group, y = r.squared, fct_rev(model))) +
-  geom_bar(stat = "identity", position = "dodge")
+  ggplot(aes(x = group, y = r.squared, fill = fct_rev(model))) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual("model", values = c("cubic" = "green", "simple" = "blue"))
 ```
 
 ```{r}

@@ -135,8 +135,9 @@ models</code></pre>
 ## 6 Strat cubic      0.575  2.62     27.1  0.0000433</code></pre>
 <p>Why not plot some of these outputs for easier interpretation?</p>
 <pre class="r"><code>models %&gt;% 
-  ggplot(aes(x = group, y = r.squared, fct_rev(model))) +
-  geom_bar(stat = &quot;identity&quot;, position = &quot;dodge&quot;)</code></pre>
+  ggplot(aes(x = group, y = r.squared, fill = fct_rev(model))) +
+  geom_bar(stat = &quot;identity&quot;, position = &quot;dodge&quot;) +
+  scale_fill_manual(&quot;model&quot;, values = c(&quot;cubic&quot; = &quot;green&quot;, &quot;simple&quot; = &quot;blue&quot;))</code></pre>
 <p><img src="../../post/2018-12-29-working-more-with-the-baumann-dataset_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <pre class="r"><code>models %&gt;% 
   ggplot(aes(x = group, y = sigma, fill = fct_rev(model))) +
