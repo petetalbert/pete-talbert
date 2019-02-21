@@ -1,0 +1,50 @@
+---
+title: Plotting factors with `forcats`
+author: Pete Talbert
+date: '2019-02-21'
+slug: ggplot2-tips-for-categories
+categories:
+  - R
+tags:
+  - tidyverse
+---
+
+Often I find myself with a *lot* of categorical variables that I want to plot, where I'm really only interested in the most common ones that bubble to the surface. This post is a mini demonstration of how I plot just the top 5 or top 10 categories for a plot. I posted about this [here](https://stackoverflow.com/questions/54260789/selecting-top-n-groups-with-dplyr-then-plotting-other-variables); thanks to all who commented!
+
+### Getting started
+
+To start I am going to load `forats::gss_cat` as my example dataset and make a simple time series of protestant denominations.
+
+```{r, message=FALSE}
+library(tidyverse)
+
+theme_set(theme_minimal())
+
+gss <- forcats::gss_cat
+
+gss %>% 
+  filter(relig == "Protestant") %>% 
+  count(year, denom) %>%
+  mutate(denom = fct_reorder(denom, n, .desc = TRUE)) %>% 
+  ggplot(aes(x = year, y = n, color = denom)) +
+  geom_line() +
+  scale_colour_viridis_d()
+```
+
+### Plotting the top 5
+
+Wow, what an extremely ugly and meaningless plot! What if I wanted to just plot the overall top 5 protestant denominations in the dataset? There are a bunch of ways to do this, but maybe the easiest I've found is to filter down to those denominations with dplyr and save that as a character vector. Then in a second step, to just filter on the pipe for your plot.
+
+```{r}
+protest_top <- gss %>% 
+  filter(relig == "Protestant") %>% 
+  count(denom, sort = TRUE) %>% 
+  head(5) %>% 
+  pull(denom) #saving as a simple vector
+```
+
+### Reordering factors
+
+
+
+
