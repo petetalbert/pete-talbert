@@ -112,7 +112,7 @@ gss %&gt;%
 <h3>Cleaning up</h3>
 <p>The last thing I want to do is add labeling and make it look prettier. I have been using <code>hrbrthemes</code> lately with Roboto Condensed font, and I love it. Below are the settings I usually have in all my markdown docs.</p>
 <pre class="r"><code>library(hrbrthemes)
-theme_set(theme_ipsum_rc(base_size = 9))
+theme_set(theme_ipsum_rc())
 
 gss %&gt;% 
   filter(denom %in% protestant_top) %&gt;% 
@@ -121,7 +121,6 @@ gss %&gt;%
   ggplot(aes(x = year, y = n, color = denom)) +
   geom_line() +
   scale_colour_viridis_d() +
-  theme(plot.title = element_text(size = 11), plot.subtitle = element_text(size = 10), strip.text.x = element_text(size = 9)) + #making the text a little smaller.
   labs(
     title = &quot;Top five Protestant denominations&quot;,
     y = element_blank(),
