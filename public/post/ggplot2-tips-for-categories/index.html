@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="A space to collect my random thoughts and learning in educational data analysis.">
+
+  <link rel="icon" type="image/png" href="../../favicon.png">
+  
+  <title>
+    
+    
+     Plotting factors with forcats 
+    
+  </title>
+  <link rel="canonical" href="../../post/ggplot2-tips-for-categories/">
+
+  <link rel="stylesheet" href="../../css/fonts.css" />
+  <link rel="stylesheet" href="../../css/style.css" />
+
+  
+</head>
+
+<body>
+<section id=nav>
+  <h1><a href="../../">Pete Talbert</a></h1>
+  <ul>
+    
+    <li><a href="../../about">About</a></li>
+    
+    <li><a href="https://github.com/petetalbert">GitHub</a></li>
+    
+    <li><a href="https://www.linkedin.com/in/petetalbert">LinkedIn</a></li>
+    
+    <li><a href="https://twitter.com/petetalbert">Twitter</a></li>
+    
+    <li><a href="../../index.xml">RSS</a></li>
+    
+  </ul>
+</section>
+
+<link rel="stylesheet" href="../../css/github.css" rel="stylesheet" id="theme-stylesheet">
+<script src="../../js/highlight.pack.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+<section id=content>
+  <h1> Plotting factors with forcats </h1>
+
+  <div id=sub-header>
+    Thursday, February 21, 2019 · 3 minute read
+  </div>
+
+  <div class="entry-content">
+    
+
+
+<p>Often, I find myself with <em>a lot</em> of categorical variables that I want to plot, where I’m really only interested in the most common ones that bubble to the surface. This post is a quick demonstration of how I plot just the top 5 or top 10 categories for a plot. I posted a question about this over on <a href="https://stackoverflow.com/questions/54260789/selecting-top-n-groups-with-dplyr-then-plotting-other-variables">Stack Overflow</a>. Thanks to all who commented!</p>
+<div id="getting-started" class="section level3">
+<h3>Getting started</h3>
+<p>To start, I am going to load <code>forats::gss_cat</code> as my example dataset and make a simple time series of the types Protestant denominations respondents list.</p>
+<pre class="r"><code>library(tidyverse)
+
+gss &lt;- forcats::gss_cat
+
+gss %&gt;% 
+  filter(relig == &quot;Protestant&quot;) %&gt;% 
+  count(year, denom) %&gt;%
+  ggplot(aes(x = year, y = n, color = denom)) +
+  geom_line() +
+  scale_colour_viridis_d()</code></pre>
+<p><img src="../../post/2019-02-21-plotting-factors-with-forcats_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+</div>
+<div id="plotting-the-top-five" class="section level3">
+<h3>Plotting the top five</h3>
+<p>Wow, what an extremely ugly and meaningless plot! What if I wanted to just plot the top 5 Protestant denominations? There are a bunch of ways to do this, but maybe the easiest I’ve found is to filter down to those denominations with <code>dplyr</code> and save that as a simple vector; then in a second step, build your plot by first filtering to just those five in the vector.</p>
+<pre class="r"><code>protestant_top &lt;- gss %&gt;% 
+  filter(relig == &quot;Protestant&quot;) %&gt;% 
+  count(denom, sort = TRUE) %&gt;% 
+  head(5) %&gt;% 
+  pull(denom) #creating a simple vector.
+
+#same plot now but filtered first for just the top five.
+gss %&gt;% 
+  filter(denom %in% protestant_top) %&gt;% #filter like this.
+  count(year, denom) %&gt;%
+  ggplot(aes(x = year, y = n, color = denom)) +
+  geom_line() +
+  scale_colour_viridis_d()</code></pre>
+<p><img src="../../post/2019-02-21-plotting-factors-with-forcats_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>That’s looking a little better!</p>
+</div>
+<div id="reordering-factors" class="section level3">
+<h3>Reordering factors</h3>
+<p>But there’s still a problem: my eyes have to hunt around to find which denomination is where, because the legend is in alphabetical order. What if the legend was ordered the same way the lines were plotted?</p>
+<p><code>forcats</code> really comes in handy here. Many useful functions in this package for working with factors start with <code>fct_</code>, and the one I am going to use is <code>fct_reorder</code> where I can order based off their count. It just takes two arguments: the factor or character vector and another vector to reorder them in ascending order. (You can also use the <code>.fun</code> argument to specify the mean or median for example.) Below, I can just give it <code>n</code> for the second argument. Lastly, <code>.desc = TRUE</code> orders it descending to align with the plot lines.</p>
+<pre class="r"><code>gss %&gt;% 
+  filter(denom %in% protestant_top) %&gt;% 
+  count(year, denom) %&gt;%
+  mutate(denom = fct_reorder(denom, n, .desc = TRUE)) %&gt;% #fct_reorder here.
+  ggplot(aes(x = year, y = n, color = denom)) +
+  geom_line() +
+  scale_colour_viridis_d()</code></pre>
+<p><img src="../../post/2019-02-21-plotting-factors-with-forcats_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>Looks great!</p>
+</div>
+<div id="cleaning-up" class="section level3">
+<h3>Cleaning up</h3>
+<p>The last thing I want to do is add labeling and make it look prettier. I have been using <code>hrbrthemes</code> lately with Roboto Condensed font, and I love it. Below are the settings I usually have in all my markdown docs.</p>
+<pre class="r"><code>library(hrbrthemes)
+theme_set(theme_ipsum_rc(base_size = 9))
+
+gss %&gt;% 
+  filter(denom %in% protestant_top) %&gt;% 
+  count(year, denom) %&gt;%
+  mutate(denom = fct_reorder(denom, n, .desc = TRUE)) %&gt;% #fct_reorder here.
+  ggplot(aes(x = year, y = n, color = denom)) +
+  geom_line() +
+  scale_colour_viridis_d() +
+  theme(plot.title = element_text(size = 11), plot.subtitle = element_text(size = 10), strip.text.x = element_text(size = 9)) + #making the text a little smaller.
+  labs(
+    title = &quot;Top five Protestant denominations&quot;,
+    y = element_blank(),
+    color = &quot;Denomination&quot;,
+    caption = &quot;A sample of categorical variables from the General Social survey.&quot;
+  )</code></pre>
+<p><img src="../../post/2019-02-21-plotting-factors-with-forcats_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+
+  </div>
+
+  <div id=links>
+    
+      <a class="basic-alignment left" href="../../post/working-more-with-the-baumann-dataset/">&laquo; Working more with the Baumann dataset</a>
+    
+    
+  </div>
+</section>
+
+<section id="comments">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+      
+      
+      if (window.location.hostname == "localhost")
+                return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'petetalbert-rbind-io';
+      dsq.src = '//petetalbert-rbind-io.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+  
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-130291758-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-130291758-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+  
+
+  
+</body>
+</html>
+

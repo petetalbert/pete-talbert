@@ -6,10 +6,19 @@
     <description>Recent content in Posts on Pete Talbert</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 29 Dec 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 21 Feb 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Plotting factors with forcats</title>
+      <link>/post/ggplot2-tips-for-categories/</link>
+      <pubDate>Thu, 21 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/ggplot2-tips-for-categories/</guid>
+      <description>Often, I find myself with a lot of categorical variables that I want to plot, where I’m really only interested in the most common ones that bubble to the surface.</description>
+    </item>
     
     <item>
       <title>Working more with the Baumann dataset</title>
