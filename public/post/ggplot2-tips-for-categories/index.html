@@ -60,8 +60,8 @@
 
 
 <p>Often, I find myself with <em>a lot</em> of categorical variables that I want to plot, where I’m really only interested in the most common ones that bubble to the surface. This post is a quick demonstration of how I plot just the top 5 or top 10 categories for a plot. I posted a question about this over on <a href="https://stackoverflow.com/questions/54260789/selecting-top-n-groups-with-dplyr-then-plotting-other-variables">Stack Overflow</a>. Thanks to all who commented!</p>
-<div id="getting-started" class="section level3">
-<h3>Getting started</h3>
+<div id="getting-started" class="section level2">
+<h2>Getting started</h2>
 <p>To start, I am going to load <code>forats::gss_cat</code> as my example dataset and make a simple time series of the types Protestant denominations respondents list.</p>
 <pre class="r"><code>library(tidyverse)
 
@@ -75,8 +75,8 @@ gss %&gt;%
   scale_colour_viridis_d()</code></pre>
 <p><img src="../../post/2019-02-21-plotting-factors-with-forcats_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 </div>
-<div id="plotting-the-top-five" class="section level3">
-<h3>Plotting the top five</h3>
+<div id="plotting-the-top-five" class="section level2">
+<h2>Plotting the top five</h2>
 <p>Wow, what an extremely ugly and meaningless plot! What if I wanted to just plot the top 5 Protestant denominations? There are a bunch of ways to do this, but maybe the easiest I’ve found is to filter down to those denominations with <code>dplyr</code> and save that as a simple vector; then in a second step, build your plot by first filtering to just those five in the vector.</p>
 <pre class="r"><code>protestant_top &lt;- gss %&gt;% 
   filter(relig == &quot;Protestant&quot;) %&gt;% 
@@ -94,8 +94,8 @@ gss %&gt;%
 <p><img src="../../post/2019-02-21-plotting-factors-with-forcats_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>That’s looking a little better!</p>
 </div>
-<div id="reordering-factors" class="section level3">
-<h3>Reordering factors</h3>
+<div id="reordering-factors" class="section level2">
+<h2>Reordering factors</h2>
 <p>But there’s still a problem: my eyes have to hunt around to find which denomination is where, because the legend is in alphabetical order. What if the legend was ordered the same way the lines were plotted?</p>
 <p><code>forcats</code> really comes in handy here. Many useful functions in this package for working with factors start with <code>fct_</code>, and the one I am going to use is <code>fct_reorder</code> where I can order based off their count. It just takes two arguments: the factor or character vector and another vector to reorder them in ascending order. (You can also use the <code>.fun</code> argument to specify the mean or median for example.) Below, I can just give it <code>n</code> for the second argument. Lastly, <code>.desc = TRUE</code> orders it descending to align with the plot lines.</p>
 <pre class="r"><code>gss %&gt;% 
@@ -108,8 +108,8 @@ gss %&gt;%
 <p><img src="../../post/2019-02-21-plotting-factors-with-forcats_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>Looks great!</p>
 </div>
-<div id="cleaning-up" class="section level3">
-<h3>Cleaning up</h3>
+<div id="cleaning-up" class="section level2">
+<h2>Cleaning up</h2>
 <p>The last thing I want to do is add labeling and make it look prettier. I have been using <code>hrbrthemes</code> lately with Roboto Condensed font, and I love it. Below are the settings I usually have in all my markdown docs.</p>
 <pre class="r"><code>library(hrbrthemes)
 theme_set(theme_ipsum_rc())
@@ -136,6 +136,8 @@ gss %&gt;%
     
       <a class="basic-alignment left" href="../../post/working-more-with-the-baumann-dataset/">&laquo; Working more with the Baumann dataset</a>
     
+    
+      <a class="basic-alignment left" href="../../post/window-functions-in-sql-vs-r/">Window Functions in SQL vs. R &raquo;</a>
     
   </div>
 </section>

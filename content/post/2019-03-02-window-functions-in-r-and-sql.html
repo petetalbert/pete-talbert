@@ -1,0 +1,148 @@
+---
+title: Window Functions in SQL vs. R
+author: ''
+date: '2019-03-02'
+categories:
+  - R
+  - SQL
+tags:
+  - ms-sql-server
+  - row_number()
+  - tidyverse
+slug: window-functions-in-sql-vs-r
+---
+
+
+
+<p>Both MS SQL Server and R’s <code>dplyr</code> package offer window functions for different operations on a dataset. What are window functions? Window functions operate on a set of rows or “window” and return a value for each row, whether that’s something like a row number or percentile rank, or an aggregate result from a min, max, average, or sum.</p>
+<p>The most common problem I have that window functions solve is when I have a set of records that I need to unduplicate. Let’s say I have student enrollment records where an individual student may have more than one enrollment; and let’s say I want to grab only the <em>latest</em> enrollment record from each student. In this case, each student would be a partition or window in which I could create a function to label the latest record. Once the latest record is identified, I could then pull just that single row.</p>
+<div id="sql" class="section level2">
+<h2>SQL</h2>
+<p>How would I do this in SQL? Below I connect to my MS SQL Server instance and print a very simple table of student enrollment records. You can see there are more than one per <code>studentID</code>. How would I grab the latest from each per the <code>date</code> column?</p>
+<pre class="r"><code>library(tidyverse)
+library(DBI)
+library(odbc)
+library(knitr)
+
+con &lt;- dbConnect(odbc::odbc(), &quot;nicodemus&quot;, database = &quot;Demo&quot;)
+
+enroll &lt;- as_tibble(dbGetQuery(con, &quot;select * from Demo.dbo.tbl_Enroll&quot;))
+
+enroll</code></pre>
+<pre><code>## # A tibble: 11 x 3
+##    studentID enrollmentType date               
+##    &lt;chr&gt;     &lt;chr&gt;          &lt;dttm&gt;             
+##  1 1000      D              2019-02-01 00:00:00
+##  2 1000      P              2019-01-20 00:00:00
+##  3 1001      D              2019-02-02 00:00:00
+##  4 1001      P              2018-12-01 00:00:00
+##  5 1001      P              2018-12-30 00:00:00
+##  6 1002      D              2019-01-15 00:00:00
+##  7 1002      D              2018-11-30 00:00:00
+##  8 1003      P              2018-10-31 00:00:00
+##  9 1003      P              2019-02-28 00:00:00
+## 10 1003      D              2018-09-30 00:00:00
+## 11 1003      P              2019-01-01 00:00:00</code></pre>
+<p>In the SQL below, I am using <code>ROW_NUMBER()</code> to make this happen. I define the window by using the <code>partition by</code> clause and then I use <code>order by</code> to tell SQL in what I want the rows numbered. Here, I want <code>desc</code> because I want the rows labeled <code>1</code> to be the latest enrollment record per student.</p>
+<pre class="sql"><code>select *
+  , ROW_NUMBER() over (partition by studentID order by [date] desc) as rowNum --SQL window function syntax
+from Demo.dbo.tbl_Enroll</code></pre>
+<pre><code>## # A tibble: 11 x 4
+##    studentID enrollmentType date                rowNum         
+##    &lt;chr&gt;     &lt;chr&gt;          &lt;dttm&gt;              &lt;S3: integer64&gt;
+##  1 1000      D              2019-02-01 00:00:00 1              
+##  2 1000      P              2019-01-20 00:00:00 2              
+##  3 1001      D              2019-02-02 00:00:00 1              
+##  4 1001      P              2018-12-30 00:00:00 2              
+##  5 1001      P              2018-12-01 00:00:00 3              
+##  6 1002      D              2019-01-15 00:00:00 1              
+##  7 1002      D              2018-11-30 00:00:00 2              
+##  8 1003      P              2019-02-28 00:00:00 1              
+##  9 1003      P              2019-01-01 00:00:00 2              
+## 10 1003      P              2018-10-31 00:00:00 3              
+## 11 1003      D              2018-09-30 00:00:00 4</code></pre>
+<p>How would I then grab the latest record? Create an outer query that just selects <code>where rowNum = 1</code>.</p>
+<pre class="sql"><code>select * from (
+  select *
+    , ROW_NUMBER() over (partition by studentID order by [date] desc) as rowNum
+  from Demo.dbo.tbl_Enroll
+) t
+where rowNum = 1 --outer query to get just the latest record per student.</code></pre>
+<pre><code>## # A tibble: 4 x 4
+##   studentID enrollmentType date                rowNum         
+##   &lt;chr&gt;     &lt;chr&gt;          &lt;dttm&gt;              &lt;S3: integer64&gt;
+## 1 1000      D              2019-02-01 00:00:00 1              
+## 2 1001      D              2019-02-02 00:00:00 1              
+## 3 1002      D              2019-01-15 00:00:00 1              
+## 4 1003      P              2019-02-28 00:00:00 1</code></pre>
+</div>
+<div id="r" class="section level2">
+<h2>R</h2>
+<p>R’s dplyr package also has window functions to do the same operation. What happens when I just apply <code>rownumber()</code> to the data?</p>
+<pre class="r"><code>enroll %&gt;% 
+  mutate(rowNum = row_number())</code></pre>
+<pre><code>## # A tibble: 11 x 4
+##    studentID enrollmentType date                rowNum
+##    &lt;chr&gt;     &lt;chr&gt;          &lt;dttm&gt;               &lt;int&gt;
+##  1 1000      D              2019-02-01 00:00:00      1
+##  2 1000      P              2019-01-20 00:00:00      2
+##  3 1001      D              2019-02-02 00:00:00      3
+##  4 1001      P              2018-12-01 00:00:00      4
+##  5 1001      P              2018-12-30 00:00:00      5
+##  6 1002      D              2019-01-15 00:00:00      6
+##  7 1002      D              2018-11-30 00:00:00      7
+##  8 1003      P              2018-10-31 00:00:00      8
+##  9 1003      P              2019-02-28 00:00:00      9
+## 10 1003      D              2018-09-30 00:00:00     10
+## 11 1003      P              2019-01-01 00:00:00     11</code></pre>
+<p>Great, it gave the row number of each row in the dataset. What happens when I put the column I want partitioned inside <code>row_number()</code>?</p>
+<pre class="r"><code>enroll %&gt;% 
+  mutate(rowNum = row_number(studentID))</code></pre>
+<pre><code>## # A tibble: 11 x 4
+##    studentID enrollmentType date                rowNum
+##    &lt;chr&gt;     &lt;chr&gt;          &lt;dttm&gt;               &lt;int&gt;
+##  1 1000      D              2019-02-01 00:00:00      1
+##  2 1000      P              2019-01-20 00:00:00      2
+##  3 1001      D              2019-02-02 00:00:00      3
+##  4 1001      P              2018-12-01 00:00:00      4
+##  5 1001      P              2018-12-30 00:00:00      5
+##  6 1002      D              2019-01-15 00:00:00      6
+##  7 1002      D              2018-11-30 00:00:00      7
+##  8 1003      P              2018-10-31 00:00:00      8
+##  9 1003      P              2019-02-28 00:00:00      9
+## 10 1003      D              2018-09-30 00:00:00     10
+## 11 1003      P              2019-01-01 00:00:00     11</code></pre>
+<p>That did nothing. This is without reading the <a href="https://dplyr.tidyverse.org/reference/ranking.html">documentation</a> obviously. What that did was just give a row number for the <code>studentID</code> vector regardless of duplication; I could have put any of the columns inside the function and it would return the same result. Not what we want. What we want to do is put <code>studentID</code> in a <code>group_by</code> clause before mutating.</p>
+<pre class="r"><code>enroll %&gt;% 
+  group_by(studentID) %&gt;%  #adding the group_by clause to partition by studentID.
+  mutate(rowNum = row_number())</code></pre>
+<pre><code>## # A tibble: 11 x 4
+## # Groups:   studentID [4]
+##    studentID enrollmentType date                rowNum
+##    &lt;chr&gt;     &lt;chr&gt;          &lt;dttm&gt;               &lt;int&gt;
+##  1 1000      D              2019-02-01 00:00:00      1
+##  2 1000      P              2019-01-20 00:00:00      2
+##  3 1001      D              2019-02-02 00:00:00      1
+##  4 1001      P              2018-12-01 00:00:00      2
+##  5 1001      P              2018-12-30 00:00:00      3
+##  6 1002      D              2019-01-15 00:00:00      1
+##  7 1002      D              2018-11-30 00:00:00      2
+##  8 1003      P              2018-10-31 00:00:00      1
+##  9 1003      P              2019-02-28 00:00:00      2
+## 10 1003      D              2018-09-30 00:00:00      3
+## 11 1003      P              2019-01-01 00:00:00      4</code></pre>
+<p>Sweet! But wait, this just listed the row number for each <code>studentID</code> in whatever order it came in. We want it to list <code>1</code> for the lastest record per the <code>date</code> column.</p>
+<pre class="r"><code>enroll %&gt;% 
+  group_by(studentID) %&gt;%  
+  mutate(rowNum = row_number(desc(date))) %&gt;% #specify how to list row numbers here; desc for latest first.
+  filter(rowNum == 1) #lastly, filter to just the latest record.</code></pre>
+<pre><code>## # A tibble: 4 x 4
+## # Groups:   studentID [4]
+##   studentID enrollmentType date                rowNum
+##   &lt;chr&gt;     &lt;chr&gt;          &lt;dttm&gt;               &lt;int&gt;
+## 1 1000      D              2019-02-01 00:00:00      1
+## 2 1001      D              2019-02-02 00:00:00      1
+## 3 1002      D              2019-01-15 00:00:00      1
+## 4 1003      P              2019-02-28 00:00:00      1</code></pre>
+<p>Nice! I really wrote this to learn the nuances for how to do the same operation I do in SQL in R for my particular use case. The vignette provided by the tidyverse team did not really suit my needs in this instance, but others my find it helpful as <a href="https://dplyr.tidyverse.org/articles/window-functions.html">further reading</a>. Cheers!</p>
+</div>

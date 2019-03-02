@@ -1,0 +1,108 @@
+---
+title: Window Functions in SQL vs. R
+author: ''
+date: '2019-03-02'
+categories:
+  - R
+  - SQL
+tags:
+  - ms-sql-server
+  - row_number()
+  - tidyverse
+slug: window-functions-in-sql-vs-r
+---
+
+Both MS SQL Server and R's `dplyr` package offer window functions for different operations on a dataset. What are window functions? Window functions operate on a set of rows or "window" and return a value for each row, whether that's something like a row number or percentile rank, or an aggregate result from a min, max, average, or sum. 
+
+The most common problem I have that window functions solve is when I have a set of records that I need to unduplicate. Let's say I have student enrollment records where an individual student may have more than one enrollment; and let's say I want to grab only the *latest* enrollment record from each student. In this case, each student would be a partition or window in which I could create a function to label the latest record. Once the latest record is identified, I could then pull just that single row.
+
+## SQL
+
+How would I do this in SQL? Below I connect to my MS SQL Server instance and print a very simple table of student enrollment records. You can see there are more than one per `studentID`. How would I grab the latest from each per the `date` column?
+
+```{r  message=FALSE}
+library(tidyverse)
+library(DBI)
+library(odbc)
+library(knitr)
+
+con <- dbConnect(odbc::odbc(), "nicodemus", database = "Demo")
+
+enroll <- as_tibble(dbGetQuery(con, "select * from Demo.dbo.tbl_Enroll"))
+
+enroll
+```
+
+In the SQL below, I am using `ROW_NUMBER()` to make this happen. I define the window by using the `partition by` clause and then I use `order by` to tell SQL in what I want the rows numbered. Here, I want `desc` because I want the rows labeled `1` to be the latest enrollment record per student.
+
+```{sql connection = con, output.var = "enrollRowNum"}
+select *
+  , ROW_NUMBER() over (partition by studentID order by [date] desc) as rowNum --SQL window function syntax
+from Demo.dbo.tbl_Enroll
+```
+
+```{r, echo = FALSE}
+as_tibble(enrollRowNum)
+```
+
+How would I then grab the latest record? Create an outer query that just selects `where rowNum = 1`.
+
+```{sql connection = con, output.var = "enrollRowNum1"}
+select * from (
+  select *
+    , ROW_NUMBER() over (partition by studentID order by [date] desc) as rowNum
+  from Demo.dbo.tbl_Enroll
+) t
+where rowNum = 1 --outer query to get just the latest record per student.
+```
+
+```{r, echo = FALSE}
+as_tibble(enrollRowNum1)
+```
+
+## R
+
+R's dplyr package also has window functions to do the same operation. What happens when I just apply `rownumber()` to the data?
+
+```{r}
+enroll %>% 
+  mutate(rowNum = row_number())
+```
+
+Great, it gave the row number of each row in the dataset. What happens when I put the column I want partitioned inside `row_number()`?
+
+```{r}
+enroll %>% 
+  mutate(rowNum = row_number(studentID))
+```
+
+That did nothing. This is without reading the [documentation](https://dplyr.tidyverse.org/reference/ranking.html) obviously. What that did was just give a row number for the `studentID` vector regardless of duplication; I could have put any of the columns inside the function and it would return the same result. Not what we want. What we want to do is put `studentID` in a `group_by` clause before mutating.
+
+```{r}
+enroll %>% 
+  group_by(studentID) %>%  #adding the group_by clause to partition by studentID.
+  mutate(rowNum = row_number())
+```
+
+Sweet! But wait, this just listed the row number for each `studentID` in whatever order it came in. We want it to list `1` for the lastest record per the `date` column.
+
+```{r}
+enroll %>% 
+  group_by(studentID) %>%  
+  mutate(rowNum = row_number(desc(date))) %>% #specify how to list row numbers here; desc for latest first.
+  filter(rowNum == 1) #lastly, filter to just the latest record.
+```
+
+Nice! I really wrote this to learn the nuances for how to do the same operation I do in SQL in R for my particular use case. The vignette provided by the tidyverse team did not really suit my needs in this instance, but others my find it helpful as [further reading](https://dplyr.tidyverse.org/articles/window-functions.html). Cheers!
+
+
+
+
+
+
+
+
+
+
+
+

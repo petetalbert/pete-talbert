@@ -11,7 +11,7 @@ tags:
 
 Often, I find myself with *a lot* of categorical variables that I want to plot, where I'm really only interested in the most common ones that bubble to the surface. This post is a quick demonstration of how I plot just the top 5 or top 10 categories for a plot. I posted a question about this over on [Stack Overflow](https://stackoverflow.com/questions/54260789/selecting-top-n-groups-with-dplyr-then-plotting-other-variables). Thanks to all who commented!
 
-### Getting started
+## Getting started
 
 To start, I am going to load `forats::gss_cat` as my example dataset and make a simple time series of the types Protestant denominations respondents list.
 
@@ -28,7 +28,7 @@ gss %>%
   scale_colour_viridis_d()
 ```
 
-### Plotting the top five
+## Plotting the top five
 
 Wow, what an extremely ugly and meaningless plot! What if I wanted to just plot the top 5 Protestant denominations? There are a bunch of ways to do this, but maybe the easiest I've found is to filter down to those denominations with `dplyr` and save that as a simple vector; then in a second step, build your plot by first filtering to just those five in the vector.
 
@@ -50,7 +50,7 @@ gss %>%
 
 That's looking a little better!
 
-### Reordering factors
+## Reordering factors
 
 But there's still a problem: my eyes have to hunt around to find which denomination is where, because the legend is in alphabetical order. What if the legend was ordered the same way the lines were plotted?
 
@@ -68,7 +68,7 @@ gss %>%
 
 Looks great!
 
-### Cleaning up
+## Cleaning up
 
 The last thing I want to do is add labeling and make it look prettier. I have been using `hrbrthemes` lately with Roboto Condensed font, and I love it. Below are the settings I usually have in all my markdown docs.
 

@@ -6,10 +6,19 @@
     <description>Recent content in Sql on Pete Talbert</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 22 Nov 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 02 Mar 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/sql/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Window Functions in SQL vs. R</title>
+      <link>/post/window-functions-in-sql-vs-r/</link>
+      <pubDate>Sat, 02 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/window-functions-in-sql-vs-r/</guid>
+      <description>Both MS SQL Server and R’s dplyr package offer window functions for different operations on a dataset. What are window functions? Window functions operate on a set of rows or “window” and return a value for each row, whether that’s something like a row number or percentile rank, or an aggregate result from a min, max, average, or sum.</description>
+    </item>
     
     <item>
       <title>Pivoting Data in SQL vs. R</title>
