@@ -6,10 +6,19 @@
     <description>Recent content on Pete Talbert</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 02 Mar 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 01 Apr 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Services</title>
+      <link>/services/</link>
+      <pubDate>Mon, 01 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/services/</guid>
+      <description>Coming soon!</description>
+    </item>
     
     <item>
       <title>Window Functions in SQL vs. R</title>
@@ -92,15 +101,6 @@
       <description>Hello!
 This is my very first post; just a quick test as to how a SQL snippet shows in a markdown file and on a website. See below.
 select personID, endYear, grade, ROW_NUMBER() over (partition by personID order by endYear, case when grade = &amp;#39;KG&amp;#39; then &amp;#39;00&amp;#39; else grade end) as rowNumfrom #enroll3</description>
-    </item>
-    
-    <item>
-      <title>Services</title>
-      <link>/services/services/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/services/services/</guid>
-      <description>Coming soon!</description>
     </item>
     
   </channel>
