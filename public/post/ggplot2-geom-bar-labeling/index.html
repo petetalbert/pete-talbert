@@ -96,7 +96,7 @@ mtcars &lt;- as_tibble(mtcars)</code></pre>
 </div>
 <div id="stacked-bar" class="section level3">
 <h3>100% stacked bar</h3>
-<p>The only difference here initially, before we label, is just changing <code>position = "stack"</code> to <code>position = "fill"</code>.</p>
+<p>The only difference here initially, before we label, is just changing <code>position = &quot;stack&quot;</code> to <code>position = &quot;fill&quot;</code>.</p>
 <pre class="r"><code>mtcars %&gt;% 
   ggplot(aes(x = factor(cyl), fill = factor(gear))) +
   geom_bar(position = &quot;fill&quot;) + #changed to &quot;fill&quot;

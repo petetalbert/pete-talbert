@@ -1,0 +1,27 @@
+---
+title: Consulting Services
+author: Pete Talbert
+date: '2019-11-24'
+slug: consulting-services
+categories:
+  - R
+  - SQL
+  - Tableau
+tags: []
+---
+
+Hello all!
+
+I have not posted on this site since March, and I feel terrible about it. I know no one reads this, but personally it was a goal of mine to keep my skills up-to-date by forcing myself to blog about them.
+
+All that being said, I have spent the last year doing a few part-time consulting projects, and I have really enjoyed it! My plan is for this website to be a personal website for blogging and for advertising my services. I offer data-related services to companies and organizations in the following technologies:
+
+* SQL (primarily SQL Server and Oracle)
+* Tableau
+* R 
+
+If your company or organization needs data analysis servicies in these areas, please reach out! 
+
+Pete Talbert
+[mailto:pete.talbert@gmail.com](pete.talbert@gmail.com)
+612-578-5525

@@ -6,10 +6,20 @@
     <description>Recent content on Pete Talbert</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 01 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 24 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Consulting Services</title>
+      <link>/post/consulting-services/</link>
+      <pubDate>Sun, 24 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/consulting-services/</guid>
+      <description>Hello all!
+I have not posted on this site since March, and I feel terrible about it. I know no one reads this, but personally it was a goal of mine to keep my skills up-to-date by forcing myself to blog about them.</description>
+    </item>
     
     <item>
       <title>Services</title>

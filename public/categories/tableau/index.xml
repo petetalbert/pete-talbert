@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tableau on Pete Talbert</title>
+    <link>/categories/tableau/</link>
+    <description>Recent content in Tableau on Pete Talbert</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 24 Nov 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/tableau/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Consulting Services</title>
+      <link>/post/consulting-services/</link>
+      <pubDate>Sun, 24 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/consulting-services/</guid>
+      <description>Hello all!
+I have not posted on this site since March, and I feel terrible about it. I know no one reads this, but personally it was a goal of mine to keep my skills up-to-date by forcing myself to blog about them.</description>
+    </item>
+    
+  </channel>
+</rss>

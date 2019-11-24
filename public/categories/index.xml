@@ -13,7 +13,7 @@
     <item>
       <title>R</title>
       <link>/categories/r/</link>
-      <pubDate>Sat, 02 Mar 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 24 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/categories/r/</guid>
       <description></description>
@@ -22,9 +22,18 @@
     <item>
       <title>Sql</title>
       <link>/categories/sql/</link>
-      <pubDate>Sat, 02 Mar 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 24 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/categories/sql/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Tableau</title>
+      <link>/categories/tableau/</link>
+      <pubDate>Sun, 24 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/tableau/</guid>
       <description></description>
     </item>
     
