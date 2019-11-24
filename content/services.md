@@ -15,5 +15,7 @@ I offer data-related services to companies and organizations in the following te
 Whether it's an ad hoc research project or an on-going dashboard or reporting need, I am here to help!
 
 Pete Talbert, *Data Analyst*
-[pete.talbert@gmail.com](mailto:pete.talbert@gmail.com)
+
+[pete.talbert@gmail.com](pete.talbert@gmail.com)
+
 612-578-5525
