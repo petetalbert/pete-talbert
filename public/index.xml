@@ -6,9 +6,112 @@
     <description>Recent content on Pete Talbert</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
+    <lastBuildDate>Sun, 24 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Consulting Services</title>
+      <link>/post/consulting-services/</link>
+      <pubDate>Sun, 24 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/consulting-services/</guid>
+      <description>Hello all!
+I have not posted on this site since March, and I feel terrible about it. I know no one reads this, but personally it was a goal of mine to keep my skills up-to-date by forcing myself to blog about them.</description>
+    </item>
+    
+    <item>
+      <title>Services</title>
+      <link>/services/</link>
+      <pubDate>Sun, 24 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/services/</guid>
+      <description>I am a data analyst in the Twin Cities, specializing in the K-12, higher education, and non-profit sectors. I have worked in the field for over four years, and know both the database and analytical/visualization components deeply.</description>
+    </item>
+    
+    <item>
+      <title>Window Functions in SQL vs. R</title>
+      <link>/post/window-functions-in-sql-vs-r/</link>
+      <pubDate>Sat, 02 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/window-functions-in-sql-vs-r/</guid>
+      <description>Both MS SQL Server and R’s dplyr package offer window functions for different operations on a dataset. What are window functions? Window functions operate on a set of rows or “window” and return a value for each row, whether that’s something like a row number or percentile rank, or an aggregate result from a min, max, average, or sum.</description>
+    </item>
+    
+    <item>
+      <title>Plotting factors with forcats</title>
+      <link>/post/ggplot2-tips-for-categories/</link>
+      <pubDate>Thu, 21 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/ggplot2-tips-for-categories/</guid>
+      <description>Often, I find myself with a lot of categorical variables that I want to plot, where I’m really only interested in the most common ones that bubble to the surface.</description>
+    </item>
+    
+    <item>
+      <title>Working more with the Baumann dataset</title>
+      <link>/post/working-more-with-the-baumann-dataset/</link>
+      <pubDate>Sat, 29 Dec 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/working-more-with-the-baumann-dataset/</guid>
+      <description>As a way to continue to teach myself statistics and learn new techniques (including some machine learning methods I am very unfamiliar with), I am taking Stanford’s self-paced statistical learning course.</description>
+    </item>
+    
+    <item>
+      <title>Learning For Loops in R</title>
+      <link>/post/learning-for-loops-in-r/</link>
+      <pubDate>Mon, 10 Dec 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/learning-for-loops-in-r/</guid>
+      <description>I’m very much a beginner when it comes to any formal programming. So I feel like my first real practice should be with for loops, which are a staple of programming concepts.</description>
+    </item>
+    
+    <item>
+      <title>Pivoting Data in SQL vs. R</title>
+      <link>/post/pivoting-data-in-sql-vs-r/</link>
+      <pubDate>Thu, 22 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/pivoting-data-in-sql-vs-r/</guid>
+      <description>Often with education data, I need to pivot data to go from long format to wide. For instance, I often have test scores for different test subjects of a single assessment.</description>
+    </item>
+    
+    <item>
+      <title>ggplot2 geom_bar Labeling</title>
+      <link>/post/ggplot2-geom-bar-labeling/</link>
+      <pubDate>Fri, 16 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/ggplot2-geom-bar-labeling/</guid>
+      <description>In educational data analysis, I am constantly looking at counts and proportions. I’ve found the easiest way to display these results with categorical variables like demographics is to use stacked bar charts and especially 100% stacked charts.</description>
+    </item>
+    
+    <item>
+      <title>Connecting to MS SQL Server in R</title>
+      <link>/post/connecting-to-ms-sql-server-in-r/</link>
+      <pubDate>Thu, 15 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/connecting-to-ms-sql-server-in-r/</guid>
+      <description>There are dozens of ways to connect to an MS SQL Server database in R. You can use a number of packages, and within those packages, there are various methods for connecting and running SQL queries via an R script.</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>/about/</link>
+      <pubDate>Tue, 13 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/about/</guid>
+      <description>Hello! My name is Pete Talbert, and I work as a data analyst in Minnesota. I have only been doing this line of work for a little over 3 years, and I have worked exclusively in educational settings, both higher ed and K-12.</description>
+    </item>
+    
+    <item>
+      <title>Can I Write SQL in R Markdown?</title>
+      <link>/post/can-i-write-sql-in-r-markdown/</link>
+      <pubDate>Tue, 13 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/can-i-write-sql-in-r-markdown/</guid>
+      <description>Hello!
+This is my very first post; just a quick test as to how a SQL snippet shows in a markdown file and on a website. See below.
+select personID, endYear, grade, ROW_NUMBER() over (partition by personID order by endYear, case when grade = &amp;#39;KG&amp;#39; then &amp;#39;00&amp;#39; else grade end) as rowNumfrom #enroll3</description>
+    </item>
     
   </channel>
 </rss>
