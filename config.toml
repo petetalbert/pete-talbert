@@ -5,6 +5,7 @@ relativeurls = true
 canonifyurls = true
 languagecode = "en"
 theme = "hugo-tanka"
+paginate = 5
 
 googleAnalytics = "UA-130291758-1"
 disqusShortname = "petetalbert-rbind-io"
