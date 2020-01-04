@@ -301,3 +301,32 @@ ul li {
     padding: 0;
     justify-content: center;
 }
+
+.page-link {
+    position: relative;
+    display: block;
+    padding: .75rem 1rem;
+    margin-left: -1px;
+    line-height: 1.25;
+}
+
+.page-item.disabled .page-link {
+    pointer-events: none;
+    cursor: auto;
+}
+
+.page-item.active .page-link {
+    z-index: 1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
