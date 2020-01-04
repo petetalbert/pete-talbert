@@ -165,12 +165,13 @@ h1,h2 {
 .posts_listing a, #nav a {
   text-decoration: none;
 }
-li {
+/*li {
   margin-left: 1.6rem;
 }
 ul li {
   margin-left: 1.2rem;
 }
+*/
 .posts_listing li {
   list-style-type: none;
 }
