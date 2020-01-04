@@ -15,11 +15,6 @@
   </ul>
 </section>
 
-{{ if .Paginator.HasPrev }}
-    <a href="{{ .Paginator.Prev.URL }}">  Prev </a>
-{{ end }}
-{{ if .Paginator.HasNext }}
-    <a href="{{ .Paginator.Next.URL }}">  Next </a>
-{{ end }}
+{{ partial "pagination.html" . }}
 
 {{ partial "footer.html" . }}
