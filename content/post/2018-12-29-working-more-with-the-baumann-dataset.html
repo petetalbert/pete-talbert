@@ -20,15 +20,15 @@ tags:
 <pre class="r"><code>library(tidyverse)
 library(car)
 library(broom)
-library(knitr)
-
-baumann &lt;- carData::Baumann %&gt;% 
+library(knitr)</code></pre>
+<pre><code>## Warning: package &#39;knitr&#39; was built under R version 3.5.3</code></pre>
+<pre class="r"><code>baumann &lt;- carData::Baumann %&gt;% 
   as_tibble()
 
 baumann</code></pre>
 <pre><code>## # A tibble: 66 x 6
 ##    group pretest.1 pretest.2 post.test.1 post.test.2 post.test.3
-##  * &lt;fct&gt;     &lt;int&gt;     &lt;int&gt;       &lt;int&gt;       &lt;int&gt;       &lt;int&gt;
+##    &lt;fct&gt;     &lt;int&gt;     &lt;int&gt;       &lt;int&gt;       &lt;int&gt;       &lt;int&gt;
 ##  1 Basal         4         3           5           4          41
 ##  2 Basal         6         5           9           5          41
 ##  3 Basal         9         4           5           3          43

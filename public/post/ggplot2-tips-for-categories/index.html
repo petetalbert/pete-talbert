@@ -52,7 +52,7 @@
   <h1> Plotting factors with forcats </h1>
 
   <div id=sub-header>
-    Thursday, February 21, 2019 · 3 minute read
+    Thursday, February 21, 2019 · 4 minute read
   </div>
 
   <div class="entry-content">
@@ -111,8 +111,12 @@ gss %&gt;%
 <div id="cleaning-up" class="section level2">
 <h2>Cleaning up</h2>
 <p>The last thing I want to do is add labeling and make it look prettier. I have been using <code>hrbrthemes</code> lately with Roboto Condensed font, and I love it. Below are the settings I usually have in all my markdown docs.</p>
-<pre class="r"><code>library(hrbrthemes)
-theme_set(theme_ipsum_rc())
+<pre class="r"><code>library(hrbrthemes)</code></pre>
+<pre><code>## Warning: package &#39;hrbrthemes&#39; was built under R version 3.5.3</code></pre>
+<pre><code>## NOTE: Either Arial Narrow or Roboto Condensed fonts are required to use these themes.</code></pre>
+<pre><code>##       Please use hrbrthemes::import_roboto_condensed() to install Roboto Condensed and</code></pre>
+<pre><code>##       if Arial Narrow is not on your system, please see http://bit.ly/arialnarrow</code></pre>
+<pre class="r"><code>theme_set(theme_ipsum_rc())
 
 gss %&gt;% 
   filter(denom %in% protestant_top) %&gt;% 
@@ -127,6 +131,49 @@ gss %&gt;%
     color = &quot;Denomination&quot;,
     caption = &quot;A sample of categorical variables from the General Social survey.&quot;
   )</code></pre>
+<pre><code>## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database</code></pre>
+<pre><code>## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database</code></pre>
 <p><img src="../../post/2019-02-21-plotting-factors-with-forcats_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 </div>
 
@@ -189,6 +236,9 @@ if (!doNotTrack) {
 </script>
 
   
+<script src="../../js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
 
   
 </body>

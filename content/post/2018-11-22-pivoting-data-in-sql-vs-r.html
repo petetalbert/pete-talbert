@@ -19,9 +19,9 @@ tags:
 <pre class="r"><code>library(tidyverse)
 library(DBI)
 library(odbc)
-library(knitr)
-
-con &lt;- dbConnect(odbc::odbc(), &quot;nicodemus&quot;)
+library(knitr)</code></pre>
+<pre><code>## Warning: package &#39;knitr&#39; was built under R version 3.5.3</code></pre>
+<pre class="r"><code>con &lt;- dbConnect(odbc::odbc(), &quot;nicodemus&quot;)
 
 query &lt;- dbSendQuery(con, &quot;select * from Demo.dbo.tbl_testScore&quot;)
 testScore &lt;- dbFetch(query)
