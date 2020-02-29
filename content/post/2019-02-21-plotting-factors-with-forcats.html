@@ -15,14 +15,9 @@ tags:
 <div id="getting-started" class="section level2">
 <h2>Getting started</h2>
 <p>To start, I am going to load <code>forats::gss_cat</code> as my example dataset and make a simple time series of the types Protestant denominations respondents list.</p>
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## Warning: As of rlang 0.4.0, dplyr must be at least version 0.8.0.
-## x dplyr 0.7.8 is too old for rlang 0.4.4.
-## i Please update dplyr to the latest version.
-## i Updating packages on Windows requires precautions:
-##   &lt;https://github.com/jennybc/what-they-forgot/issues/62&gt;</code></pre>
-<pre><code>## Warning: package &#39;purrr&#39; was built under R version 3.5.3</code></pre>
-<pre class="r"><code>gss &lt;- forcats::gss_cat
+<pre class="r"><code>library(tidyverse)
+
+gss &lt;- forcats::gss_cat
 
 gss %&gt;% 
   filter(relig == &quot;Protestant&quot;) %&gt;% 
@@ -30,8 +25,6 @@ gss %&gt;%
   ggplot(aes(x = year, y = n, color = denom)) +
   geom_line() +
   scale_colour_viridis_d()</code></pre>
-<pre><code>## Warning: The `printer` argument is deprecated as of rlang 0.3.0.
-## This warning is displayed once per session.</code></pre>
 <p><img src="/post/2019-02-21-plotting-factors-with-forcats_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 </div>
 <div id="plotting-the-top-five" class="section level2">
