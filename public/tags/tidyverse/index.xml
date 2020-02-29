@@ -6,10 +6,19 @@
     <description>Recent content in Tidyverse on Pete Talbert</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 02 Mar 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 28 Feb 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/tidyverse/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>For loops for quick summaries in R</title>
+      <link>/post/for-loops-for-quick-summaries-in-r/</link>
+      <pubDate>Fri, 28 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/for-loops-for-quick-summaries-in-r/</guid>
+      <description>Because I often work with categorical data, I find myself making lots of quick, sorted counts of variables in a dataset. I find that this is a really common technique to get to know a dataset you’re working with; I’ve also noticed David Robinson do it often in his screencasts.</description>
+    </item>
     
     <item>
       <title>Window Functions in SQL vs. R</title>
@@ -36,6 +45,15 @@
       
       <guid>/post/pivoting-data-in-sql-vs-r/</guid>
       <description>Often with education data, I need to pivot data to go from long format to wide. For instance, I often have test scores for different test subjects of a single assessment.</description>
+    </item>
+    
+    <item>
+      <title>ggplot2 geom_bar Labeling</title>
+      <link>/post/ggplot2-geom-bar-labeling/</link>
+      <pubDate>Fri, 16 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/ggplot2-geom-bar-labeling/</guid>
+      <description>In educational data analysis, I am constantly looking at counts and proportions. I’ve found the easiest way to display these results with categorical variables like demographics is to use stacked bar charts and especially 100% stacked charts.</description>
     </item>
     
   </channel>

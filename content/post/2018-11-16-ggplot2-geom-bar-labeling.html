@@ -1,10 +1,12 @@
 ---
 title: ggplot2 geom_bar Labeling
-author: ''
+author: Pete Talbert
 date: '2018-11-16'
 slug: ggplot2-geom-bar-labeling
-categories: []
-tags: []
+categories: R
+tags:   
+  - tidyverse
+  - ggplot2
 ---
 
 
@@ -14,8 +16,14 @@ tags: []
 <div id="ggplot2" class="section level3">
 <h3>ggplot2</h3>
 <p>First, for this post, I am using the following packages and <code>mtcars</code> as a dataset. I always make sure my dataframes are tibbles (probably not necessary).</p>
-<pre class="r"><code>library(tidyverse)
-library(scales)
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## Warning: As of rlang 0.4.0, dplyr must be at least version 0.8.0.
+## x dplyr 0.7.8 is too old for rlang 0.4.4.
+## i Please update dplyr to the latest version.
+## i Updating packages on Windows requires precautions:
+##   &lt;https://github.com/jennybc/what-they-forgot/issues/62&gt;</code></pre>
+<pre><code>## Warning: package &#39;purrr&#39; was built under R version 3.5.3</code></pre>
+<pre class="r"><code>library(scales)
 
 mtcars &lt;- as_tibble(mtcars)</code></pre>
 </div>
@@ -62,6 +70,8 @@ mtcars &lt;- as_tibble(mtcars)</code></pre>
   group_by(cyl) %&gt;% 
   count(gear) %&gt;%
   mutate(ratio = scales::percent(n/sum(n)))</code></pre>
+<pre><code>## Warning: The `printer` argument is deprecated as of rlang 0.3.0.
+## This warning is displayed once per session.</code></pre>
 <p>Then just call it, and again position it half-way in each fill:</p>
 <pre class="r"><code>mtcars %&gt;% 
   ggplot(aes(x = factor(cyl), fill = factor(gear))) +

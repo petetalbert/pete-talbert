@@ -1,0 +1,131 @@
+---
+title: For loops for quick summaries in R
+author: Pete Talbert
+date: '2020-02-28'
+slug: for-loops-for-quick-summaries-in-r
+categories:
+  - R
+tags:
+  - for-loop
+  - tidyverse
+  - purrr
+---
+
+Because I often work with categorical data, I find myself making lots of quick, sorted counts of variables in a dataset. I find that this is a really common technique to get to know a dataset you're working with; I've also noticed David Robinson do it often in his [screencasts](https://www.youtube.com/user/safe4democracy/featured). (If you haven't checked these out, I cannot recommend these enough!)
+
+## Using for loops
+
+As always, I need to make a disclaimer that I know I should be using some type of functional like `lapply` or `purrr::map`, but again since I'm newer to programming, I find it best to make a for loop first to better understand what's happening.
+
+This example uses a sample of the General Social Survey found in the `forcats` package.
+
+```{r warning=FALSE, message=FALSE}
+library(tidyverse)
+
+gss <- forcats::gss_cat %>% as_tibble()
+
+gss
+```
+
+What I want to do is quick count of the responses for each column of the survey. First, I just try to do it for the first column:
+
+```{r warning=FALSE}
+gss %>% 
+  group_by(year) %>% 
+  summarize(n = n())
+```
+
+Easy enough. I could have wrote one less line of code with `count()`, but the reason I am not has to do with how the for loops work. I found that `count()` inside a for loop was nearly impossible, for reasons I have yet to understand.
+
+Now let's write the for loop. As always we want three things: output, sequence, and body.
+
+```{r}
+gss_list <- vector("list", ncol(gss)) # 1. output
+for (i in 1:ncol(gss)) {              # 2. sequence
+  gss_list[[i]] <- gss %>%            # 3. body
+    group_by(gss[[i]]) %>% 
+    summarize(n = n())
+}
+#printing the 8th item in the list for an example.
+gss_list[[7]]
+```
+
+Awesome! That wasn't so bad. And what's nice is, if I print the whole list, I get a nice quick summary of counts for every column in the dataframe.
+
+*Here's the problem:* I want the column name in the dataframe, not `gss[[i]]`, which isn't meaningful. If I had 40 columns for instance, how could I keep track of what's what?
+
+Below, I add another line inside the for loop that replaces `gss[[i]]` in each dataframe in `gss_list` to the original column names.
+
+```{r}
+gss_list <- vector("list", ncol(gss)) # 1. output
+for (i in 1:ncol(gss)) {              # 2. sequence
+  gss_list[[i]] <- gss %>%            # 3. body
+    group_by(gss[[i]]) %>% 
+    summarize(n = n()) %>% 
+    ungroup()
+  colnames(gss_list[[i]])[1] <- names(gss)[i] #here I rename the column to its orig name.
+}
+#printing the 8th item in the list for an example.
+gss_list[[7]]
+```
+
+It's not the prettiest code, but it does the trick. I'd love a more elegant solution, but for now, it works.
+
+## A quick plot
+
+I always end by doing a quick plot, because really what's the point of summarizing data like this without visualizing it in some way?
+
+First, though, I want to group by the first column `year` for all my counts, so I'll tweak the for loop again.
+
+```{r}
+gss_list <- vector("list", ncol(gss)) # 1. output
+for (i in 1:ncol(gss)) {              # 2. sequence
+  gss_list[[i]] <- gss %>%            # 3. body
+    group_by(year, gss[[i]]) %>% #adding the year column
+    summarize(n = n()) %>% 
+    ungroup()
+  colnames(gss_list[[i]])[2] <- names(gss)[i] #here I rename the column to its orig name. Note: it's the second column now!
+}
+#printing the 8th item in the list for an example.
+gss_list[[7]]
+```
+
+Okay, now on to plotting! This is also a chance to show off Julia Silge's awesome `reorder_within()` [function](https://juliasilge.com/blog/reorder-within/) that allows you to easily reorder factors within each facet using `facet_wrap()`.
+
+```{r warning=FALSE, message=FALSE, fig.height=8}
+library(scales)
+library(tidytext) #this has reorder_within() along with a lot of great functions for working with text.
+
+theme_set(theme_minimal(base_size = 10) +
+  theme(plot.title = element_text(face = "bold"),
+        axis.text = element_text(size = 8))
+)
+
+gss_list[[7]] %>% 
+  mutate(relig = reorder_within(relig, n, year)) %>% #use this inside of mutate
+  ggplot(aes(x = relig, y = n, fill = relig)) +
+  geom_col() +
+  coord_flip() +
+  facet_wrap(~year, scales = "free_y") +
+  scale_x_reordered() + #and this to scale it properly.
+  scale_fill_viridis_d(direction = -1) +
+  scale_y_log10(labels = comma_format()) +
+  theme(legend.position = "none") +
+  labs(
+    title = "Although the top five have remained steady,\nthere's been lots of movement in minority religions.",
+    subtitle = "Count of religious affiliation, 2000-2014.",
+    x = element_blank(),
+    y = element_blank(),
+    caption = "A sample of categorical variables from the General Social survey."
+  )
+  
+```
+
+Another thing to note that David Robinson got me hooked on is `scale_y_log10()`; without it in this particular plot, it would be difficult to see how the smaller minority religions have changed across time.
+
+
+
+
+
+
+

@@ -64,8 +64,14 @@
 <div id="baumann-dataset" class="section level2">
 <h2>Baumann dataset</h2>
 <p>I’m going to use the one of the datasets that comes with the <code>car</code> package, called <code>Baumann</code>. According to the <code>carData</code> <a href="https://www.rdocumentation.org/packages/carData/versions/3.0-2/topics/Baumann">package documentation</a>, data are “from an experimental study conducted by Baumann and Jones, as reported by Moore and McCabe (1993). Students were randomly assigned to one of three experimental groups.” <code>group</code> is a factor with three levels: <code>Basal</code>, traditional method of teaching; <code>DRTA</code>, an innovative method; <code>Strat</code>, another innovative method. Seeing as though it is education data, I felt it was appropriate for this blog. I load it and make it a <code>tibble</code> below.</p>
-<pre class="r"><code>library(tidyverse)
-library(car)
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## Warning: As of rlang 0.4.0, dplyr must be at least version 0.8.0.
+## x dplyr 0.7.8 is too old for rlang 0.4.4.
+## i Please update dplyr to the latest version.
+## i Updating packages on Windows requires precautions:
+##   &lt;https://github.com/jennybc/what-they-forgot/issues/62&gt;</code></pre>
+<pre><code>## Warning: package &#39;purrr&#39; was built under R version 3.5.3</code></pre>
+<pre class="r"><code>library(car)
 
 baumann &lt;- carData::Baumann %&gt;% 
   as_tibble()

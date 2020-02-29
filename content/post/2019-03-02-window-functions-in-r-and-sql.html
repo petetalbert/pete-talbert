@@ -19,8 +19,14 @@ slug: window-functions-in-sql-vs-r
 <div id="sql" class="section level2">
 <h2>SQL</h2>
 <p>How would I do this in SQL? Below I connect to my MS SQL Server instance and print a very simple table of student enrollment records. You can see there are more than one per <code>studentID</code>. How would I grab the latest from each per the <code>date</code> column?</p>
-<pre class="r"><code>library(tidyverse)
-library(DBI)
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## Warning: As of rlang 0.4.0, dplyr must be at least version 0.8.0.
+## x dplyr 0.7.8 is too old for rlang 0.4.4.
+## i Please update dplyr to the latest version.
+## i Updating packages on Windows requires precautions:
+##   &lt;https://github.com/jennybc/what-they-forgot/issues/62&gt;</code></pre>
+<pre><code>## Warning: package &#39;purrr&#39; was built under R version 3.5.3</code></pre>
+<pre class="r"><code>library(DBI)
 library(odbc)
 library(knitr)</code></pre>
 <pre><code>## Warning: package &#39;knitr&#39; was built under R version 3.5.3</code></pre>
@@ -81,6 +87,8 @@ where rowNum = 1 --outer query to get just the latest record per student.</code>
 <p>R’s dplyr package also has window functions to do the same operation. What happens when I just apply <code>rownumber()</code> to the data?</p>
 <pre class="r"><code>enroll %&gt;% 
   mutate(rowNum = row_number())</code></pre>
+<pre><code>## Warning: The `printer` argument is deprecated as of rlang 0.3.0.
+## This warning is displayed once per session.</code></pre>
 <pre><code>## # A tibble: 11 x 4
 ##    studentID enrollmentType date                rowNum
 ##    &lt;chr&gt;     &lt;chr&gt;          &lt;dttm&gt;               &lt;int&gt;

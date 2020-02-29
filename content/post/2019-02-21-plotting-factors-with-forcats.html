@@ -15,9 +15,14 @@ tags:
 <div id="getting-started" class="section level2">
 <h2>Getting started</h2>
 <p>To start, I am going to load <code>forats::gss_cat</code> as my example dataset and make a simple time series of the types Protestant denominations respondents list.</p>
-<pre class="r"><code>library(tidyverse)
-
-gss &lt;- forcats::gss_cat
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## Warning: As of rlang 0.4.0, dplyr must be at least version 0.8.0.
+## x dplyr 0.7.8 is too old for rlang 0.4.4.
+## i Please update dplyr to the latest version.
+## i Updating packages on Windows requires precautions:
+##   &lt;https://github.com/jennybc/what-they-forgot/issues/62&gt;</code></pre>
+<pre><code>## Warning: package &#39;purrr&#39; was built under R version 3.5.3</code></pre>
+<pre class="r"><code>gss &lt;- forcats::gss_cat
 
 gss %&gt;% 
   filter(relig == &quot;Protestant&quot;) %&gt;% 
@@ -25,6 +30,8 @@ gss %&gt;%
   ggplot(aes(x = year, y = n, color = denom)) +
   geom_line() +
   scale_colour_viridis_d()</code></pre>
+<pre><code>## Warning: The `printer` argument is deprecated as of rlang 0.3.0.
+## This warning is displayed once per session.</code></pre>
 <p><img src="/post/2019-02-21-plotting-factors-with-forcats_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 </div>
 <div id="plotting-the-top-five" class="section level2">
@@ -63,12 +70,10 @@ gss %&gt;%
 <div id="cleaning-up" class="section level2">
 <h2>Cleaning up</h2>
 <p>The last thing I want to do is add labeling and make it look prettier. I have been using <code>hrbrthemes</code> lately with Roboto Condensed font, and I love it. Below are the settings I usually have in all my markdown docs.</p>
-<pre class="r"><code>library(hrbrthemes)</code></pre>
-<pre><code>## Warning: package &#39;hrbrthemes&#39; was built under R version 3.5.3</code></pre>
-<pre><code>## NOTE: Either Arial Narrow or Roboto Condensed fonts are required to use these themes.</code></pre>
-<pre><code>##       Please use hrbrthemes::import_roboto_condensed() to install Roboto Condensed and</code></pre>
-<pre><code>##       if Arial Narrow is not on your system, please see http://bit.ly/arialnarrow</code></pre>
-<pre class="r"><code>theme_set(theme_ipsum_rc())
+<pre class="r"><code>theme_set(theme_minimal(base_size = 10) +
+  theme(plot.title = element_text(face = &quot;bold&quot;),
+        axis.text = element_text(size = 8))
+)
 
 gss %&gt;% 
   filter(denom %in% protestant_top) %&gt;% 
@@ -83,48 +88,5 @@ gss %&gt;%
     color = &quot;Denomination&quot;,
     caption = &quot;A sample of categorical variables from the General Social survey.&quot;
   )</code></pre>
-<pre><code>## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database</code></pre>
-<pre><code>## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database</code></pre>
 <p><img src="/post/2019-02-21-plotting-factors-with-forcats_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 </div>

@@ -6,10 +6,19 @@
     <description>Recent content in Posts on Pete Talbert</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 24 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 28 Feb 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>For loops for quick summaries in R</title>
+      <link>/post/for-loops-for-quick-summaries-in-r/</link>
+      <pubDate>Fri, 28 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/for-loops-for-quick-summaries-in-r/</guid>
+      <description>Because I often work with categorical data, I find myself making lots of quick, sorted counts of variables in a dataset. I find that this is a really common technique to get to know a dataset you’re working with; I’ve also noticed David Robinson do it often in his screencasts.</description>
+    </item>
     
     <item>
       <title>Consulting Services</title>
