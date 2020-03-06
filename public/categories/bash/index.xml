@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>bash on Pete Talbert</title>
+    <link>/categories/bash/</link>
+    <description>Recent content in bash on Pete Talbert</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 05 Mar 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/bash/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Learning bash</title>
+      <link>/post/learning-bash/</link>
+      <pubDate>Thu, 05 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/learning-bash/</guid>
+      <description>Hello all!
+So I just bought a used MacBook Pro in order to learn Linux, bash, shell scripting, etc. This post is just to test that I can write bash code in an .</description>
+    </item>
+    
+  </channel>
+</rss>

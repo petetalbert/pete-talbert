@@ -1,9 +1,54 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/categories/bash/</loc>
+    <lastmod>2020-03-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/</loc>
+    <lastmod>2020-03-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/learning-bash/</loc>
+    <lastmod>2020-03-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/</loc>
+    <lastmod>2020-03-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/post/for-loops-for-quick-summaries-in-r/</loc>
+    <lastmod>2020-02-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/for-loop/</loc>
+    <lastmod>2020-02-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/purrr/</loc>
+    <lastmod>2020-02-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/r/</loc>
+    <lastmod>2020-02-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2020-02-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/tidyverse/</loc>
     <lastmod>2020-02-28T00:00:00+00:00</lastmod>
   </url>
   
@@ -13,8 +58,33 @@
   </url>
   
   <url>
+    <loc>/</loc>
+    <lastmod>2019-11-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/services/</loc>
     <lastmod>2019-11-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/sql/</loc>
+    <lastmod>2019-11-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/tableau/</loc>
+    <lastmod>2019-11-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/ms-sql-server/</loc>
+    <lastmod>2019-03-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/row_number/</loc>
+    <lastmod>2019-03-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -28,6 +98,16 @@
   </url>
   
   <url>
+    <loc>/tags/regression/</loc>
+    <lastmod>2018-12-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/statistical-learning/</loc>
+    <lastmod>2018-12-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/post/working-more-with-the-baumann-dataset/</loc>
     <lastmod>2018-12-29T00:00:00+00:00</lastmod>
   </url>
@@ -38,8 +118,23 @@
   </url>
   
   <url>
+    <loc>/tags/pivot/</loc>
+    <lastmod>2018-11-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/post/pivoting-data-in-sql-vs-r/</loc>
     <lastmod>2018-11-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/spread/</loc>
+    <lastmod>2018-11-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/ggplot2/</loc>
+    <lastmod>2018-11-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -63,109 +158,7 @@
   </url>
   
   <url>
-    <loc>/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/categories/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/for-loop/</loc>
-    <lastmod>2020-02-28T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/ggplot2/</loc>
-    <lastmod>2018-11-16T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/ms-sql-server/</loc>
-    <lastmod>2019-03-02T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/</loc>
-    <lastmod>2020-02-28T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/pivot/</loc>
-    <lastmod>2018-11-22T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/post/</loc>
-    <lastmod>2020-02-28T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/purrr/</loc>
-    <lastmod>2020-02-28T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/categories/r/</loc>
-    <lastmod>2020-02-28T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/regression/</loc>
-    <lastmod>2018-12-29T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/row_number/</loc>
-    <lastmod>2019-03-02T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/spread/</loc>
-    <lastmod>2018-11-22T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/categories/sql/</loc>
-    <lastmod>2019-11-24T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/statistical-learning/</loc>
-    <lastmod>2018-12-29T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/categories/tableau/</loc>
-    <lastmod>2019-11-24T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
-    <lastmod>2020-02-28T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/tidyverse/</loc>
-    <lastmod>2020-02-28T00:00:00+00:00</lastmod>
-    <priority>0</priority>
+    <loc>/index.html</loc>
   </url>
   
 </urlset>

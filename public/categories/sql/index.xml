@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Sql on Pete Talbert</title>
+    <title>SQL on Pete Talbert</title>
     <link>/categories/sql/</link>
-    <description>Recent content in Sql on Pete Talbert</description>
+    <description>Recent content in SQL on Pete Talbert</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Sun, 24 Nov 2019 00:00:00 +0000</lastBuildDate>
@@ -54,9 +54,9 @@ I have not posted on this site since March, and I feel terrible about it. I know
       <pubDate>Tue, 13 Nov 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/can-i-write-sql-in-r-markdown/</guid>
-      <description>Hello!
+      <description> Hello!
 This is my very first post; just a quick test as to how a SQL snippet shows in a markdown file and on a website. See below.
-select personID, endYear, grade, ROW_NUMBER() over (partition by personID order by endYear, case when grade = &amp;#39;KG&amp;#39; then &amp;#39;00&amp;#39; else grade end) as rowNumfrom #enroll3</description>
+select personID , endYear , grade , ROW_NUMBER() over (partition by personID order by endYear, case when grade = &amp;#39;KG&amp;#39; then &amp;#39;00&amp;#39; else grade end) as rowNum from #enroll3 </description>
     </item>
     
   </channel>

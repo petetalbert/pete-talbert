@@ -1,0 +1,24 @@
+---
+title: Learning bash
+author: Pete Talbert
+date: '2020-03-05'
+slug: learning-bash
+categories:
+  - bash
+tags: []
+---
+
+Hello all!
+
+So I just bought a used MacBook Pro in order to learn Linux, bash, shell scripting, etc. This post is just to test that I can write bash code in an `.Rmd` file and it will show on my blog correctly.
+
+```{bash}
+ls
+```
+
+Hey, that's pretty cool! It looks like it is showing the directory where this `.Rmd` file lives. 
+
+```{bash}
+cd /
+ls
+```

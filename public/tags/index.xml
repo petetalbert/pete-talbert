@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Pete Talbert</title>
@@ -12,7 +12,7 @@
     
     
     <item>
-      <title>For Loop</title>
+      <title>for-loop</title>
       <link>/tags/for-loop/</link>
       <pubDate>Fri, 28 Feb 2020 00:00:00 +0000</pubDate>
       
@@ -21,34 +21,7 @@
     </item>
     
     <item>
-      <title>Ggplot2</title>
-      <link>/tags/ggplot2/</link>
-      <pubDate>Fri, 16 Nov 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/ggplot2/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Ms Sql Server</title>
-      <link>/tags/ms-sql-server/</link>
-      <pubDate>Sat, 02 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/ms-sql-server/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Pivot</title>
-      <link>/tags/pivot/</link>
-      <pubDate>Thu, 22 Nov 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/pivot/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Purrr</title>
+      <title>purrr</title>
       <link>/tags/purrr/</link>
       <pubDate>Fri, 28 Feb 2020 00:00:00 +0000</pubDate>
       
@@ -57,16 +30,25 @@
     </item>
     
     <item>
-      <title>Regression</title>
-      <link>/tags/regression/</link>
-      <pubDate>Sat, 29 Dec 2018 00:00:00 +0000</pubDate>
+      <title>tidyverse</title>
+      <link>/tags/tidyverse/</link>
+      <pubDate>Fri, 28 Feb 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/regression/</guid>
+      <guid>/tags/tidyverse/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Row_number</title>
+      <title>ms-sql-server</title>
+      <link>/tags/ms-sql-server/</link>
+      <pubDate>Sat, 02 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/ms-sql-server/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>row_number()</title>
       <link>/tags/row_number/</link>
       <pubDate>Sat, 02 Mar 2019 00:00:00 +0000</pubDate>
       
@@ -75,16 +57,16 @@
     </item>
     
     <item>
-      <title>Spread</title>
-      <link>/tags/spread/</link>
-      <pubDate>Thu, 22 Nov 2018 00:00:00 +0000</pubDate>
+      <title>regression</title>
+      <link>/tags/regression/</link>
+      <pubDate>Sat, 29 Dec 2018 00:00:00 +0000</pubDate>
       
-      <guid>/tags/spread/</guid>
+      <guid>/tags/regression/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Statistical Learning</title>
+      <title>statistical-learning</title>
       <link>/tags/statistical-learning/</link>
       <pubDate>Sat, 29 Dec 2018 00:00:00 +0000</pubDate>
       
@@ -93,11 +75,29 @@
     </item>
     
     <item>
-      <title>Tidyverse</title>
-      <link>/tags/tidyverse/</link>
-      <pubDate>Fri, 28 Feb 2020 00:00:00 +0000</pubDate>
+      <title>pivot</title>
+      <link>/tags/pivot/</link>
+      <pubDate>Thu, 22 Nov 2018 00:00:00 +0000</pubDate>
       
-      <guid>/tags/tidyverse/</guid>
+      <guid>/tags/pivot/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>spread</title>
+      <link>/tags/spread/</link>
+      <pubDate>Thu, 22 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/spread/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ggplot2</title>
+      <link>/tags/ggplot2/</link>
+      <pubDate>Fri, 16 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/ggplot2/</guid>
       <description></description>
     </item>
     

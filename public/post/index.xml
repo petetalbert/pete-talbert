@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Pete Talbert</title>
@@ -6,10 +6,20 @@
     <description>Recent content in Posts on Pete Talbert</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 28 Feb 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 05 Mar 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Learning bash</title>
+      <link>/post/learning-bash/</link>
+      <pubDate>Thu, 05 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/learning-bash/</guid>
+      <description>Hello all!
+So I just bought a used MacBook Pro in order to learn Linux, bash, shell scripting, etc. This post is just to test that I can write bash code in an .</description>
+    </item>
     
     <item>
       <title>For loops for quick summaries in R</title>
@@ -99,9 +109,9 @@ I have not posted on this site since March, and I feel terrible about it. I know
       <pubDate>Tue, 13 Nov 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/can-i-write-sql-in-r-markdown/</guid>
-      <description>Hello!
+      <description> Hello!
 This is my very first post; just a quick test as to how a SQL snippet shows in a markdown file and on a website. See below.
-select personID, endYear, grade, ROW_NUMBER() over (partition by personID order by endYear, case when grade = &amp;#39;KG&amp;#39; then &amp;#39;00&amp;#39; else grade end) as rowNumfrom #enroll3</description>
+select personID , endYear , grade , ROW_NUMBER() over (partition by personID order by endYear, case when grade = &amp;#39;KG&amp;#39; then &amp;#39;00&amp;#39; else grade end) as rowNum from #enroll3 </description>
     </item>
     
   </channel>
