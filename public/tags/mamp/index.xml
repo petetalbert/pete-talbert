@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>MAMP on Pete Talbert</title>
+    <link>/tags/mamp/</link>
+    <description>Recent content in MAMP on Pete Talbert</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 11 Mar 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/mamp/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Connecting to MAMP install of MySQL in R</title>
+      <link>/post/connecting-to-mamp-install-of-mysql-in-r/</link>
+      <pubDate>Wed, 11 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/connecting-to-mamp-install-of-mysql-in-r/</guid>
+      <description>I just purchased a used Macbook Pro to learn a little web development, bash, and other Linux-type things, and in the course of doing some tutorials (namely Tania Rascia’s great post on building a simple CRUD app) I had to install MAMP.</description>
+    </item>
+    
+  </channel>
+</rss>

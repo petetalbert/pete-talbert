@@ -1,0 +1,129 @@
+---
+title: Connecting to MAMP install of MySQL in R
+author: Pete Talbert
+date: '2020-03-11'
+slug: connecting-to-mamp-install-of-mysql-in-r
+categories:
+  - R
+  - MySQL
+tags:
+  - macOS
+  - MAMP
+---
+
+I just purchased a used Macbook Pro to learn a little web development, bash, and other Linux-type things, and in the course of doing some tutorials (namely Tania Rascia's [great post](https://www.taniarascia.com/create-a-simple-database-app-connecting-to-mysql-with-php/) on building a simple CRUD app) I had to install [MAMP](https://www.mamp.info/en/mamp/mac/). This gives you a local server environment consisting of Apache, MySQL, and PHP.
+
+Since I work with databases so often, I was curious about the simplest way to connect to my newly installed instance of MySQL in R.
+
+## Which R package?
+
+This tutorial assumes you have already installed [MAMP](https://www.mamp.info/en/mamp/mac/) and have it currently running on your local machine in a macOS environment. 
+
+There are lots of different ways to connect to a db in R. RStudio has a great website that walks through their enterprise packages for working with databases, but I've often found this site confusing. Setting up drivers, ODBC connections, and DSN files is difficult enough in Windows, let alone on a Mac.
+
+So instead of attempting to set up an ODBC connection to MySQL, I am simply going to use the `RMariaDB` package coupled with `DBI` (I'm skipping the `odbc` package altogether). I tend to always trust the folks at RStudio for great package development, and this is a part of the [DBI](https://www.r-dbi.org/) interface that in my experience gives the best performance for database work in R.
+
+So if you haven't done so already, install the following packages (along with `nycflights13` which we'll be using for a demo):
+
+```{r eval=FALSE}
+install.packages("tidyverse")
+install.packages("DBI")
+install.packages("RMariaDB")
+install.packages("nycflights13")
+```
+
+## Creating a connection to the database
+
+Okay, let's first see if we can connect to the database. Since I don't want to embed my username and password, I am using environmental variables. You can learn more on how to do that on RStudio's [Databases using R page](https://db.rstudio.com/best-practices/managing-credentials/#use-environment-variables).
+
+```{r warning=FALSE, message=FALSE}
+library(tidyverse)
+library(odbc)
+library(DBI)
+library(RMariaDB)
+library(nycflights13)
+```
+
+
+```{r eval=FALSE}
+con <- DBI::dbConnect(RMariaDB::MariaDB(), user = Sys.getenv("mysql_user"), password = Sys.getenv("mysql_pass"), host = "localhost")
+```
+
+`Error: Failed to connect: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)`
+
+Great! Immediately we have an error. According to MySQL's [documentation](https://dev.mysql.com/doc/refman/8.0/en/connecting.html), Unix systems use this socket file for connecting to MySQL databases. Mine isn't there because I used MAMP to install MySQL; MAMP places the socket file here: `/Applications/MAMP/tmp/mysql/mysql.sock`. 
+
+So what we can do is write a bash command that creates a hard link from the MAMP location to where the `RMariaDB` package expects it:
+
+```{r eval=FALSE}
+#either open terminal and run what's within quotes, or run it write from r with the system() function.
+system("ln -s /Applications/MAMP/tmp/mysql/mysql.sock /tmp/mysql.sock")
+```
+
+Okay, let's try to connect again.
+
+```{r}
+con <- DBI::dbConnect(RMariaDB::MariaDB(), user = Sys.getenv("mysql_user"), password = Sys.getenv("mysql_pass"), host = "localhost")
+
+dbGetQuery(conn = con, statement = "show databases;")
+```
+
+Awesome! We are connected to our MySQL instance that we installed with MAMP. **Note:** If you restart your machine, you will have to re-run the bash command above...Not quite sure why that is, but you can probably figure out a more permanent solution.
+
+## Reading and writing from the database
+
+The `dbGetQuery` function is the easiest way to read/write to the database. The first argument is just the name of your connection (mine is `con`), and the second is your sql statement.
+
+Let's create a database of the `nycflights13` data, and query it!
+
+```{r eval=FALSE}
+dbGetQuery(con, "CREATE DATABASE nyc_flights;") #create the database
+``` 
+
+Great, okay my plan is to insert each of the five dataframes of `nycflights13` into the db as tables. So below, I first need to modify my connection to connect to the database we just created. I'm then going to create a simple function that takes each dataframe in the package and copies it to a table in the database.
+
+```{r}
+#new connection
+con_flights <- DBI::dbConnect(RMariaDB::MariaDB(), user = Sys.getenv("mysql_user"), password = Sys.getenv("mysql_pass"), db = "nyc_flights", host = "localhost") #added db argument.
+
+#function
+insert_db_table <- function(x) {    #creating function insert_db_table
+  copy_to(con_flights, x,           #x is the dataframe
+          deparse(substitute(x)),   #here I'm using the substitute() and deparse() function just to get the dataframe name as a string
+          temporary = FALSE,        #we'll make them permanent tables
+          overwrite = TRUE          #and overwrite them if they already exist
+      )
+}
+
+#run the function for each dataframe in nycflights13
+insert_db_table(airlines)
+insert_db_table(airports)
+insert_db_table(flights)
+insert_db_table(planes)
+insert_db_table(weather)
+```
+
+Let's see if the data's there.
+
+```{r}
+dbGetQuery(con_flights, statement = "select * from flights") %>% 
+  as_tibble()
+```
+
+Awesome!
+
+## Querying with `dbplyr`
+
+So far we have been using `dbGetQuery`, which queries the data and brings it back in memory in R. But since the data is in a SQL database, we can actually write queries remotely and not pull the data into R until we need it; `dbplyr` executes `dplyr` code on the MySQL server and lazily evaluates it's results. You can then use `collect()` to actually capture the total results in memory for plotting.
+
+```{r}
+tbl_flights <- tbl(con_flights, "flights")   #dbplyr's tbl function
+tbl_airports <- tbl(con_flights, "airports")
+
+tbl_flights %>% 
+  inner_join(tbl_airports, by = c("dest" = "faa")) %>% 
+  count(name)
+```
+
+Although in my early experience of using `dbplyr` commands I have found it much slower than just bringing all the data into R, I think it's still a useful method for working with databases. You can read more about it on [RStudio's website](https://dbplyr.tidyverse.org/). Cheers!
+
