@@ -17,7 +17,7 @@
       <pubDate>Wed, 11 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/post/connecting-to-mamp-install-of-mysql-in-r/</guid>
-      <description>I just purchased a used Macbook Pro to learn a little web development, bash, and other Linux-type things, and in the course of doing some tutorials (namely Tania Rascia’s great post on building a simple CRUD app) I had to install MAMP.</description>
+      <description>In the course of doing a web dev tutorial (namely Tania Rascia’s great post on building a simple CRUD app) I had to install MAMP. This gives you a local server environment consisting of Apache, MySQL, and PHP.</description>
     </item>
     
     <item>
