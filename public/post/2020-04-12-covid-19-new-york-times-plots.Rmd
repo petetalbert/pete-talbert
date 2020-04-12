@@ -165,7 +165,7 @@ covid_processed %>%
   scale_y_continuous(minor_breaks = NULL, labels = comma_format(accuracy = 1)) + # removed the hard-coded breaks.
   facet_wrap(~state, scales = "free_y", ncol = 4) +
   labs(
-    title = "Some states have flattened the curve; others may be still ramping up",
+    title = "Some states have flattened the curve, others may still be ramping up",
     subtitle = "New York Times new cases and 7-day average plot",
     x = element_blank(),
     y = element_blank(),
