@@ -1,0 +1,178 @@
+---
+title: COVID-19 New York Times plots
+author: Pete Talbert
+date: '2020-04-12'
+slug: covid-19-new-york-times-plots
+categories:
+  - R
+tags:
+  - ggplot2
+---
+
+
+
+<p>The New York Times has produced some really great maps and plots in its efforts to track the coronavirus in the U.S. One plot in particular that caught my attention is the histogram of new cases with a 7-day average line overlayed found at the top of this <a href="https://www.nytimes.com/interactive/2020/us/coronavirus-us-cases.html">page</a> (and subsequent state pages).</p>
+<p>Why not try to replicate that? I would also like to try to facet this plot out with all 50 states.</p>
+<div id="making-the-histogram" class="section level2">
+<h2>Making the histogram</h2>
+<p>Making the histogram of new cases shouldn’t be too difficult. I am going to use New York as my first state. Conveniently enough, The New York Times has a Github site where we can download the state-level data that creates the maps and plots on their site.</p>
+<pre class="r"><code>library(tidyverse)
+library(lubridate)
+library(scales)
+
+theme_set(theme_minimal(base_size = 11))</code></pre>
+<pre class="r"><code>covid &lt;- read.csv(&quot;https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv&quot;) %&gt;% 
+  as_tibble() %&gt;% 
+  mutate(date = ymd(date), 
+         state = as.character(state))
+
+covid</code></pre>
+<pre><code>## # A tibble: 2,217 x 5
+##    date       state       fips cases deaths
+##    &lt;date&gt;     &lt;chr&gt;      &lt;int&gt; &lt;int&gt;  &lt;int&gt;
+##  1 2020-01-21 Washington    53     1      0
+##  2 2020-01-22 Washington    53     1      0
+##  3 2020-01-23 Washington    53     1      0
+##  4 2020-01-24 Illinois      17     1      0
+##  5 2020-01-24 Washington    53     1      0
+##  6 2020-01-25 California     6     1      0
+##  7 2020-01-25 Illinois      17     1      0
+##  8 2020-01-25 Washington    53     1      0
+##  9 2020-01-26 Arizona        4     1      0
+## 10 2020-01-26 California     6     2      0
+## # … with 2,207 more rows</code></pre>
+<p>The data from NYT is <em>cumulative</em> counts of cases and deaths. To get new cases, we will have to remove the previous total from each row using the <code>lag</code> function in <code>dplyr</code>.</p>
+<pre class="r"><code>covid_processed &lt;- covid %&gt;% 
+  group_by(state) %&gt;% 
+  mutate(new_cases = cases - lag(cases), 
+         new_cases = replace_na(new_cases, 0)) %&gt;% 
+  ungroup()
+
+covid_processed %&gt;% 
+  filter(state == &quot;New York&quot;) %&gt;% 
+  ggplot(aes(x = date, y = new_cases)) +
+  geom_histogram(stat = &quot;identity&quot;)</code></pre>
+<p><img src="/post/2020-04-12-covid-19-new-york-times-plots_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>I haven’t done any scaling or labeling, but this looks like the same histogram as the one at the top of the <a href="https://www.nytimes.com/interactive/2020/us/new-york-coronavirus-cases.html">New York state-specific page</a>, so we’re on the right track. Let’s see if I can color, scale, and label it the same way as NYT now.</p>
+<pre class="r"><code>covid_processed %&gt;% 
+  filter(state == &quot;New York&quot;) %&gt;% 
+  ggplot(aes(x = date, y = new_cases)) +
+  geom_histogram(stat = &quot;identity&quot;, fill = &quot;#FAC9C7&quot;) +
+  geom_hline(yintercept = 0, size = 0.75, color = &quot;gray92&quot;) +
+  scale_x_date(limits = date(c(&quot;2020-02-26&quot;, &quot;2020-04-11&quot;)),
+               breaks = date(c(&quot;2020-02-26&quot;, &quot;2020-04-11&quot;)),
+               labels = date_format(format = &quot;%b. %d&quot;),
+               minor_breaks = NULL) +
+  scale_y_continuous(breaks = c(0, 5000, 10000), minor_breaks = NULL, labels = comma_format()) +
+  labs(
+    x = element_blank(),
+    y = element_blank()
+  ) +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_line(linetype = &quot;dashed&quot;)
+  ) -&gt; p
+
+p</code></pre>
+<p><img src="/post/2020-04-12-covid-19-new-york-times-plots_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Whew! That was a decent amount of work with scales and grid lines; one hack is that when I set <code>panel.grid.major.y = element_line(linetype = &quot;dashed&quot;)</code>, the 0 line was dashed as well, whereas I wanted a solid line at 0. To remedy this, I had to place a <code>geom_hline</code> with <code>yintercept = 0</code> and make it the same color gray as the other grid lines.</p>
+</div>
+<div id="day-average" class="section level2">
+<h2>7-day average</h2>
+<p>Okay, now for maybe the hardest part: creating a 7-day average line that is layered over the histogram. First, let’s attempt to compute the 7-day average using <code>rollmean</code> from the <code>zoo</code> package.</p>
+<pre class="r"><code>library(zoo)
+
+covid_processed &lt;- covid_processed %&gt;%
+  group_by(state) %&gt;% 
+  mutate(seven_avg = rollmean(new_cases, 7, align = &quot;right&quot;, fill = 0)) %&gt;% 
+  ungroup()</code></pre>
+<p>I’ve set <code>align = &quot;right&quot;</code>, which will compute the average from the <em>previous</em> seven days; this appears to be the methodology of NYT, though I’m not entirely sure. I’ve also set <code>fill = 0</code>, so that I get the same vector length as the rest of the data frame, just filling the starting numbers with 0.</p>
+<p>Let’s just verify that’s it’s doing what we expect:</p>
+<pre class="r"><code>covid_processed %&gt;% 
+  filter(state == &quot;New York&quot;,
+         date &gt;= &quot;2020-03-15&quot; &amp; date &lt;= &quot;2020-03-21&quot;)</code></pre>
+<pre><code>## # A tibble: 7 x 7
+##   date       state     fips cases deaths new_cases seven_avg
+##   &lt;date&gt;     &lt;chr&gt;    &lt;int&gt; &lt;int&gt;  &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 2020-03-15 New York    36   732      6       122      89.4
+## 2 2020-03-16 New York    36   950     10       218     115. 
+## 3 2020-03-17 New York    36  1374     17       424     172. 
+## 4 2020-03-18 New York    36  2382     27      1008     309. 
+## 5 2020-03-19 New York    36  4152     30      1770     547. 
+## 6 2020-03-20 New York    36  7102     57      2950     954. 
+## 7 2020-03-21 New York    36 10356     80      3254    1392.</code></pre>
+<pre class="r"><code>covid_processed %&gt;% 
+  filter(state == &quot;New York&quot;,
+         date &gt;= &quot;2020-03-15&quot; &amp; date &lt;= &quot;2020-03-21&quot;) %&gt;% 
+  summarize(seven_avg = sum(new_cases) / n())</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   seven_avg
+##       &lt;dbl&gt;
+## 1     1392.</code></pre>
+<p>Yep, when I do it by hand for one date (Mar. 21), I get the same result: <strong>1,392</strong>.</p>
+<p>Let’s just update the data for the plot <code>p</code> and add the line to compare to the NYT plot:</p>
+<pre class="r"><code>p$data &lt;- covid_processed %&gt;% 
+  filter(state == &quot;New York&quot;)
+
+p +
+  geom_line(aes(y = seven_avg))</code></pre>
+<p><img src="/post/2020-04-12-covid-19-new-york-times-plots_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Nice! Okay, now let’s doctor that line up to look like the NYT plot. Here, rather than add to the <code>ggplot</code> object, <code>p</code>, I’m going to rebuild the entire plot. However, it can be helpful sometimes when working on a plot to save a portion of it, and continue to build on it. Furthermore, since it’s a list object, you can edit elements of the list, like I did to update the data above.</p>
+<pre class="r"><code>covid_processed %&gt;% 
+  filter(state == &quot;New York&quot;) %&gt;% 
+  ggplot(aes(x = date, y = new_cases)) +
+  geom_histogram(stat = &quot;identity&quot;, fill = &quot;#FAC9C7&quot;) +
+  geom_hline(yintercept = 0, size = 0.75, color = &quot;gray92&quot;) +
+  geom_line(aes(y = seven_avg, color = &quot;#CF1010&quot;), size = 1) +
+  geom_area(aes(y = seven_avg, fill = &quot;#CF1010&quot;), alpha = 0.25) +
+  scale_x_date(limits = date(c(&quot;2020-02-26&quot;, &quot;2020-04-11&quot;)),
+               breaks = date(c(&quot;2020-02-26&quot;, &quot;2020-04-11&quot;)),
+               labels = date_format(format = &quot;%b. %d&quot;),
+               minor_breaks = NULL) +
+  scale_y_continuous(breaks = c(0, 5000, 10000), minor_breaks = NULL, labels = comma_format()) +
+  labs(
+    title = &quot;New York may have flattened the curve&quot;,
+    subtitle = &quot;New York Times new cases and 7-day average plot&quot;,
+    x = element_blank(),
+    y = element_blank(),
+    caption = &quot;Data from https://github.com/nytimes/covid-19-data.&quot;
+  ) +
+  theme(plot.title = element_text(face = &quot;bold&quot;),
+        panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_line(linetype = &quot;dashed&quot;),
+        legend.position = &quot;none&quot;
+  )</code></pre>
+<p><img src="/post/2020-04-12-covid-19-new-york-times-plots_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="faceting-all-50-states" class="section level2">
+<h2>Faceting all 50 states</h2>
+<p>Okay, the last thing I want to do is facet this out by state.</p>
+<pre class="r"><code>covid_processed %&gt;% 
+  filter(fips &lt;= 56) %&gt;% # just the 50 states + DC.
+  mutate(state = case_when(state == &quot;District of Columbia&quot; ~ &quot;Washington DC&quot;, TRUE ~ state)) %&gt;% 
+  ggplot(aes(x = date, y = new_cases)) +
+  geom_histogram(stat = &quot;identity&quot;, fill = &quot;#FAC9C7&quot;) +
+  geom_hline(yintercept = 0, size = 0.75, color = &quot;gray92&quot;) +
+  geom_line(aes(y = seven_avg, color = &quot;#CF1010&quot;), size = 1) +
+  geom_area(aes(y = seven_avg, fill = &quot;#CF1010&quot;), alpha = 0.25) +
+  scale_x_date(limits = date(c(&quot;2020-02-26&quot;, &quot;2020-04-11&quot;)),
+               breaks = date(c(&quot;2020-02-26&quot;, &quot;2020-04-11&quot;)),
+               labels = date_format(format = &quot;%b. %d&quot;),
+               minor_breaks = NULL) +
+  scale_y_continuous(minor_breaks = NULL, labels = comma_format(accuracy = 1)) + # removed the hard-coded breaks.
+  facet_wrap(~state, scales = &quot;free_y&quot;, ncol = 4) +
+  labs(
+    title = &quot;Some states have flattened the curve; others may be still ramping up&quot;,
+    subtitle = &quot;New York Times new cases and 7-day average plot&quot;,
+    x = element_blank(),
+    y = element_blank(),
+    caption = &quot;Data from https://github.com/nytimes/covid-19-data.&quot;
+  ) +
+  theme(plot.title = element_text(face = &quot;bold&quot;),
+        panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_line(linetype = &quot;dashed&quot;),
+        legend.position = &quot;none&quot;
+  )</code></pre>
+<p><img src="/post/2020-04-12-covid-19-new-york-times-plots_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>I hope this tutorial was helpful; I feel the best way to get better at <code>ggplot2</code> is to find plots on the internet you like, and try to recreate them in R.</p>
+<p>Lastly, I want to say happy Easter to you all. During this time, it can be difficult to find hope, but in the story of Jesus we find a message of light in the midst of darkness.</p>
+</div>

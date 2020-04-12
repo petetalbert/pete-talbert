@@ -6,10 +6,19 @@
     <description>Recent content in R on Pete Talbert</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 11 Mar 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 12 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>COVID-19 New York Times plots</title>
+      <link>/post/covid-19-new-york-times-plots/</link>
+      <pubDate>Sun, 12 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/covid-19-new-york-times-plots/</guid>
+      <description>The New York Times has produced some really great maps and plots in its efforts to track the coronavirus in the U.S. One plot in particular that caught my attention is the histogram of new cases with a 7-day average line overlayed found at the top of this page (and subsequent state pages).</description>
+    </item>
     
     <item>
       <title>Connecting to MAMP install of MySQL in R</title>
