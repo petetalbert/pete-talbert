@@ -52,18 +52,18 @@
   <h1> COVID-19 New York Times plots </h1>
 
   <div id=sub-header>
-    Sunday, April 12, 2020 · 6 minute read
+    Sunday, April 12, 2020 · 7 minute read
   </div>
 
   <div class="entry-content">
     
 
 
-<p>The New York Times has produced some really great maps and plots in its efforts to track the coronavirus in the U.S. One plot in particular that caught my attention is the histogram of new cases with a 7-day average line overlayed found at the top of this <a href="https://www.nytimes.com/interactive/2020/us/coronavirus-us-cases.html">page</a> (and subsequent state pages).</p>
-<p>Why not try to replicate that? I would also like to try to facet this plot out with all 50 states.</p>
-<div id="making-the-histogram" class="section level2">
-<h2>Making the histogram</h2>
-<p>Making the histogram of new cases shouldn’t be too difficult. I am going to use New York as my first state. Conveniently enough, The New York Times has a Github site where we can download the state-level data that creates the maps and plots on their site.</p>
+<p>The New York Times has produced some really great maps and plots in its efforts to track the coronavirus in the U.S. One plot in particular that caught my attention is the histogram (actually more like a bar plot) of new cases with a 7-day average line overlayed found at the top of this <a href="https://www.nytimes.com/interactive/2020/us/coronavirus-us-cases.html">page</a>.</p>
+<p>Why not try to replicate this? I would also like to try to facet this plot out with all 50 states.</p>
+<div id="making-the-histogram-bar-plot" class="section level2">
+<h2>Making the histogram (bar plot)</h2>
+<p>Making the histogram of new cases shouldn’t be too difficult. I am going to use New York as my first state. Conveniently enough, The New York Times has a Github site where we can download the state-level data that creates the maps and plots on their site. I’ll also use <code>geom_col</code> because each bar is just one day, so there are no bins needed.</p>
 <pre class="r"><code>library(tidyverse)
 library(lubridate)
 library(scales)
@@ -99,13 +99,13 @@ covid</code></pre>
 covid_processed %&gt;% 
   filter(state == &quot;New York&quot;) %&gt;% 
   ggplot(aes(x = date, y = new_cases)) +
-  geom_histogram(stat = &quot;identity&quot;)</code></pre>
+  geom_col()</code></pre>
 <p><img src="../../post/2020-04-12-covid-19-new-york-times-plots_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>I haven’t done any scaling or labeling, but this looks like the same histogram as the one at the top of the <a href="https://www.nytimes.com/interactive/2020/us/new-york-coronavirus-cases.html">New York state-specific page</a>, so we’re on the right track. Let’s see if I can color, scale, and label it the same way as NYT now.</p>
 <pre class="r"><code>covid_processed %&gt;% 
   filter(state == &quot;New York&quot;) %&gt;% 
   ggplot(aes(x = date, y = new_cases)) +
-  geom_histogram(stat = &quot;identity&quot;, fill = &quot;#FAC9C7&quot;) +
+  geom_col(fill = &quot;#FAC9C7&quot;) +
   geom_hline(yintercept = 0, size = 0.75, color = &quot;gray92&quot;) +
   scale_x_date(limits = date(c(&quot;2020-02-26&quot;, &quot;2020-04-11&quot;)),
                breaks = date(c(&quot;2020-02-26&quot;, &quot;2020-04-11&quot;)),
@@ -164,14 +164,14 @@ covid_processed &lt;- covid_processed %&gt;%
 p +
   geom_line(aes(y = seven_avg))</code></pre>
 <p><img src="../../post/2020-04-12-covid-19-new-york-times-plots_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<p>Nice! Okay, now let’s doctor that line up to look like the NYT plot. Here, rather than add to the <code>ggplot</code> object, <code>p</code>, I’m going to rebuild the entire plot. However, it can be helpful sometimes when working on a plot to save a portion of it, and continue to build on it. Furthermore, since it’s a list object, you can edit elements of the list, like I did to update the data above.</p>
+<p>Nice! Okay, now let’s doctor that line up to look like the NYT plot. Here, rather than add to the <code>ggplot</code> object, <code>p</code>, I’m going to rebuild the entire plot. However, it can be helpful sometimes when working on a plot to save a portion of it, and continue to build on it. Furthermore, since it’s a list object, we can edit elements of the list, like I did to update the data above.</p>
 <pre class="r"><code>covid_processed %&gt;% 
   filter(state == &quot;New York&quot;) %&gt;% 
   ggplot(aes(x = date, y = new_cases)) +
-  geom_histogram(stat = &quot;identity&quot;, fill = &quot;#FAC9C7&quot;) +
+  geom_col(fill = &quot;#FAC9C7&quot;) +
   geom_hline(yintercept = 0, size = 0.75, color = &quot;gray92&quot;) +
-  geom_line(aes(y = seven_avg, color = &quot;#CF1010&quot;), size = 1) +
-  geom_area(aes(y = seven_avg, fill = &quot;#CF1010&quot;), alpha = 0.25) +
+  geom_line(aes(y = seven_avg), color = &quot;#CF1010&quot;, size = 1) +
+  geom_area(aes(y = seven_avg), fill = &quot;#CF1010&quot;, alpha = 0.25) +
   scale_x_date(limits = date(c(&quot;2020-02-26&quot;, &quot;2020-04-11&quot;)),
                breaks = date(c(&quot;2020-02-26&quot;, &quot;2020-04-11&quot;)),
                labels = date_format(format = &quot;%b. %d&quot;),
@@ -200,8 +200,8 @@ p +
   ggplot(aes(x = date, y = new_cases)) +
   geom_histogram(stat = &quot;identity&quot;, fill = &quot;#FAC9C7&quot;) +
   geom_hline(yintercept = 0, size = 0.75, color = &quot;gray92&quot;) +
-  geom_line(aes(y = seven_avg, color = &quot;#CF1010&quot;), size = 1) +
-  geom_area(aes(y = seven_avg, fill = &quot;#CF1010&quot;), alpha = 0.25) +
+  geom_line(aes(y = seven_avg), color = &quot;#CF1010&quot;, size = 1) +
+  geom_area(aes(y = seven_avg), fill = &quot;#CF1010&quot;, alpha = 0.25) +
   scale_x_date(limits = date(c(&quot;2020-02-26&quot;, &quot;2020-04-11&quot;)),
                breaks = date(c(&quot;2020-02-26&quot;, &quot;2020-04-11&quot;)),
                labels = date_format(format = &quot;%b. %d&quot;),
@@ -221,7 +221,7 @@ p +
         legend.position = &quot;none&quot;
   )</code></pre>
 <p><img src="../../post/2020-04-12-covid-19-new-york-times-plots_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
-<p>I hope this tutorial was helpful; I feel the best way to get better at <code>ggplot2</code> is to find plots on the internet you like, and try to recreate them in R.</p>
+<p>I hope this tutorial was helpful; I feel the best way to get better at <code>ggplot2</code> is to find plots on the internet I like, and try to recreate them in R.</p>
 <p>Lastly, I want to say happy Easter to you all. During this time, it can be difficult to find hope, but in the story of Jesus we find a message of light in the midst of darkness.</p>
 </div>
 

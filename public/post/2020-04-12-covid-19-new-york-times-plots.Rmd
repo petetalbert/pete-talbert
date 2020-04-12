@@ -9,13 +9,13 @@ tags:
   - ggplot2
 ---
 
-The New York Times has produced some really great maps and plots in its efforts to track the coronavirus in the U.S. One plot in particular that caught my attention is the histogram of new cases with a 7-day average line overlayed found at the top of this [page](https://www.nytimes.com/interactive/2020/us/coronavirus-us-cases.html) (and subsequent state pages).
+The New York Times has produced some really great maps and plots in its efforts to track the coronavirus in the U.S. One plot in particular that caught my attention is the histogram (actually more like a bar plot) of new cases with a 7-day average line overlayed found at the top of this [page](https://www.nytimes.com/interactive/2020/us/coronavirus-us-cases.html).
 
-Why not try to replicate that? I would also like to try to facet this plot out with all 50 states.
+Why not try to replicate this? I would also like to try to facet this plot out with all 50 states.
 
-## Making the histogram
+## Making the histogram (bar plot)
 
-Making the histogram of new cases shouldn't be too difficult. I am going to use New York as my first state. Conveniently enough, The New York Times has a Github site where we can download the state-level data that creates the maps and plots on their site.
+Making the histogram of new cases shouldn't be too difficult. I am going to use New York as my first state. Conveniently enough, The New York Times has a Github site where we can download the state-level data that creates the maps and plots on their site. I'll also use `geom_col` because each bar is just one day, so there are no bins needed.
 
 ```{r warning=FALSE, message=FALSE}
 library(tidyverse)
@@ -47,7 +47,7 @@ covid_processed <- covid %>%
 covid_processed %>% 
   filter(state == "New York") %>% 
   ggplot(aes(x = date, y = new_cases)) +
-  geom_histogram(stat = "identity")
+  geom_col()
 ```
 
 I haven't done any scaling or labeling, but this looks like the same histogram as the one at the top of the [New York state-specific page](https://www.nytimes.com/interactive/2020/us/new-york-coronavirus-cases.html), so we're on the right track. Let's see if I can color, scale, and label it the same way as NYT now.
@@ -56,7 +56,7 @@ I haven't done any scaling or labeling, but this looks like the same histogram a
 covid_processed %>% 
   filter(state == "New York") %>% 
   ggplot(aes(x = date, y = new_cases)) +
-  geom_histogram(stat = "identity", fill = "#FAC9C7") +
+  geom_col(fill = "#FAC9C7") +
   geom_hline(yintercept = 0, size = 0.75, color = "gray92") +
   scale_x_date(limits = date(c("2020-02-26", "2020-04-11")),
                breaks = date(c("2020-02-26", "2020-04-11")),
@@ -116,16 +116,16 @@ p +
   geom_line(aes(y = seven_avg))
 ```
 
-Nice! Okay, now let's doctor that line up to look like the NYT plot. Here, rather than add to the `ggplot` object, `p`, I'm going to rebuild the entire plot. However, it can be helpful sometimes when working on a plot to save a portion of it, and continue to build on it. Furthermore, since it's a list object, you can edit elements of the list, like I did to update the data above.
+Nice! Okay, now let's doctor that line up to look like the NYT plot. Here, rather than add to the `ggplot` object, `p`, I'm going to rebuild the entire plot. However, it can be helpful sometimes when working on a plot to save a portion of it, and continue to build on it. Furthermore, since it's a list object, we can edit elements of the list, like I did to update the data above.
 
 ```{r warning=FALSE}
 covid_processed %>% 
   filter(state == "New York") %>% 
   ggplot(aes(x = date, y = new_cases)) +
-  geom_histogram(stat = "identity", fill = "#FAC9C7") +
+  geom_col(fill = "#FAC9C7") +
   geom_hline(yintercept = 0, size = 0.75, color = "gray92") +
-  geom_line(aes(y = seven_avg, color = "#CF1010"), size = 1) +
-  geom_area(aes(y = seven_avg, fill = "#CF1010"), alpha = 0.25) +
+  geom_line(aes(y = seven_avg), color = "#CF1010", size = 1) +
+  geom_area(aes(y = seven_avg), fill = "#CF1010", alpha = 0.25) +
   scale_x_date(limits = date(c("2020-02-26", "2020-04-11")),
                breaks = date(c("2020-02-26", "2020-04-11")),
                labels = date_format(format = "%b. %d"),
@@ -156,8 +156,8 @@ covid_processed %>%
   ggplot(aes(x = date, y = new_cases)) +
   geom_histogram(stat = "identity", fill = "#FAC9C7") +
   geom_hline(yintercept = 0, size = 0.75, color = "gray92") +
-  geom_line(aes(y = seven_avg, color = "#CF1010"), size = 1) +
-  geom_area(aes(y = seven_avg, fill = "#CF1010"), alpha = 0.25) +
+  geom_line(aes(y = seven_avg), color = "#CF1010", size = 1) +
+  geom_area(aes(y = seven_avg), fill = "#CF1010", alpha = 0.25) +
   scale_x_date(limits = date(c("2020-02-26", "2020-04-11")),
                breaks = date(c("2020-02-26", "2020-04-11")),
                labels = date_format(format = "%b. %d"),
@@ -178,6 +178,6 @@ covid_processed %>%
   )
 ```
 
-I hope this tutorial was helpful; I feel the best way to get better at `ggplot2` is to find plots on the internet you like, and try to recreate them in R.
+I hope this tutorial was helpful; I feel the best way to get better at `ggplot2` is to find plots on the internet I like, and try to recreate them in R.
 
 Lastly, I want to say happy Easter to you all. During this time, it can be difficult to find hope, but in the story of Jesus we find a message of light in the midst of darkness.
