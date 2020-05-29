@@ -6,10 +6,20 @@
     <description>Recent content in Posts on Pete Talbert</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 12 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 29 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Shiny App Test</title>
+      <link>/post/shiny-app-test/</link>
+      <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/shiny-app-test/</guid>
+      <description>This is a test that I can successfully embed a Shiny app (in this case a tutorial using the learnr package) in my blog.
+</description>
+    </item>
     
     <item>
       <title>COVID-19 New York Times plots</title>
@@ -127,9 +137,9 @@ I have not posted on this site since March, and I feel terrible about it. I know
       <pubDate>Tue, 13 Nov 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/can-i-write-sql-in-r-markdown/</guid>
-      <description> Hello!
+      <description>Hello!
 This is my very first post; just a quick test as to how a SQL snippet shows in a markdown file and on a website. See below.
-select personID , endYear , grade , ROW_NUMBER() over (partition by personID order by endYear, case when grade = &amp;#39;KG&amp;#39; then &amp;#39;00&amp;#39; else grade end) as rowNum from #enroll3 </description>
+select personID, endYear, grade, ROW_NUMBER() over (partition by personID order by endYear, case when grade = &amp;#39;KG&amp;#39; then &amp;#39;00&amp;#39; else grade end) as rowNumfrom #enroll3</description>
     </item>
     
   </channel>
