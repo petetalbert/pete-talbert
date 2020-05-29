@@ -6,10 +6,20 @@
     <description>Recent content in R on Pete Talbert</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 12 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 29 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Install R and RStudio on Mac</title>
+      <link>/post/install-r-and-rstudio-on-mac/</link>
+      <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/install-r-and-rstudio-on-mac/</guid>
+      <description>Watch the YouTube video below to learn how to install R and RStudio on a Mac.
+  </description>
+    </item>
     
     <item>
       <title>COVID-19 New York Times plots</title>
