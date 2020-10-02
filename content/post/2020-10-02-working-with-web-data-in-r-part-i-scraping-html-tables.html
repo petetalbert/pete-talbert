@@ -15,10 +15,10 @@ tags:
 
 
 
-<p>In this short post, I am going to introduce you to web scraping in R using the <code>rvest</code> package. In another post (part II), I’ll show you maybe the most popular method for pulling data from the web: using a web API. <code>httr</code> will help us send HTTP requests to an API server and get back data in JSON format (which we can then parse with the <code>jsonlite</code> package). But for today, let’s look discuss web scraping.</p>
+<p>In this short post, I am going to introduce you to web scraping in R using the <code>rvest</code> package. In another post (part II), I’ll show you maybe the most popular method for pulling data from the web: using a web API. <code>httr</code> will help us send HTTP requests to an API server and get back data in JSON format (which we can then parse with the <code>jsonlite</code> package). But for today, let’s discuss web scraping.</p>
 <div id="html-tables" class="section level2">
 <h2>HTML tables</h2>
-<p>I am going to show you the simplest case of web scraping: when there is one, simple table on a public facing webpage that we can identify by the HTML <code>&lt;table&gt;</code> tag. Lately, I’ve been interested in tracking the U.S. unemployment rate from the Bureau of Labor Statistics. There is a nicely formatted table on the <a href="https://www.ncsl.org/research/labor-and-employment/national-employment-monthly-update.aspx">National Conference of State Legislatures’ website</a>. Let’s try to scrape the single table on this webpage.</p>
+<p>I am going to show you the simplest case of web scraping: when there is one table on a public facing webpage that we can identify by the HTML <code>&lt;table&gt;</code> tag. Lately, I’ve been interested in tracking the U.S. unemployment rate from the Bureau of Labor Statistics. There is a nicely formatted table on the <a href="https://www.ncsl.org/research/labor-and-employment/national-employment-monthly-update.aspx">National Conference of State Legislatures’ website</a>. Let’s try to scrape the single table on this webpage.</p>
 </div>
 <div id="using-rvest" class="section level2">
 <h2>Using <code>rvest</code></h2>

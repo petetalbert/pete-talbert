@@ -13,11 +13,11 @@ tags:
   - tidyverse
 ---
 
-In this short post, I am going to introduce you to web scraping in R using the `rvest` package. In another post (part II), I'll show you maybe the most popular method for pulling data from the web: using a web API. `httr` will help us send HTTP requests to an API server and get back data in JSON format (which we can then parse with the `jsonlite` package). But for today, let's look discuss web scraping.
+In this short post, I am going to introduce you to web scraping in R using the `rvest` package. In another post (part II), I'll show you maybe the most popular method for pulling data from the web: using a web API. `httr` will help us send HTTP requests to an API server and get back data in JSON format (which we can then parse with the `jsonlite` package). But for today, let's discuss web scraping.
 
 ## HTML tables
 
-I am going to show you the simplest case of web scraping: when there is one, simple table on a public facing webpage that we can identify by the HTML `<table>` tag. Lately, I've been interested in tracking the U.S. unemployment rate from the Bureau of Labor Statistics. There is a nicely formatted table on the [National Conference of State Legislatures' website](https://www.ncsl.org/research/labor-and-employment/national-employment-monthly-update.aspx). Let's try to scrape the single table on this webpage.
+I am going to show you the simplest case of web scraping: when there is one table on a public facing webpage that we can identify by the HTML `<table>` tag. Lately, I've been interested in tracking the U.S. unemployment rate from the Bureau of Labor Statistics. There is a nicely formatted table on the [National Conference of State Legislatures' website](https://www.ncsl.org/research/labor-and-employment/national-employment-monthly-update.aspx). Let's try to scrape the single table on this webpage.
 
 ## Using `rvest`
 
