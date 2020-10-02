@@ -1,0 +1,109 @@
+---
+title: Working with web data in R part I - Scraping HTML tables
+author: Pete Talbert
+date: '2020-10-02'
+slug: working-with-web-data-in-r-part-i-scraping-html-tables
+categories:
+  - R
+  - HTML
+tags:
+  - rvest
+  - web-scaping
+  - html
+  - tidyverse
+---
+
+In this short post, I am going to introduce you to web scraping in R using the `rvest` package. In another post (part II), I'll show you maybe the most popular method for pulling data from the web: using a web API. `httr` will help us send HTTP requests to an API server and get back data in JSON format (which we can then parse with the `jsonlite` package). But for today, let's look discuss web scraping.
+
+## HTML tables
+
+I am going to show you the simplest case of web scraping: when there is one, simple table on a public facing webpage that we can identify by the HTML `<table>` tag. Lately, I've been interested in tracking the U.S. unemployment rate from the Bureau of Labor Statistics. There is a nicely formatted table on the [National Conference of State Legislatures' website](https://www.ncsl.org/research/labor-and-employment/national-employment-monthly-update.aspx). Let's try to scrape the single table on this webpage.
+
+## Using `rvest`
+
+With `rvest`, the first step is to use the `read_html()` function and supply the URL. From there, we can pipe to the `html_nodes()` function, and supply the tag we want. This acts as a CSS selector; it doesn't actually parse the data in the table.
+
+```{r warning=FALSE, message=FALSE}
+library(tidyverse)
+library(rvest)
+library(lubridate)
+library(scales)
+
+unemploy_webpage <- read_html("https://www.ncsl.org/research/labor-and-employment/national-employment-monthly-update.aspx")
+
+
+unemploy_webpage %>%
+  html_nodes("table")
+```
+
+To actually parse the data, we pipe to the `html_table()` function.
+
+```{r}
+unemploy_webpage %>%
+  html_nodes("table") %>% 
+  html_table()
+```
+
+Man, that was easy! One thing that makes this example extremely simple is that there is only one table on this webpage. If there were more than one, each would be contained as an element in this list (that is, if they were each properly tagged with `<table>`). Below, I use `str()` to verify that this is indeed a list with one element, containing the data frame of unemployment rates we want. I'll save this list off.
+
+```{r}
+unemploy_webpage %>%
+  html_nodes("table") %>% 
+  html_table() %>% 
+  str()
+
+unemploy_list <- unemploy_webpage %>%
+  html_nodes("table") %>% 
+  html_table()
+```
+
+## Base R
+
+Next, I'm just going to do some base R to subset the list and assign a name the column that contains the year.
+
+```{r}
+unemploy_df <- unemploy_list[[1]]
+
+colnames(unemploy_df)[1] <- "year"
+
+str(unemploy_df)
+```
+
+## Tidying up
+
+Next, I'll pipe this data frame to a `tibble` data type and then pivot longer and clean up some of the date data for easier plotting.
+
+```{r}
+
+unemploy_final <- unemploy_df %>% 
+  as_tibble() %>% 
+  pivot_longer(cols = -c("year"),
+               names_to = "month",
+               values_to = "unemployment_rate") %>% 
+  mutate(date = mdy(paste0(month, "/01", year)),
+         month = month(date, label = TRUE),
+         unemployment_rate = unemployment_rate / 100) %>% 
+  select(date, everything())
+
+unemploy_final
+```
+
+Now, it's in perfect shape for a simple time series showing the unemployment rate, highlighting the massive spike when COVID-19 shut the economy down.
+
+```{r}
+
+unemploy_final %>% 
+  filter(date >= "2016-01-01" & !is.na(unemployment_rate)) %>% 
+  ggplot(aes(x = date, y = unemployment_rate)) +
+  geom_line(size = 1, color = "lightblue4") +
+  scale_y_continuous(limits = c(0, 0.3), labels = percent_format()) +
+  scale_x_date(breaks = "1 year", labels = date_format(format = "%b '%y")) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 8)) +
+  labs(title = "U.S. Unemployment Rate",
+       subtitle = "Since January 2016",
+       x = element_blank(),
+       y = element_blank(),
+       caption = paste0("Data from the Bureau of Labor Statistics.\nReproduced by ncsl.org. Last updated ", Sys.Date(), "."))
+```
+

@@ -6,10 +6,46 @@
     <description>Recent content in Tags on Pete Talbert</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 29 May 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 02 Oct 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>html</title>
+      <link>/tags/html/</link>
+      <pubDate>Fri, 02 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/html/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rvest</title>
+      <link>/tags/rvest/</link>
+      <pubDate>Fri, 02 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/rvest/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tidyverse</title>
+      <link>/tags/tidyverse/</link>
+      <pubDate>Fri, 02 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/tidyverse/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>web-scaping</title>
+      <link>/tags/web-scaping/</link>
+      <pubDate>Fri, 02 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/web-scaping/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>macOS</title>
@@ -53,15 +89,6 @@
       <pubDate>Fri, 28 Feb 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/purrr/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>tidyverse</title>
-      <link>/tags/tidyverse/</link>
-      <pubDate>Fri, 28 Feb 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/tidyverse/</guid>
       <description></description>
     </item>
     
