@@ -59,7 +59,7 @@ unemploy_list <- unemploy_webpage %>%
 
 ## Base R
 
-Next, I'm just going to do some base R to subset the list and assign a name the column that contains the year.
+Next, I'm just going to do some base R to subset the list and assign a name to the column that contains the year.
 
 ```{r}
 unemploy_df <- unemploy_list[[1]]
@@ -88,7 +88,7 @@ unemploy_final <- unemploy_df %>%
 unemploy_final
 ```
 
-Now, it's in perfect shape for a simple time series showing the unemployment rate, highlighting the massive spike when COVID-19 shut the economy down.
+Now, it's in perfect shape for a time series, highlighting the massive spike when COVID-19 shut the economy down.
 
 ```{r}
 
