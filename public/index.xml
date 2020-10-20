@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Pete Talbert</title>
@@ -6,11 +6,13 @@
     <description>Recent content on Pete Talbert</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 02 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>2020-10-02</lastBuildDate>
+    
+        <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Working with web data in R part I - Scraping HTML tables</title>
       <link>/post/working-with-web-data-in-r-part-i-scraping-html-tables/</link>
-      <pubDate>Fri, 02 Oct 2020 00:00:00 +0000</pubDate>
+      <pubDate>2020-10-02</pubDate>
       
       <guid>/post/working-with-web-data-in-r-part-i-scraping-html-tables/</guid>
       <description>
@@ -162,11 +164,10 @@ unemploy_final&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 </description>
     </item>
-    
     <item>
       <title>Install R and RStudio on Mac</title>
       <link>/post/install-r-and-rstudio-on-mac/</link>
-      <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
+      <pubDate>2020-05-29</pubDate>
       
       <guid>/post/install-r-and-rstudio-on-mac/</guid>
       <description>
@@ -180,11 +181,10 @@ unemploy_final&lt;/code&gt;&lt;/pre&gt;
 
 </description>
     </item>
-    
     <item>
       <title>Shiny App Test</title>
       <link>/post/shiny-app-test/</link>
-      <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
+      <pubDate>2020-05-29</pubDate>
       
       <guid>/post/shiny-app-test/</guid>
       <description>
@@ -195,11 +195,10 @@ unemploy_final&lt;/code&gt;&lt;/pre&gt;
 &lt;/iframe&gt;
 </description>
     </item>
-    
     <item>
       <title>COVID-19 New York Times plots</title>
       <link>/post/covid-19-new-york-times-plots/</link>
-      <pubDate>Sun, 12 Apr 2020 00:00:00 +0000</pubDate>
+      <pubDate>2020-04-12</pubDate>
       
       <guid>/post/covid-19-new-york-times-plots/</guid>
       <description>
@@ -372,11 +371,10 @@ p +
 &lt;/div&gt;
 </description>
     </item>
-    
     <item>
       <title>Connecting to MAMP install of MySQL in R</title>
       <link>/post/connecting-to-mamp-install-of-mysql-in-r/</link>
-      <pubDate>Wed, 11 Mar 2020 00:00:00 +0000</pubDate>
+      <pubDate>2020-03-11</pubDate>
       
       <guid>/post/connecting-to-mamp-install-of-mysql-in-r/</guid>
       <description>
@@ -495,11 +493,10 @@ tbl_flights %&amp;gt;%
 &lt;/div&gt;
 </description>
     </item>
-    
     <item>
       <title>Learning bash</title>
       <link>/post/learning-bash/</link>
-      <pubDate>Thu, 05 Mar 2020 00:00:00 +0000</pubDate>
+      <pubDate>2020-03-05</pubDate>
       
       <guid>/post/learning-bash/</guid>
       <description>
@@ -554,11 +551,10 @@ ls&lt;/code&gt;&lt;/pre&gt;
 ## var&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
-    
     <item>
       <title>For loops for quick summaries in R</title>
       <link>/post/for-loops-for-quick-summaries-in-r/</link>
-      <pubDate>Fri, 28 Feb 2020 00:00:00 +0000</pubDate>
+      <pubDate>2020-02-28</pubDate>
       
       <guid>/post/for-loops-for-quick-summaries-in-r/</guid>
       <description>
@@ -723,11 +719,10 @@ gss_list[[7]] %&amp;gt;%
 &lt;/div&gt;
 </description>
     </item>
-    
     <item>
       <title>Consulting Services</title>
       <link>/post/consulting-services/</link>
-      <pubDate>Sun, 24 Nov 2019 00:00:00 +0000</pubDate>
+      <pubDate>2019-11-24</pubDate>
       
       <guid>/post/consulting-services/</guid>
       <description>
@@ -745,31 +740,10 @@ gss_list[[7]] %&amp;gt;%
 &lt;p&gt;Pete Talbert, &lt;em&gt;Data Analyst&lt;/em&gt; | &lt;a href=&#34;mailto:pete.talbert@gmail.com&#34; class=&#34;email&#34;&gt;pete.talbert@gmail.com&lt;/a&gt; | 612-578-5525&lt;/p&gt;
 </description>
     </item>
-    
-    <item>
-      <title>Services</title>
-      <link>/services/</link>
-      <pubDate>Sun, 24 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/services/</guid>
-      <description>&lt;p&gt;I am a data analyst in the Twin Cities, specializing in the K-12, higher education, and non-profit sectors. I have worked in the field for over four years, and know both the database and analytical/visualization components deeply. I work hard to understand business and end user needs, and build revealing and elegant solutions.&lt;/p&gt;
-&lt;p&gt;I offer data-related services to companies and organizations in the following technologies:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;SQL (primarily MS SQL Server and Oracle)&lt;/li&gt;
-&lt;li&gt;R&lt;/li&gt;
-&lt;li&gt;Python&lt;/li&gt;
-&lt;li&gt;Tableau&lt;/li&gt;
-&lt;li&gt;ETL&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Whether it&amp;rsquo;s an ad hoc research project or an on-going dashboard or reporting need, I am here to help!&lt;/p&gt;
-&lt;p&gt;Pete Talbert, &lt;em&gt;Data Analyst&lt;/em&gt; | &lt;a href=&#34;mailto:pete.talbert@gmail.com&#34;&gt;pete.talbert@gmail.com&lt;/a&gt; | 612-578-5525&lt;/p&gt;
-</description>
-    </item>
-    
     <item>
       <title>Window Functions in SQL vs. R</title>
       <link>/post/window-functions-in-sql-vs-r/</link>
-      <pubDate>Sat, 02 Mar 2019 00:00:00 +0000</pubDate>
+      <pubDate>2019-03-02</pubDate>
       
       <guid>/post/window-functions-in-sql-vs-r/</guid>
       <description>
@@ -909,6 +883,90 @@ where rowNum = 1 --outer query to get just the latest record per student.&lt;/co
 &lt;/div&gt;
 </description>
     </item>
+    <item>
+      <title>Plotting factors with forcats</title>
+      <link>/post/ggplot2-tips-for-categories/</link>
+      <pubDate>2019-02-21</pubDate>
+      
+      <guid>/post/ggplot2-tips-for-categories/</guid>
+      <description>
+
+
+&lt;p&gt;Often, I find myself with &lt;em&gt;a lot&lt;/em&gt; of categorical variables that I want to plot, where I’m really only interested in the most common ones that bubble to the surface. This post is a quick demonstration of how I plot just the top 5 or top 10 categories for a plot. I posted a question about this over on &lt;a href=&#34;https://stackoverflow.com/questions/54260789/selecting-top-n-groups-with-dplyr-then-plotting-other-variables&#34;&gt;Stack Overflow&lt;/a&gt;. Thanks to all who commented!&lt;/p&gt;
+&lt;div id=&#34;getting-started&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Getting started&lt;/h2&gt;
+&lt;p&gt;To start, I am going to load &lt;code&gt;forats::gss_cat&lt;/code&gt; as my example dataset and make a simple time series of the types Protestant denominations respondents list.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
+
+gss &amp;lt;- forcats::gss_cat
+
+gss %&amp;gt;% 
+  filter(relig == &amp;quot;Protestant&amp;quot;) %&amp;gt;% 
+  count(year, denom) %&amp;gt;%
+  ggplot(aes(x = year, y = n, color = denom)) +
+  geom_line() +
+  scale_colour_viridis_d()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;./post/2019-02-21-plotting-factors-with-forcats_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;plotting-the-top-five&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Plotting the top five&lt;/h2&gt;
+&lt;p&gt;Wow, what an extremely ugly and meaningless plot! What if I wanted to just plot the top 5 Protestant denominations? There are a bunch of ways to do this, but maybe the easiest I’ve found is to filter down to those denominations with &lt;code&gt;dplyr&lt;/code&gt; and save that as a simple vector; then in a second step, build your plot by first filtering to just those five in the vector.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;protestant_top &amp;lt;- gss %&amp;gt;% 
+  filter(relig == &amp;quot;Protestant&amp;quot;) %&amp;gt;% 
+  count(denom, sort = TRUE) %&amp;gt;% 
+  head(5) %&amp;gt;% 
+  pull(denom) #creating a simple vector.
+
+#same plot now but filtered first for just the top five.
+gss %&amp;gt;% 
+  filter(denom %in% protestant_top) %&amp;gt;% #filter like this.
+  count(year, denom) %&amp;gt;%
+  ggplot(aes(x = year, y = n, color = denom)) +
+  geom_line() +
+  scale_colour_viridis_d()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;./post/2019-02-21-plotting-factors-with-forcats_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;That’s looking a little better!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;reordering-factors&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Reordering factors&lt;/h2&gt;
+&lt;p&gt;But there’s still a problem: my eyes have to hunt around to find which denomination is where, because the legend is in alphabetical order. What if the legend was ordered the same way the lines were plotted?&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;forcats&lt;/code&gt; really comes in handy here. Many useful functions in this package for working with factors start with &lt;code&gt;fct_&lt;/code&gt;, and the one I am going to use is &lt;code&gt;fct_reorder&lt;/code&gt; where I can order based off their count. It just takes two arguments: the factor or character vector and another vector to reorder them in ascending order. (You can also use the &lt;code&gt;.fun&lt;/code&gt; argument to specify the mean or median for example.) Below, I can just give it &lt;code&gt;n&lt;/code&gt; for the second argument. Lastly, &lt;code&gt;.desc = TRUE&lt;/code&gt; orders it descending to align with the plot lines.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;gss %&amp;gt;% 
+  filter(denom %in% protestant_top) %&amp;gt;% 
+  count(year, denom) %&amp;gt;%
+  mutate(denom = fct_reorder(denom, n, .desc = TRUE)) %&amp;gt;% #fct_reorder here.
+  ggplot(aes(x = year, y = n, color = denom)) +
+  geom_line() +
+  scale_colour_viridis_d()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;./post/2019-02-21-plotting-factors-with-forcats_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Looks great!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;cleaning-up&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Cleaning up&lt;/h2&gt;
+&lt;p&gt;The last thing I want to do is add labeling and make it look prettier. I have been using &lt;code&gt;hrbrthemes&lt;/code&gt; lately with Roboto Condensed font, and I love it. Below are the settings I usually have in all my markdown docs.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;theme_set(theme_minimal(base_size = 10) +
+  theme(plot.title = element_text(face = &amp;quot;bold&amp;quot;),
+        axis.text = element_text(size = 8))
+)
+
+gss %&amp;gt;% 
+  filter(denom %in% protestant_top) %&amp;gt;% 
+  count(year, denom) %&amp;gt;%
+  mutate(denom = fct_reorder(denom, n, .desc = TRUE)) %&amp;gt;% #fct_reorder here.
+  ggplot(aes(x = year, y = n, color = denom)) +
+  geom_line() +
+  scale_colour_viridis_d() +
+  labs(
+    title = &amp;quot;Top five Protestant denominations&amp;quot;,
+    y = element_blank(),
+    color = &amp;quot;Denomination&amp;quot;,
+    caption = &amp;quot;A sample of categorical variables from the General Social survey.&amp;quot;
+  )&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;./post/2019-02-21-plotting-factors-with-forcats_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
     
   </channel>
 </rss>
+
