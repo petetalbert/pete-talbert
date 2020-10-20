@@ -1,4 +1,4 @@
-baseurl = "/"
+baseurl = "https://petetalbert.rbind.io/"
 title = "Pete Talbert"
 author = "Pete Talbert"
 relativeurls = true
@@ -12,6 +12,7 @@ disqusShortname = "petetalbert-rbind-io"
 disable_mathjax = false
 summaryLength = 30
 disableKinds = ["taxonomy", "section", "taxonomyTerm"]
+rssLimit = 10
 
 [taxonomies]
   category = "categories"
