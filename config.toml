@@ -11,6 +11,7 @@ googleAnalytics = "UA-130291758-1"
 disqusShortname = "petetalbert-rbind-io"
 disable_mathjax = false
 summaryLength = 30
+disableKinds = ["taxonomy", "section", "taxonomyTerm"]
 
 [taxonomies]
   category = "categories"
@@ -42,10 +43,10 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
     url = "https://github.com/petetalbert"
     weight = 3
 [[menu.main]]
-    name = "LinkedIn"
-    url = "https://www.linkedin.com/in/petetalbert"
-    weight = 4
-[[menu.main]]
     name = "RSS"
     url = "/index.xml"
     weight = 5
+[[menu.main]]
+    name = "R-Bloggers"
+    url = "https://www.r-bloggers.com/"
+    weight = 6

@@ -2,228 +2,181 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Pete Talbert</title>
-    <link>/index.html</link>
+    <link>/</link>
     <description>Recent content on Pete Talbert</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
+    <lastBuildDate>Fri, 02 Oct 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Categories</title>
-      <link>/categories/</link>
+      <title>Working with web data in R part I - Scraping HTML tables</title>
+      <link>/post/working-with-web-data-in-r-part-i-scraping-html-tables/</link>
       <pubDate>Fri, 02 Oct 2020 00:00:00 +0000</pubDate>
       
-      <guid>/categories/</guid>
-      <description></description>
+      <guid>/post/working-with-web-data-in-r-part-i-scraping-html-tables/</guid>
+      <description>In this short post, I am going to introduce you to web scraping in R using the rvest package. In another post (part II), I’ll show you maybe the most popular method for pulling data from the web: using a web API.</description>
     </item>
     
     <item>
-      <title>HTML</title>
-      <link>/categories/html/</link>
-      <pubDate>Fri, 02 Oct 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/html/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>html</title>
-      <link>/tags/html/</link>
-      <pubDate>Fri, 02 Oct 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/html/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>R</title>
-      <link>/categories/r/</link>
-      <pubDate>Fri, 02 Oct 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/r/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>rvest</title>
-      <link>/tags/rvest/</link>
-      <pubDate>Fri, 02 Oct 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/rvest/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Tags</title>
-      <link>/tags/</link>
-      <pubDate>Fri, 02 Oct 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>tidyverse</title>
-      <link>/tags/tidyverse/</link>
-      <pubDate>Fri, 02 Oct 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/tidyverse/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>web-scaping</title>
-      <link>/tags/web-scaping/</link>
-      <pubDate>Fri, 02 Oct 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/web-scaping/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>macOS</title>
-      <link>/tags/macos/</link>
+      <title>Install R and RStudio on Mac</title>
+      <link>/post/install-r-and-rstudio-on-mac/</link>
       <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/macos/</guid>
-      <description></description>
+      <guid>/post/install-r-and-rstudio-on-mac/</guid>
+      <description>Watch the YouTube video below to learn how to install R and RStudio on a Mac.
+  </description>
     </item>
     
     <item>
-      <title>RStudio</title>
-      <link>/categories/rstudio/</link>
+      <title>Shiny App Test</title>
+      <link>/post/shiny-app-test/</link>
       <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
       
-      <guid>/categories/rstudio/</guid>
-      <description></description>
+      <guid>/post/shiny-app-test/</guid>
+      <description>This is a test that I can successfully embed a Shiny app (in this case a tutorial using the learnr package) in my blog.
+</description>
     </item>
     
     <item>
-      <title>ggplot2</title>
-      <link>/tags/ggplot2/</link>
+      <title>COVID-19 New York Times plots</title>
+      <link>/post/covid-19-new-york-times-plots/</link>
       <pubDate>Sun, 12 Apr 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/ggplot2/</guid>
-      <description></description>
+      <guid>/post/covid-19-new-york-times-plots/</guid>
+      <description>The New York Times has produced some really great maps and plots in its efforts to track the coronavirus in the U.S. One plot in particular that caught my attention is the histogram (actually more like a bar plot) of new cases with a 7-day average line overlayed found at the top of this page.</description>
     </item>
     
     <item>
-      <title>MAMP</title>
-      <link>/tags/mamp/</link>
+      <title>Connecting to MAMP install of MySQL in R</title>
+      <link>/post/connecting-to-mamp-install-of-mysql-in-r/</link>
       <pubDate>Wed, 11 Mar 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/mamp/</guid>
-      <description></description>
+      <guid>/post/connecting-to-mamp-install-of-mysql-in-r/</guid>
+      <description>In the course of doing a web dev tutorial (namely Tania Rascia’s great post on building a simple CRUD app) I had to install MAMP. This gives you a local server environment consisting of Apache, MySQL, and PHP.</description>
     </item>
     
     <item>
-      <title>MySQL</title>
-      <link>/categories/mysql/</link>
-      <pubDate>Wed, 11 Mar 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/mysql/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>bash</title>
-      <link>/categories/bash/</link>
+      <title>Learning bash</title>
+      <link>/post/learning-bash/</link>
       <pubDate>Thu, 05 Mar 2020 00:00:00 +0000</pubDate>
       
-      <guid>/categories/bash/</guid>
-      <description></description>
+      <guid>/post/learning-bash/</guid>
+      <description>Hello all!
+So I just bought a used MacBook Pro in order to learn Linux, bash, shell scripting, etc. This post is just to test that I can write bash code in an .</description>
     </item>
     
     <item>
-      <title>for-loop</title>
-      <link>/tags/for-loop/</link>
+      <title>For loops for quick summaries in R</title>
+      <link>/post/for-loops-for-quick-summaries-in-r/</link>
       <pubDate>Fri, 28 Feb 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/for-loop/</guid>
-      <description></description>
+      <guid>/post/for-loops-for-quick-summaries-in-r/</guid>
+      <description>Because I often work with categorical data, I find myself making lots of quick, sorted counts of variables in a dataset. I find that this is a really common technique to get to know a dataset you’re working with; I’ve also noticed David Robinson do it often in his screencasts.</description>
     </item>
     
     <item>
-      <title>purrr</title>
-      <link>/tags/purrr/</link>
-      <pubDate>Fri, 28 Feb 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/purrr/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>SQL</title>
-      <link>/categories/sql/</link>
+      <title>Consulting Services</title>
+      <link>/post/consulting-services/</link>
       <pubDate>Sun, 24 Nov 2019 00:00:00 +0000</pubDate>
       
-      <guid>/categories/sql/</guid>
-      <description></description>
+      <guid>/post/consulting-services/</guid>
+      <description>Hello all!
+I have not posted on this site since March, and I feel terrible about it. I know no one reads this, but personally it was a goal of mine to keep my skills up-to-date by forcing myself to blog about them.</description>
     </item>
     
     <item>
-      <title>Tableau</title>
-      <link>/categories/tableau/</link>
+      <title>Services</title>
+      <link>/services/</link>
       <pubDate>Sun, 24 Nov 2019 00:00:00 +0000</pubDate>
       
-      <guid>/categories/tableau/</guid>
-      <description></description>
+      <guid>/services/</guid>
+      <description>I am a data analyst in the Twin Cities, specializing in the K-12, higher education, and non-profit sectors. I have worked in the field for over four years, and know both the database and analytical/visualization components deeply.</description>
     </item>
     
     <item>
-      <title>ms-sql-server</title>
-      <link>/tags/ms-sql-server/</link>
+      <title>Window Functions in SQL vs. R</title>
+      <link>/post/window-functions-in-sql-vs-r/</link>
       <pubDate>Sat, 02 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/ms-sql-server/</guid>
-      <description></description>
+      <guid>/post/window-functions-in-sql-vs-r/</guid>
+      <description>Both MS SQL Server and R’s dplyr package offer window functions for different operations on a dataset. What are window functions? Window functions operate on a set of rows or “window” and return a value for each row, whether that’s something like a row number or percentile rank, or an aggregate result from a min, max, average, or sum.</description>
     </item>
     
     <item>
-      <title>row_number()</title>
-      <link>/tags/row_number/</link>
-      <pubDate>Sat, 02 Mar 2019 00:00:00 +0000</pubDate>
+      <title>Plotting factors with forcats</title>
+      <link>/post/ggplot2-tips-for-categories/</link>
+      <pubDate>Thu, 21 Feb 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/row_number/</guid>
-      <description></description>
+      <guid>/post/ggplot2-tips-for-categories/</guid>
+      <description>Often, I find myself with a lot of categorical variables that I want to plot, where I’m really only interested in the most common ones that bubble to the surface.</description>
     </item>
     
     <item>
-      <title>regression</title>
-      <link>/tags/regression/</link>
+      <title>Working more with the Baumann dataset</title>
+      <link>/post/working-more-with-the-baumann-dataset/</link>
       <pubDate>Sat, 29 Dec 2018 00:00:00 +0000</pubDate>
       
-      <guid>/tags/regression/</guid>
-      <description></description>
+      <guid>/post/working-more-with-the-baumann-dataset/</guid>
+      <description>As a way to continue to teach myself statistics and learn new techniques (including some machine learning methods I am very unfamiliar with), I am taking Stanford’s self-paced statistical learning course.</description>
     </item>
     
     <item>
-      <title>statistical-learning</title>
-      <link>/tags/statistical-learning/</link>
-      <pubDate>Sat, 29 Dec 2018 00:00:00 +0000</pubDate>
+      <title>Learning For Loops in R</title>
+      <link>/post/learning-for-loops-in-r/</link>
+      <pubDate>Mon, 10 Dec 2018 00:00:00 +0000</pubDate>
       
-      <guid>/tags/statistical-learning/</guid>
-      <description></description>
+      <guid>/post/learning-for-loops-in-r/</guid>
+      <description>I’m very much a beginner when it comes to any formal programming. So I feel like my first real practice should be with for loops, which are a staple of programming concepts.</description>
     </item>
     
     <item>
-      <title>pivot</title>
-      <link>/tags/pivot/</link>
+      <title>Pivoting Data in SQL vs. R</title>
+      <link>/post/pivoting-data-in-sql-vs-r/</link>
       <pubDate>Thu, 22 Nov 2018 00:00:00 +0000</pubDate>
       
-      <guid>/tags/pivot/</guid>
-      <description></description>
+      <guid>/post/pivoting-data-in-sql-vs-r/</guid>
+      <description>Often with education data, I need to pivot data to go from long format to wide. For instance, I often have test scores for different test subjects of a single assessment.</description>
     </item>
     
     <item>
-      <title>spread</title>
-      <link>/tags/spread/</link>
-      <pubDate>Thu, 22 Nov 2018 00:00:00 +0000</pubDate>
+      <title>ggplot2 geom_bar Labeling</title>
+      <link>/post/ggplot2-geom-bar-labeling/</link>
+      <pubDate>Fri, 16 Nov 2018 00:00:00 +0000</pubDate>
       
-      <guid>/tags/spread/</guid>
-      <description></description>
+      <guid>/post/ggplot2-geom-bar-labeling/</guid>
+      <description>In educational data analysis, I am constantly looking at counts and proportions. I’ve found the easiest way to display these results with categorical variables like demographics is to use stacked bar charts and especially 100% stacked charts.</description>
+    </item>
+    
+    <item>
+      <title>Connecting to MS SQL Server in R</title>
+      <link>/post/connecting-to-ms-sql-server-in-r/</link>
+      <pubDate>Thu, 15 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/connecting-to-ms-sql-server-in-r/</guid>
+      <description>There are dozens of ways to connect to an MS SQL Server database in R. You can use a number of packages, and within those packages, there are various methods for connecting and running SQL queries via an R script.</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>/about/</link>
+      <pubDate>Tue, 13 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/about/</guid>
+      <description>Hello! My name is Pete Talbert, and I work as a data analyst in Minnesota. I have only been doing this line of work for a little over 3 years, and I have worked exclusively in educational settings, both higher ed and K-12.</description>
+    </item>
+    
+    <item>
+      <title>Can I Write SQL in R Markdown?</title>
+      <link>/post/can-i-write-sql-in-r-markdown/</link>
+      <pubDate>Tue, 13 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/can-i-write-sql-in-r-markdown/</guid>
+      <description>Hello!
+This is my very first post; just a quick test as to how a SQL snippet shows in a markdown file and on a website. See below.
+select personID, endYear, grade, ROW_NUMBER() over (partition by personID order by endYear, case when grade = &amp;#39;KG&amp;#39; then &amp;#39;00&amp;#39; else grade end) as rowNumfrom #enroll3</description>
     </item>
     
   </channel>

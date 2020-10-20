@@ -7,10 +7,11 @@ I am a data analyst in the Twin Cities, specializing in the K-12, higher educati
 
 I offer data-related services to companies and organizations in the following technologies:
 
-* SQL (primarily SQL Server and Oracle)
-* Tableau
+* SQL (primarily MS SQL Server and Oracle)
 * R 
-* ETL (primarily SSIS package development/deployment)
+* Python
+* Tableau
+* ETL
 
 Whether it's an ad hoc research project or an on-going dashboard or reporting need, I am here to help!
 

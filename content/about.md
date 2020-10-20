@@ -14,6 +14,12 @@ My name is Pete Talbert, and I work as a data analyst in Minnesota. I have only 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Minor in Educational Psychology, Quantitative Methods in Education (QME)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*University of Minnesota - Twin Cities*
 
+### Contact information
+
+[LinkedIn Profile](https://www.linkedin.com/in/petetalbert/) \
+pete.talbert@gmail.com \
+612-578-5525
+
 ### Purpose of site
 
 I hope this site can help others who are learning data analysis, are interested in education data, or both. Most posts will focus on tools and programming techniques in R, SQL, and Tableau, but I hope they will touch on topics in education as well. I am especially interested in educational measurement and how assessment can improve student outcomes, so there may be some fundamentals of measurement stuff here as well.
