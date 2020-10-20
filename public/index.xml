@@ -6,18 +6,161 @@
     <description>Recent content on Pete Talbert</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 02 Oct 2020 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Fri, 02 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Working with web data in R part I - Scraping HTML tables</title>
       <link>/post/working-with-web-data-in-r-part-i-scraping-html-tables/</link>
       <pubDate>Fri, 02 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>/post/working-with-web-data-in-r-part-i-scraping-html-tables/</guid>
-      <description>In this short post, I am going to introduce you to web scraping in R using the rvest package. In another post (part II), I’ll show you maybe the most popular method for pulling data from the web: using a web API.</description>
+      <description>
+
+
+&lt;p&gt;In this short post, I am going to introduce you to web scraping in R using the &lt;code&gt;rvest&lt;/code&gt; package. In another post (part II), I’ll show you maybe the most popular method for pulling data from the web: using a web API. &lt;code&gt;httr&lt;/code&gt; will help us send HTTP requests to an API server and get back data in JSON format (which we can then parse with the &lt;code&gt;jsonlite&lt;/code&gt; package). But for today, let’s discuss web scraping.&lt;/p&gt;
+&lt;div id=&#34;html-tables&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;HTML tables&lt;/h2&gt;
+&lt;p&gt;I am going to show you the simplest case of web scraping: when there is one table on a public facing webpage that we can identify by the HTML &lt;code&gt;&amp;lt;table&amp;gt;&lt;/code&gt; tag. Lately, I’ve been interested in tracking the U.S. unemployment rate from the Bureau of Labor Statistics. There is a nicely formatted table on the &lt;a href=&#34;https://www.ncsl.org/research/labor-and-employment/national-employment-monthly-update.aspx&#34;&gt;National Conference of State Legislatures’ website&lt;/a&gt;. Let’s try to scrape the single table on this webpage.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;using-rvest&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Using &lt;code&gt;rvest&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;With &lt;code&gt;rvest&lt;/code&gt;, the first step is to use the &lt;code&gt;read_html()&lt;/code&gt; function and supply the URL. From there, we can pipe to the &lt;code&gt;html_nodes()&lt;/code&gt; function, and supply the tag we want. This acts as a CSS selector; it doesn’t actually parse the data in the table.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
+library(rvest)
+library(lubridate)
+library(scales)
+
+unemploy_webpage &amp;lt;- read_html(&amp;quot;https://www.ncsl.org/research/labor-and-employment/national-employment-monthly-update.aspx&amp;quot;)
+
+
+unemploy_webpage %&amp;gt;%
+  html_nodes(&amp;quot;table&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## {xml_nodeset (1)}
+## [1] &amp;lt;table border=&amp;quot;0&amp;quot; cellpadding=&amp;quot;0&amp;quot; cellspacing=&amp;quot;0&amp;quot; class=&amp;quot;table table-cond ...&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;To actually parse the data, we pipe to the &lt;code&gt;html_table()&lt;/code&gt; function.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;unemploy_webpage %&amp;gt;%
+  html_nodes(&amp;quot;table&amp;quot;) %&amp;gt;% 
+  html_table()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [[1]]
+##         January February March April  May June July August September October
+## 1  2020     3.6      3.5   4.4  14.7 13.3 11.1 10.2    8.4       7.9      NA
+## 2  2019     4.0      3.8   3.8   3.6  3.6  3.7  3.7    3.7       3.5     3.6
+## 3  2018     4.1      4.1   4.0   3.9  3.8  4.0  3.9    3.8       3.7     3.8
+## 4  2017     4.7      4.7   4.4   4.4  4.4  4.3  4.3    4.4       4.2     4.1
+## 5  2016     4.9      4.9   5.0   5.0  4.8  4.9  4.8    4.9       5.0     4.9
+## 6  2015     5.7      5.5   5.4   5.4  5.6  5.3  5.2    5.1       5.0     5.0
+## 7  2014     6.6      6.7   6.7   6.2  6.3  6.1  6.2    6.1       5.9     5.7
+## 8  2013     8.0      7.7   7.5   7.6  7.5  7.5  7.3    7.2       7.2     7.2
+## 9  2012     8.3      8.3   8.2   8.2  8.2  8.2  8.2    8.1       7.8     7.8
+## 10 2011     9.1      9.0   9.0   9.1  9.0  9.1  9.0    9.0       9.0     8.8
+## 11 2010     9.8      9.8   9.9   9.9  9.6  9.4  9.4    9.5       9.5     9.4
+## 12 2009     7.8      8.3   8.7   9.0  9.4  9.5  9.5    9.6       9.8    10.0
+## 13 2008     4.9      4.8   5.1   5.0  5.5  5.6  5.8    6.2       6.2     6.6
+##    November December
+## 1        NA       NA
+## 2       3.5      3.5
+## 3       3.7      3.9
+## 4       4.2      4.1
+## 5       4.7      4.7
+## 6       5.1      5.0
+## 7       5.8      5.6
+## 8       6.9      6.7
+## 9       7.7      7.9
+## 10      8.6      8.5
+## 11      9.8      9.3
+## 12      9.9      9.9
+## 13      6.8      7.2&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Man, that was easy! One thing that makes this example extremely simple is that there is only one table on this webpage. If there were more than one, each would be contained as an element in this list (that is, if they were each properly tagged with &lt;code&gt;&amp;lt;table&amp;gt;&lt;/code&gt;). Below, I use &lt;code&gt;str()&lt;/code&gt; to verify that this is indeed a list with one element, containing the data frame of unemployment rates we want. I’ll save this list off.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;unemploy_webpage %&amp;gt;%
+  html_nodes(&amp;quot;table&amp;quot;) %&amp;gt;% 
+  html_table() %&amp;gt;% 
+  str()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## List of 1
+##  $ :&amp;#39;data.frame&amp;#39;:    13 obs. of  13 variables:
+##   ..$          : int [1:13] 2020 2019 2018 2017 2016 2015 2014 2013 2012 2011 ...
+##   ..$ January  : num [1:13] 3.6 4 4.1 4.7 4.9 5.7 6.6 8 8.3 9.1 ...
+##   ..$ February : num [1:13] 3.5 3.8 4.1 4.7 4.9 5.5 6.7 7.7 8.3 9 ...
+##   ..$ March    : num [1:13] 4.4 3.8 4 4.4 5 5.4 6.7 7.5 8.2 9 ...
+##   ..$ April    : num [1:13] 14.7 3.6 3.9 4.4 5 5.4 6.2 7.6 8.2 9.1 ...
+##   ..$ May      : num [1:13] 13.3 3.6 3.8 4.4 4.8 5.6 6.3 7.5 8.2 9 ...
+##   ..$ June     : num [1:13] 11.1 3.7 4 4.3 4.9 5.3 6.1 7.5 8.2 9.1 ...
+##   ..$ July     : num [1:13] 10.2 3.7 3.9 4.3 4.8 5.2 6.2 7.3 8.2 9 ...
+##   ..$ August   : num [1:13] 8.4 3.7 3.8 4.4 4.9 5.1 6.1 7.2 8.1 9 ...
+##   ..$ September: num [1:13] 7.9 3.5 3.7 4.2 5 5 5.9 7.2 7.8 9 ...
+##   ..$ October  : num [1:13] NA 3.6 3.8 4.1 4.9 5 5.7 7.2 7.8 8.8 ...
+##   ..$ November : num [1:13] NA 3.5 3.7 4.2 4.7 5.1 5.8 6.9 7.7 8.6 ...
+##   ..$ December : num [1:13] NA 3.5 3.9 4.1 4.7 5 5.6 6.7 7.9 8.5 ...&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;unemploy_list &amp;lt;- unemploy_webpage %&amp;gt;%
+  html_nodes(&amp;quot;table&amp;quot;) %&amp;gt;% 
+  html_table()&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;base-r&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Base R&lt;/h2&gt;
+&lt;p&gt;Next, I’m just going to do some base R to subset the list and assign a name to the column that contains the year.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;unemploy_df &amp;lt;- unemploy_list[[1]]
+
+colnames(unemploy_df)[1] &amp;lt;- &amp;quot;year&amp;quot;
+
+str(unemploy_df)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## &amp;#39;data.frame&amp;#39;:    13 obs. of  13 variables:
+##  $ year     : int  2020 2019 2018 2017 2016 2015 2014 2013 2012 2011 ...
+##  $ January  : num  3.6 4 4.1 4.7 4.9 5.7 6.6 8 8.3 9.1 ...
+##  $ February : num  3.5 3.8 4.1 4.7 4.9 5.5 6.7 7.7 8.3 9 ...
+##  $ March    : num  4.4 3.8 4 4.4 5 5.4 6.7 7.5 8.2 9 ...
+##  $ April    : num  14.7 3.6 3.9 4.4 5 5.4 6.2 7.6 8.2 9.1 ...
+##  $ May      : num  13.3 3.6 3.8 4.4 4.8 5.6 6.3 7.5 8.2 9 ...
+##  $ June     : num  11.1 3.7 4 4.3 4.9 5.3 6.1 7.5 8.2 9.1 ...
+##  $ July     : num  10.2 3.7 3.9 4.3 4.8 5.2 6.2 7.3 8.2 9 ...
+##  $ August   : num  8.4 3.7 3.8 4.4 4.9 5.1 6.1 7.2 8.1 9 ...
+##  $ September: num  7.9 3.5 3.7 4.2 5 5 5.9 7.2 7.8 9 ...
+##  $ October  : num  NA 3.6 3.8 4.1 4.9 5 5.7 7.2 7.8 8.8 ...
+##  $ November : num  NA 3.5 3.7 4.2 4.7 5.1 5.8 6.9 7.7 8.6 ...
+##  $ December : num  NA 3.5 3.9 4.1 4.7 5 5.6 6.7 7.9 8.5 ...&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;tidying-up&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Tidying up&lt;/h2&gt;
+&lt;p&gt;Next, I’ll pipe this data frame to a &lt;code&gt;tibble&lt;/code&gt; data type and then pivot longer and clean up some of the date data for easier plotting.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;unemploy_final &amp;lt;- unemploy_df %&amp;gt;% 
+  as_tibble() %&amp;gt;% 
+  pivot_longer(cols = -c(&amp;quot;year&amp;quot;),
+               names_to = &amp;quot;month&amp;quot;,
+               values_to = &amp;quot;unemployment_rate&amp;quot;) %&amp;gt;% 
+  mutate(date = mdy(paste0(month, &amp;quot;/01&amp;quot;, year)),
+         month = month(date, label = TRUE),
+         unemployment_rate = unemployment_rate / 100) %&amp;gt;% 
+  select(date, everything())
+
+unemploy_final&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 156 x 4
+##    date        year month unemployment_rate
+##    &amp;lt;date&amp;gt;     &amp;lt;int&amp;gt; &amp;lt;ord&amp;gt;             &amp;lt;dbl&amp;gt;
+##  1 2020-01-01  2020 Jan               0.036
+##  2 2020-02-01  2020 Feb               0.035
+##  3 2020-03-01  2020 Mar               0.044
+##  4 2020-04-01  2020 Apr               0.147
+##  5 2020-05-01  2020 May               0.133
+##  6 2020-06-01  2020 Jun               0.111
+##  7 2020-07-01  2020 Jul               0.102
+##  8 2020-08-01  2020 Aug               0.084
+##  9 2020-09-01  2020 Sep               0.079
+## 10 2020-10-01  2020 Oct              NA    
+## # ... with 146 more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now, it’s in perfect shape for a time series, highlighting the massive spike when COVID-19 shut the economy down.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;unemploy_final %&amp;gt;% 
+  filter(date &amp;gt;= &amp;quot;2016-01-01&amp;quot; &amp;amp; !is.na(unemployment_rate)) %&amp;gt;% 
+  ggplot(aes(x = date, y = unemployment_rate)) +
+  geom_line(size = 1, color = &amp;quot;lightblue4&amp;quot;) +
+  scale_y_continuous(limits = c(0, 0.3), labels = percent_format()) +
+  scale_x_date(breaks = &amp;quot;1 year&amp;quot;, labels = date_format(format = &amp;quot;%b &amp;#39;%y&amp;quot;)) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 8)) +
+  labs(title = &amp;quot;U.S. Unemployment Rate&amp;quot;,
+       subtitle = &amp;quot;Since January 2016&amp;quot;,
+       x = element_blank(),
+       y = element_blank(),
+       caption = paste0(&amp;quot;Data from the Bureau of Labor Statistics.\nReproduced by ncsl.org. Last updated &amp;quot;, Sys.Date(), &amp;quot;.&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;./post/2020-10-02-working-with-web-data-in-r-part-i-scraping-html-tables_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+</description>
     </item>
     
     <item>
@@ -26,8 +169,16 @@
       <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
       
       <guid>/post/install-r-and-rstudio-on-mac/</guid>
-      <description>Watch the YouTube video below to learn how to install R and RStudio on a Mac.
-  </description>
+      <description>
+
+
+&lt;p&gt;Watch the YouTube video below to learn how to install R and RStudio on a Mac.&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/EY_ly754CC0&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+</description>
     </item>
     
     <item>
@@ -36,8 +187,13 @@
       <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
       
       <guid>/post/shiny-app-test/</guid>
-      <description>This is a test that I can successfully embed a Shiny app (in this case a tutorial using the learnr package) in my blog.
-</description>
+      <description>
+
+
+&lt;p&gt;This is a test that I can successfully embed a Shiny app (in this case a tutorial using the &lt;code&gt;learnr&lt;/code&gt; package) in my blog.&lt;/p&gt;
+&lt;iframe height=&#34;800&#34; width=&#34;100%&#34; frameborder=&#34;no&#34; src=&#34;https://pete-talbert.shinyapps.io/arithmetic/&#34;&gt;
+&lt;/iframe&gt;
+</description>
     </item>
     
     <item>
@@ -46,7 +202,175 @@
       <pubDate>Sun, 12 Apr 2020 00:00:00 +0000</pubDate>
       
       <guid>/post/covid-19-new-york-times-plots/</guid>
-      <description>The New York Times has produced some really great maps and plots in its efforts to track the coronavirus in the U.S. One plot in particular that caught my attention is the histogram (actually more like a bar plot) of new cases with a 7-day average line overlayed found at the top of this page.</description>
+      <description>
+
+
+&lt;p&gt;The New York Times has produced some really great maps and plots in its efforts to track the coronavirus in the U.S. One plot in particular that caught my attention is the histogram (actually more like a bar plot) of new cases with a 7-day average line overlayed found at the top of this &lt;a href=&#34;https://www.nytimes.com/interactive/2020/us/coronavirus-us-cases.html&#34;&gt;page&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Why not try to replicate this? I would also like to try to facet this plot out with all 50 states.&lt;/p&gt;
+&lt;div id=&#34;making-the-histogram-bar-plot&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Making the histogram (bar plot)&lt;/h2&gt;
+&lt;p&gt;Making the histogram of new cases shouldn’t be too difficult. I am going to use New York as my first state. Conveniently enough, The New York Times has a Github site where we can download the state-level data that creates the maps and plots on their site. I’ll also use &lt;code&gt;geom_col&lt;/code&gt; because each bar is just one day, so there are no bins needed.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
+library(lubridate)
+library(scales)
+
+theme_set(theme_minimal(base_size = 11))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;covid &amp;lt;- read.csv(&amp;quot;https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv&amp;quot;) %&amp;gt;% 
+  as_tibble() %&amp;gt;% 
+  mutate(date = ymd(date), 
+         state = as.character(state))
+
+covid&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 2,217 x 5
+##    date       state       fips cases deaths
+##    &amp;lt;date&amp;gt;     &amp;lt;chr&amp;gt;      &amp;lt;int&amp;gt; &amp;lt;int&amp;gt;  &amp;lt;int&amp;gt;
+##  1 2020-01-21 Washington    53     1      0
+##  2 2020-01-22 Washington    53     1      0
+##  3 2020-01-23 Washington    53     1      0
+##  4 2020-01-24 Illinois      17     1      0
+##  5 2020-01-24 Washington    53     1      0
+##  6 2020-01-25 California     6     1      0
+##  7 2020-01-25 Illinois      17     1      0
+##  8 2020-01-25 Washington    53     1      0
+##  9 2020-01-26 Arizona        4     1      0
+## 10 2020-01-26 California     6     2      0
+## # … with 2,207 more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The data from NYT is &lt;em&gt;cumulative&lt;/em&gt; counts of cases and deaths. To get new cases, we will have to remove the previous total from each row using the &lt;code&gt;lag&lt;/code&gt; function in &lt;code&gt;dplyr&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;covid_processed &amp;lt;- covid %&amp;gt;% 
+  group_by(state) %&amp;gt;% 
+  mutate(new_cases = cases - lag(cases), 
+         new_cases = replace_na(new_cases, 0)) %&amp;gt;% 
+  ungroup()
+
+covid_processed %&amp;gt;% 
+  filter(state == &amp;quot;New York&amp;quot;) %&amp;gt;% 
+  ggplot(aes(x = date, y = new_cases)) +
+  geom_col()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;./post/2020-04-12-covid-19-new-york-times-plots_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;I haven’t done any scaling or labeling, but this looks like the same histogram as the one at the top of the &lt;a href=&#34;https://www.nytimes.com/interactive/2020/us/new-york-coronavirus-cases.html&#34;&gt;New York state-specific page&lt;/a&gt;, so we’re on the right track. Let’s see if I can color, scale, and label it the same way as NYT now.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;covid_processed %&amp;gt;% 
+  filter(state == &amp;quot;New York&amp;quot;) %&amp;gt;% 
+  ggplot(aes(x = date, y = new_cases)) +
+  geom_col(fill = &amp;quot;#FAC9C7&amp;quot;) +
+  geom_hline(yintercept = 0, size = 0.75, color = &amp;quot;gray92&amp;quot;) +
+  scale_x_date(limits = date(c(&amp;quot;2020-02-26&amp;quot;, &amp;quot;2020-04-11&amp;quot;)),
+               breaks = date(c(&amp;quot;2020-02-26&amp;quot;, &amp;quot;2020-04-11&amp;quot;)),
+               labels = date_format(format = &amp;quot;%b. %d&amp;quot;),
+               minor_breaks = NULL) +
+  scale_y_continuous(breaks = c(0, 5000, 10000), minor_breaks = NULL, labels = comma_format()) +
+  labs(
+    x = element_blank(),
+    y = element_blank()
+  ) +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_line(linetype = &amp;quot;dashed&amp;quot;)
+  ) -&amp;gt; p
+
+p&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;./post/2020-04-12-covid-19-new-york-times-plots_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Whew! That was a decent amount of work with scales and grid lines; one hack is that when I set &lt;code&gt;panel.grid.major.y = element_line(linetype = &amp;quot;dashed&amp;quot;)&lt;/code&gt;, the 0 line was dashed as well, whereas I wanted a solid line at 0. To remedy this, I had to place a &lt;code&gt;geom_hline&lt;/code&gt; with &lt;code&gt;yintercept = 0&lt;/code&gt; and make it the same color gray as the other grid lines.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;day-average&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;7-day average&lt;/h2&gt;
+&lt;p&gt;Okay, now for maybe the hardest part: creating a 7-day average line that is layered over the histogram. First, let’s attempt to compute the 7-day average using &lt;code&gt;rollmean&lt;/code&gt; from the &lt;code&gt;zoo&lt;/code&gt; package.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(zoo)
+
+covid_processed &amp;lt;- covid_processed %&amp;gt;%
+  group_by(state) %&amp;gt;% 
+  mutate(seven_avg = rollmean(new_cases, 7, align = &amp;quot;right&amp;quot;, fill = 0)) %&amp;gt;% 
+  ungroup()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I’ve set &lt;code&gt;align = &amp;quot;right&amp;quot;&lt;/code&gt;, which will compute the average from the &lt;em&gt;previous&lt;/em&gt; seven days; this appears to be the methodology of NYT, though I’m not entirely sure. I’ve also set &lt;code&gt;fill = 0&lt;/code&gt;, so that I get the same vector length as the rest of the data frame, just filling the starting numbers with 0.&lt;/p&gt;
+&lt;p&gt;Let’s just verify that’s it’s doing what we expect:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;covid_processed %&amp;gt;% 
+  filter(state == &amp;quot;New York&amp;quot;,
+         date &amp;gt;= &amp;quot;2020-03-15&amp;quot; &amp;amp; date &amp;lt;= &amp;quot;2020-03-21&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 7 x 7
+##   date       state     fips cases deaths new_cases seven_avg
+##   &amp;lt;date&amp;gt;     &amp;lt;chr&amp;gt;    &amp;lt;int&amp;gt; &amp;lt;int&amp;gt;  &amp;lt;int&amp;gt;     &amp;lt;dbl&amp;gt;     &amp;lt;dbl&amp;gt;
+## 1 2020-03-15 New York    36   732      6       122      89.4
+## 2 2020-03-16 New York    36   950     10       218     115. 
+## 3 2020-03-17 New York    36  1374     17       424     172. 
+## 4 2020-03-18 New York    36  2382     27      1008     309. 
+## 5 2020-03-19 New York    36  4152     30      1770     547. 
+## 6 2020-03-20 New York    36  7102     57      2950     954. 
+## 7 2020-03-21 New York    36 10356     80      3254    1392.&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;covid_processed %&amp;gt;% 
+  filter(state == &amp;quot;New York&amp;quot;,
+         date &amp;gt;= &amp;quot;2020-03-15&amp;quot; &amp;amp; date &amp;lt;= &amp;quot;2020-03-21&amp;quot;) %&amp;gt;% 
+  summarize(seven_avg = sum(new_cases) / n())&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 1 x 1
+##   seven_avg
+##       &amp;lt;dbl&amp;gt;
+## 1     1392.&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Yep, when I do it by hand for one date (Mar. 21), I get the same result: &lt;strong&gt;1,392&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Let’s just update the data for the plot &lt;code&gt;p&lt;/code&gt; and add the line to compare to the NYT plot:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;p$data &amp;lt;- covid_processed %&amp;gt;% 
+  filter(state == &amp;quot;New York&amp;quot;)
+
+p +
+  geom_line(aes(y = seven_avg))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;./post/2020-04-12-covid-19-new-york-times-plots_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Nice! Okay, now let’s doctor that line up to look like the NYT plot. Here, rather than add to the &lt;code&gt;ggplot&lt;/code&gt; object, &lt;code&gt;p&lt;/code&gt;, I’m going to rebuild the entire plot. However, it can be helpful sometimes when working on a plot to save a portion of it, and continue to build on it. Furthermore, since it’s a list object, we can edit elements of the list, like I did to update the data above.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;covid_processed %&amp;gt;% 
+  filter(state == &amp;quot;New York&amp;quot;) %&amp;gt;% 
+  ggplot(aes(x = date, y = new_cases)) +
+  geom_col(fill = &amp;quot;#FAC9C7&amp;quot;) +
+  geom_hline(yintercept = 0, size = 0.75, color = &amp;quot;gray92&amp;quot;) +
+  geom_line(aes(y = seven_avg), color = &amp;quot;#CF1010&amp;quot;, size = 1) +
+  geom_area(aes(y = seven_avg), fill = &amp;quot;#CF1010&amp;quot;, alpha = 0.25) +
+  scale_x_date(limits = date(c(&amp;quot;2020-02-26&amp;quot;, &amp;quot;2020-04-11&amp;quot;)),
+               breaks = date(c(&amp;quot;2020-02-26&amp;quot;, &amp;quot;2020-04-11&amp;quot;)),
+               labels = date_format(format = &amp;quot;%b. %d&amp;quot;),
+               minor_breaks = NULL) +
+  scale_y_continuous(breaks = c(0, 5000, 10000), minor_breaks = NULL, labels = comma_format()) +
+  labs(
+    title = &amp;quot;New York may have flattened the curve&amp;quot;,
+    subtitle = &amp;quot;New York Times new cases and 7-day average plot&amp;quot;,
+    x = element_blank(),
+    y = element_blank(),
+    caption = &amp;quot;Data from https://github.com/nytimes/covid-19-data.&amp;quot;
+  ) +
+  theme(plot.title = element_text(face = &amp;quot;bold&amp;quot;),
+        panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_line(linetype = &amp;quot;dashed&amp;quot;),
+        legend.position = &amp;quot;none&amp;quot;
+  )&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;./post/2020-04-12-covid-19-new-york-times-plots_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;faceting-all-50-states&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Faceting all 50 states&lt;/h2&gt;
+&lt;p&gt;Okay, the last thing I want to do is facet this out by state.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;covid_processed %&amp;gt;% 
+  filter(fips &amp;lt;= 56) %&amp;gt;% # just the 50 states + DC.
+  mutate(state = case_when(state == &amp;quot;District of Columbia&amp;quot; ~ &amp;quot;Washington DC&amp;quot;, TRUE ~ state)) %&amp;gt;% 
+  ggplot(aes(x = date, y = new_cases)) +
+  geom_histogram(stat = &amp;quot;identity&amp;quot;, fill = &amp;quot;#FAC9C7&amp;quot;) +
+  geom_hline(yintercept = 0, size = 0.75, color = &amp;quot;gray92&amp;quot;) +
+  geom_line(aes(y = seven_avg), color = &amp;quot;#CF1010&amp;quot;, size = 1) +
+  geom_area(aes(y = seven_avg), fill = &amp;quot;#CF1010&amp;quot;, alpha = 0.25) +
+  scale_x_date(limits = date(c(&amp;quot;2020-02-26&amp;quot;, &amp;quot;2020-04-11&amp;quot;)),
+               breaks = date(c(&amp;quot;2020-02-26&amp;quot;, &amp;quot;2020-04-11&amp;quot;)),
+               labels = date_format(format = &amp;quot;%b. %d&amp;quot;),
+               minor_breaks = NULL) +
+  scale_y_continuous(minor_breaks = NULL, labels = comma_format(accuracy = 1)) + # removed the hard-coded breaks.
+  facet_wrap(~state, scales = &amp;quot;free_y&amp;quot;, ncol = 4) +
+  labs(
+    title = &amp;quot;Some states have flattened the curve, others may still be ramping up&amp;quot;,
+    subtitle = &amp;quot;New York Times new cases and 7-day average plot&amp;quot;,
+    x = element_blank(),
+    y = element_blank(),
+    caption = &amp;quot;Data from https://github.com/nytimes/covid-19-data.&amp;quot;
+  ) +
+  theme(plot.title = element_text(face = &amp;quot;bold&amp;quot;),
+        panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_line(linetype = &amp;quot;dashed&amp;quot;),
+        legend.position = &amp;quot;none&amp;quot;
+  )&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;./post/2020-04-12-covid-19-new-york-times-plots_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;I hope this tutorial was helpful; I feel the best way to get better at &lt;code&gt;ggplot2&lt;/code&gt; is to find plots on the internet I like, and try to recreate them in R.&lt;/p&gt;
+&lt;p&gt;Lastly, I want to say happy Easter to you all. During this time, it can be difficult to find hope, but in the story of Jesus we find a message of light in the midst of darkness.&lt;/p&gt;
+&lt;/div&gt;
+</description>
     </item>
     
     <item>
@@ -55,7 +379,121 @@
       <pubDate>Wed, 11 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/post/connecting-to-mamp-install-of-mysql-in-r/</guid>
-      <description>In the course of doing a web dev tutorial (namely Tania Rascia’s great post on building a simple CRUD app) I had to install MAMP. This gives you a local server environment consisting of Apache, MySQL, and PHP.</description>
+      <description>
+
+
+&lt;p&gt;In the course of doing a web dev tutorial (namely Tania Rascia’s &lt;a href=&#34;https://www.taniarascia.com/create-a-simple-database-app-connecting-to-mysql-with-php/&#34;&gt;great post&lt;/a&gt; on building a simple CRUD app) I had to install &lt;a href=&#34;https://www.mamp.info/en/mamp/mac/&#34;&gt;MAMP&lt;/a&gt;. This gives you a local server environment consisting of Apache, MySQL, and PHP.&lt;/p&gt;
+&lt;p&gt;Since I work with databases so often, I was curious about the simplest way to connect to my newly installed instance of MySQL in R.&lt;/p&gt;
+&lt;div id=&#34;which-r-package&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Which R package?&lt;/h2&gt;
+&lt;p&gt;This tutorial assumes you have already installed &lt;a href=&#34;https://www.mamp.info/en/mamp/mac/&#34;&gt;MAMP&lt;/a&gt; and have it currently running on your local machine in a macOS environment.&lt;/p&gt;
+&lt;p&gt;There are lots of different ways to connect to a db in R. RStudio has a great website that walks through their enterprise packages for working with databases, but I’ve often found this site confusing. Setting up drivers, ODBC connections, and DSN files is difficult enough in Windows, let alone on a Mac.&lt;/p&gt;
+&lt;p&gt;So instead of attempting to set up an ODBC connection to MySQL, I am simply going to use the &lt;code&gt;RMariaDB&lt;/code&gt; package coupled with &lt;code&gt;DBI&lt;/code&gt; (I’m skipping the &lt;code&gt;odbc&lt;/code&gt; package altogether). I tend to always trust the folks at RStudio for great package development, and this is a part of the &lt;a href=&#34;https://www.r-dbi.org/&#34;&gt;DBI&lt;/a&gt; interface that in my experience gives the best performance for database work in R.&lt;/p&gt;
+&lt;p&gt;So if you haven’t done so already, install the following packages (along with &lt;code&gt;nycflights13&lt;/code&gt; which we’ll be using for a demo):&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;install.packages(&amp;quot;tidyverse&amp;quot;)
+install.packages(&amp;quot;DBI&amp;quot;)
+install.packages(&amp;quot;RMariaDB&amp;quot;)
+install.packages(&amp;quot;nycflights13&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;creating-a-connection-to-the-database&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Creating a connection to the database&lt;/h2&gt;
+&lt;p&gt;Okay, let’s first see if we can connect to the database. Since I don’t want to embed my username and password, I am using environmental variables. You can learn more on how to do that on RStudio’s &lt;a href=&#34;https://db.rstudio.com/best-practices/managing-credentials/#use-environment-variables&#34;&gt;Databases using R page&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
+library(odbc)
+library(DBI)
+library(RMariaDB)
+library(nycflights13)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;con &amp;lt;- DBI::dbConnect(RMariaDB::MariaDB(), user = Sys.getenv(&amp;quot;mysql_user&amp;quot;), password = Sys.getenv(&amp;quot;mysql_pass&amp;quot;), host = &amp;quot;localhost&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;Error: Failed to connect: Can&#39;t connect to local MySQL server through socket &#39;/tmp/mysql.sock&#39; (2)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Great! Immediately we have an error. According to MySQL’s &lt;a href=&#34;https://dev.mysql.com/doc/refman/8.0/en/connecting.html&#34;&gt;documentation&lt;/a&gt;, Unix systems use this socket file for connecting to MySQL databases. Mine isn’t there because I used MAMP to install MySQL; MAMP places the socket file here: &lt;code&gt;/Applications/MAMP/tmp/mysql/mysql.sock&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;So what we can do is write a bash command that creates a hard link from the MAMP location to where the &lt;code&gt;RMariaDB&lt;/code&gt; package expects it:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#either open terminal and run what&amp;#39;s within quotes, or run it write from r with the system() function.
+system(&amp;quot;ln -s /Applications/MAMP/tmp/mysql/mysql.sock /tmp/mysql.sock&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Okay, let’s try to connect again.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;con &amp;lt;- DBI::dbConnect(RMariaDB::MariaDB(), user = Sys.getenv(&amp;quot;mysql_user&amp;quot;), password = Sys.getenv(&amp;quot;mysql_pass&amp;quot;), host = &amp;quot;localhost&amp;quot;)
+
+dbGetQuery(conn = con, statement = &amp;quot;show databases;&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##             Database
+## 1 information_schema
+## 2               crud
+## 3              mysql
+## 4        nyc_flights
+## 5 performance_schema
+## 6                sys&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Awesome! We are connected to our MySQL instance that we installed with MAMP. &lt;strong&gt;Note:&lt;/strong&gt; If you restart your machine, you will have to re-run the bash command above…Not quite sure why that is, but you can probably figure out a more permanent solution.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;reading-and-writing-from-the-database&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Reading and writing from the database&lt;/h2&gt;
+&lt;p&gt;The &lt;code&gt;dbGetQuery&lt;/code&gt; function is the easiest way to read/write to the database. The first argument is just the name of your connection (mine is &lt;code&gt;con&lt;/code&gt;), and the second is your sql statement.&lt;/p&gt;
+&lt;p&gt;Let’s create a database of the &lt;code&gt;nycflights13&lt;/code&gt; data, and query it!&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dbGetQuery(con, &amp;quot;CREATE DATABASE nyc_flights;&amp;quot;) #create the database&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Great, okay my plan is to insert each of the five dataframes of &lt;code&gt;nycflights13&lt;/code&gt; into the db as tables. So below, I first need to modify my connection to connect to the database we just created. I’m then going to create a simple function that takes each dataframe in the package and copies it to a table in the database.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#new connection
+con_flights &amp;lt;- DBI::dbConnect(RMariaDB::MariaDB(), user = Sys.getenv(&amp;quot;mysql_user&amp;quot;), password = Sys.getenv(&amp;quot;mysql_pass&amp;quot;), db = &amp;quot;nyc_flights&amp;quot;, host = &amp;quot;localhost&amp;quot;) #added db argument.
+
+#function
+insert_db_table &amp;lt;- function(x) {    #creating function insert_db_table
+  copy_to(con_flights, x,           #x is the dataframe
+          deparse(substitute(x)),   #here I&amp;#39;m using the substitute() and deparse() function just to get the dataframe name as a string
+          temporary = FALSE,        #we&amp;#39;ll make them permanent tables
+          overwrite = TRUE          #and overwrite them if they already exist
+      )
+}
+
+#run the function for each dataframe in nycflights13
+insert_db_table(airlines)
+insert_db_table(airports)
+insert_db_table(flights)
+insert_db_table(planes)
+insert_db_table(weather)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Let’s see if the data’s there.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dbGetQuery(con_flights, statement = &amp;quot;select * from flights&amp;quot;) %&amp;gt;% 
+  as_tibble()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 336,776 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    &amp;lt;int&amp;gt; &amp;lt;int&amp;gt; &amp;lt;int&amp;gt;    &amp;lt;int&amp;gt;          &amp;lt;int&amp;gt;     &amp;lt;dbl&amp;gt;    &amp;lt;int&amp;gt;          &amp;lt;int&amp;gt;
+##  1  2013     1     1      517            515         2      830            819
+##  2  2013     1     1      533            529         4      850            830
+##  3  2013     1     1      542            540         2      923            850
+##  4  2013     1     1      544            545        -1     1004           1022
+##  5  2013     1     1      554            600        -6      812            837
+##  6  2013     1     1      554            558        -4      740            728
+##  7  2013     1     1      555            600        -5      913            854
+##  8  2013     1     1      557            600        -3      709            723
+##  9  2013     1     1      557            600        -3      838            846
+## 10  2013     1     1      558            600        -2      753            745
+## # … with 336,766 more rows, and 11 more variables: arr_delay &amp;lt;dbl&amp;gt;,
+## #   carrier &amp;lt;chr&amp;gt;, flight &amp;lt;int&amp;gt;, tailnum &amp;lt;chr&amp;gt;, origin &amp;lt;chr&amp;gt;, dest &amp;lt;chr&amp;gt;,
+## #   air_time &amp;lt;dbl&amp;gt;, distance &amp;lt;dbl&amp;gt;, hour &amp;lt;dbl&amp;gt;, minute &amp;lt;dbl&amp;gt;, time_hour &amp;lt;dttm&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Awesome!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;querying-with-dbplyr&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Querying with &lt;code&gt;dbplyr&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;So far we have been using &lt;code&gt;dbGetQuery&lt;/code&gt;, which queries the data and brings it back in memory in R. But since the data is in a SQL database, we can actually write queries remotely and not pull the data into R until we need it; &lt;code&gt;dbplyr&lt;/code&gt; executes &lt;code&gt;dplyr&lt;/code&gt; code on the MySQL server and lazily evaluates it’s results. You can then use &lt;code&gt;collect()&lt;/code&gt; to actually capture the total results in memory for plotting.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tbl_flights &amp;lt;- tbl(con_flights, &amp;quot;flights&amp;quot;)   #dbplyr&amp;#39;s tbl function
+tbl_airports &amp;lt;- tbl(con_flights, &amp;quot;airports&amp;quot;)
+
+tbl_flights %&amp;gt;% 
+  inner_join(tbl_airports, by = c(&amp;quot;dest&amp;quot; = &amp;quot;faa&amp;quot;)) %&amp;gt;% 
+  count(name)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # Source:   lazy query [?? x 2]
+## # Database: mysql [root@localhost:NA/nyc_flights]
+##    name                              n      
+##    &amp;lt;chr&amp;gt;                             &amp;lt;int64&amp;gt;
+##  1 Akron Canton Regional Airport      864   
+##  2 Albany Intl                        439   
+##  3 Albuquerque International Sunport  254   
+##  4 Asheville Regional Airport         275   
+##  5 Austin Bergstrom Intl             2439   
+##  6 Baltimore Washington Intl         1781   
+##  7 Bangor Intl                        375   
+##  8 Birmingham Intl                    297   
+##  9 Blue Grass                           1   
+## 10 Bob Hope                           371   
+## # … with more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Although in my early experience of using &lt;code&gt;dbplyr&lt;/code&gt; commands I have found it much slower than just bringing all the data into R, I think it’s still a useful method for working with databases. You can read more about it on &lt;a href=&#34;https://dbplyr.tidyverse.org/&#34;&gt;RStudio’s website&lt;/a&gt;. Cheers!&lt;/p&gt;
+&lt;/div&gt;
+</description>
     </item>
     
     <item>
@@ -64,8 +502,57 @@
       <pubDate>Thu, 05 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/post/learning-bash/</guid>
-      <description>Hello all!
-So I just bought a used MacBook Pro in order to learn Linux, bash, shell scripting, etc. This post is just to test that I can write bash code in an .</description>
+      <description>
+
+
+&lt;p&gt;Hello all!&lt;/p&gt;
+&lt;p&gt;So I just bought a used MacBook Pro in order to learn Linux, bash, shell scripting, etc. This post is just to test that I can write bash code in an &lt;code&gt;.Rmd&lt;/code&gt; file and it will show on my blog correctly.&lt;/p&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;ls&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 2018-11-13-can-i-write-sql-in-r-markdown.Rmd
+## 2018-11-13-can-i-write-sql-in-r-markdown.html
+## 2018-11-15-connecting-to-ms-sql-server-in-r.Rmd
+## 2018-11-15-connecting-to-ms-sql-server-in-r.html
+## 2018-11-16-ggplot2-geom-bar-labeling.Rmd
+## 2018-11-16-ggplot2-geom-bar-labeling.html
+## 2018-11-22-pivoting-data-in-sql-vs-r.Rmd
+## 2018-11-22-pivoting-data-in-sql-vs-r.html
+## 2018-12-10-learning-for-loops-in-r.Rmd
+## 2018-12-10-learning-for-loops-in-r.html
+## 2018-12-29-working-more-with-the-baumann-dataset.Rmd
+## 2018-12-29-working-more-with-the-baumann-dataset.html
+## 2019-02-21-plotting-factors-with-forcats.Rmd
+## 2019-02-21-plotting-factors-with-forcats.html
+## 2019-03-02-window-functions-in-r-and-sql.Rmd
+## 2019-03-02-window-functions-in-r-and-sql.html
+## 2019-11-24-consulting-services.Rmd
+## 2019-11-24-consulting-services.html
+## 2020-02-28-for-loops-for-quick-summaries-in-r.Rmd
+## 2020-02-28-for-loops-for-quick-summaries-in-r.html
+## 2020-03-05-learning-bash.Rmd
+## 2020-03-05-learning-bash.html
+## dsn-setup.PNG&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Hey, that’s pretty cool! It looks like it is showing the directory where this &lt;code&gt;.Rmd&lt;/code&gt; file lives.&lt;/p&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;cd /
+ls&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Applications
+## Library
+## Network
+## System
+## Users
+## Volumes
+## bin
+## cores
+## dev
+## etc
+## home
+## installer.failurerequests
+## net
+## private
+## sbin
+## tmp
+## usr
+## var&lt;/code&gt;&lt;/pre&gt;
+</description>
     </item>
     
     <item>
@@ -74,7 +561,167 @@ So I just bought a used MacBook Pro in order to learn Linux, bash, shell scripti
       <pubDate>Fri, 28 Feb 2020 00:00:00 +0000</pubDate>
       
       <guid>/post/for-loops-for-quick-summaries-in-r/</guid>
-      <description>Because I often work with categorical data, I find myself making lots of quick, sorted counts of variables in a dataset. I find that this is a really common technique to get to know a dataset you’re working with; I’ve also noticed David Robinson do it often in his screencasts.</description>
+      <description>
+
+
+&lt;p&gt;Because I often work with categorical data, I find myself making lots of quick, sorted counts of variables in a dataset. I find that this is a really common technique to get to know a dataset you’re working with; I’ve also noticed David Robinson do it often in his &lt;a href=&#34;https://www.youtube.com/user/safe4democracy/featured&#34;&gt;screencasts&lt;/a&gt;. (If you haven’t checked these out, I cannot recommend these enough!)&lt;/p&gt;
+&lt;div id=&#34;using-for-loops&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Using for loops&lt;/h2&gt;
+&lt;p&gt;As always, I need to make a disclaimer that I know I should be using some type of functional like &lt;code&gt;lapply&lt;/code&gt; or &lt;code&gt;purrr::map&lt;/code&gt;, but again since I’m newer to programming, I find it best to make a for loop first to better understand what’s happening.&lt;/p&gt;
+&lt;p&gt;This example uses a sample of the General Social Survey found in the &lt;code&gt;forcats&lt;/code&gt; package.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
+
+gss &amp;lt;- forcats::gss_cat %&amp;gt;% as_tibble()
+
+gss&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 21,483 x 9
+##     year marital     age race  rincome    partyid     relig     denom    tvhours
+##    &amp;lt;int&amp;gt; &amp;lt;fct&amp;gt;     &amp;lt;int&amp;gt; &amp;lt;fct&amp;gt; &amp;lt;fct&amp;gt;      &amp;lt;fct&amp;gt;       &amp;lt;fct&amp;gt;     &amp;lt;fct&amp;gt;      &amp;lt;int&amp;gt;
+##  1  2000 Never ma~    26 White $8000 to ~ Ind,near r~ Protesta~ Souther~      12
+##  2  2000 Divorced     48 White $8000 to ~ Not str re~ Protesta~ Baptist~      NA
+##  3  2000 Widowed      67 White Not appli~ Independent Protesta~ No deno~       2
+##  4  2000 Never ma~    39 White Not appli~ Ind,near r~ Orthodox~ Not app~       4
+##  5  2000 Divorced     25 White Not appli~ Not str de~ None      Not app~       1
+##  6  2000 Married      25 White $20000 - ~ Strong dem~ Protesta~ Souther~      NA
+##  7  2000 Never ma~    36 White $25000 or~ Not str re~ Christian Not app~       3
+##  8  2000 Divorced     44 White $7000 to ~ Ind,near d~ Protesta~ Luthera~      NA
+##  9  2000 Married      44 White $25000 or~ Not str de~ Protesta~ Other          0
+## 10  2000 Married      47 White $25000 or~ Strong rep~ Protesta~ Souther~       3
+## # ... with 21,473 more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;What I want to do is quick count of the responses for each column of the survey. First, I just try to do it for the first column:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;gss %&amp;gt;% 
+  group_by(year) %&amp;gt;% 
+  summarize(n = n())&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 8 x 2
+##    year     n
+##   &amp;lt;int&amp;gt; &amp;lt;int&amp;gt;
+## 1  2000  2817
+## 2  2002  2765
+## 3  2004  2812
+## 4  2006  4510
+## 5  2008  2023
+## 6  2010  2044
+## 7  2012  1974
+## 8  2014  2538&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Easy enough. I could have wrote one less line of code with &lt;code&gt;count()&lt;/code&gt;, but the reason I am not has to do with how the for loops work. I found that &lt;code&gt;count()&lt;/code&gt; inside a for loop was nearly impossible, for reasons I have yet to understand.&lt;/p&gt;
+&lt;p&gt;Now let’s write the for loop. As always we want three things: output, sequence, and body.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;gss_list &amp;lt;- vector(&amp;quot;list&amp;quot;, ncol(gss)) # 1. output
+for (i in 1:ncol(gss)) {              # 2. sequence
+  gss_list[[i]] &amp;lt;- gss %&amp;gt;%            # 3. body
+    group_by(gss[[i]]) %&amp;gt;% 
+    summarize(n = n())
+}
+#printing the 8th item in the list for an example.
+gss_list[[7]]&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 15 x 2
+##    `gss[[i]]`                  n
+##    &amp;lt;fct&amp;gt;                   &amp;lt;int&amp;gt;
+##  1 No answer                  93
+##  2 Don&amp;#39;t know                 15
+##  3 Inter-nondenominational   109
+##  4 Native american            23
+##  5 Christian                 689
+##  6 Orthodox-christian         95
+##  7 Moslem/islam              104
+##  8 Other eastern              32
+##  9 Hinduism                   71
+## 10 Buddhism                  147
+## 11 Other                     224
+## 12 None                     3523
+## 13 Jewish                    388
+## 14 Catholic                 5124
+## 15 Protestant              10846&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Awesome! That wasn’t so bad. And what’s nice is, if I print the whole list, I get a nice quick summary of counts for every column in the dataframe.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Here’s the problem:&lt;/em&gt; I want the column name in the dataframe, not &lt;code&gt;gss[[i]]&lt;/code&gt;, which isn’t meaningful. If I had 40 columns for instance, how could I keep track of what’s what?&lt;/p&gt;
+&lt;p&gt;Below, I add another line inside the for loop that replaces &lt;code&gt;gss[[i]]&lt;/code&gt; in each dataframe in &lt;code&gt;gss_list&lt;/code&gt; to the original column names.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;gss_list &amp;lt;- vector(&amp;quot;list&amp;quot;, ncol(gss)) # 1. output
+for (i in 1:ncol(gss)) {              # 2. sequence
+  gss_list[[i]] &amp;lt;- gss %&amp;gt;%            # 3. body
+    group_by(gss[[i]]) %&amp;gt;% 
+    summarize(n = n()) %&amp;gt;% 
+    ungroup()
+  colnames(gss_list[[i]])[1] &amp;lt;- names(gss)[i] #here I rename the column to its orig name.
+}
+#printing the 8th item in the list for an example.
+gss_list[[7]]&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 15 x 2
+##    relig                       n
+##    &amp;lt;fct&amp;gt;                   &amp;lt;int&amp;gt;
+##  1 No answer                  93
+##  2 Don&amp;#39;t know                 15
+##  3 Inter-nondenominational   109
+##  4 Native american            23
+##  5 Christian                 689
+##  6 Orthodox-christian         95
+##  7 Moslem/islam              104
+##  8 Other eastern              32
+##  9 Hinduism                   71
+## 10 Buddhism                  147
+## 11 Other                     224
+## 12 None                     3523
+## 13 Jewish                    388
+## 14 Catholic                 5124
+## 15 Protestant              10846&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It’s not the prettiest code, but it does the trick. I’d love a more elegant solution, but for now, it works.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;a-quick-plot&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;A quick plot&lt;/h2&gt;
+&lt;p&gt;I always end by doing a quick plot, because really what’s the point of summarizing data like this without visualizing it in some way?&lt;/p&gt;
+&lt;p&gt;First, though, I want to group by the first column &lt;code&gt;year&lt;/code&gt; for all my counts, so I’ll tweak the for loop again.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;gss_list &amp;lt;- vector(&amp;quot;list&amp;quot;, ncol(gss)) # 1. output
+for (i in 1:ncol(gss)) {              # 2. sequence
+  gss_list[[i]] &amp;lt;- gss %&amp;gt;%            # 3. body
+    group_by(year, gss[[i]]) %&amp;gt;% #adding the year column
+    summarize(n = n()) %&amp;gt;% 
+    ungroup()
+  colnames(gss_list[[i]])[2] &amp;lt;- names(gss)[i] #here I rename the column to its orig name. Note: it&amp;#39;s the second column now!
+}
+#printing the 8th item in the list for an example.
+gss_list[[7]]&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 118 x 3
+##     year relig                       n
+##    &amp;lt;int&amp;gt; &amp;lt;fct&amp;gt;                   &amp;lt;int&amp;gt;
+##  1  2000 No answer                   3
+##  2  2000 Don&amp;#39;t know                  1
+##  3  2000 Inter-nondenominational    17
+##  4  2000 Native american             4
+##  5  2000 Christian                  39
+##  6  2000 Orthodox-christian         12
+##  7  2000 Moslem/islam               12
+##  8  2000 Other eastern               1
+##  9  2000 Hinduism                    8
+## 10  2000 Buddhism                   17
+## # ... with 108 more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Okay, now on to plotting! This is also a chance to show off Julia Silge’s awesome &lt;code&gt;reorder_within()&lt;/code&gt; &lt;a href=&#34;https://juliasilge.com/blog/reorder-within/&#34;&gt;function&lt;/a&gt; that allows you to easily reorder factors within each facet using &lt;code&gt;facet_wrap()&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(scales)
+library(tidytext) #this has reorder_within() along with a lot of great functions for working with text.
+
+theme_set(theme_minimal(base_size = 10) +
+  theme(plot.title = element_text(face = &amp;quot;bold&amp;quot;),
+        axis.text = element_text(size = 8))
+)
+
+gss_list[[7]] %&amp;gt;% 
+  mutate(relig = reorder_within(relig, n, year)) %&amp;gt;% #use this inside of mutate
+  ggplot(aes(x = relig, y = n, fill = relig)) +
+  geom_col() +
+  coord_flip() +
+  facet_wrap(~year, scales = &amp;quot;free_y&amp;quot;) +
+  scale_x_reordered() + #and this to scale it properly.
+  scale_fill_viridis_d(direction = -1) +
+  scale_y_log10(labels = comma_format()) +
+  theme(legend.position = &amp;quot;none&amp;quot;) +
+  labs(
+    title = &amp;quot;Although the top five have remained steady,\nthere&amp;#39;s been lots of movement in minority religions.&amp;quot;,
+    subtitle = &amp;quot;Count of religious affiliation, 2000-2014.&amp;quot;,
+    x = element_blank(),
+    y = element_blank(),
+    caption = &amp;quot;A sample of categorical variables from the General Social survey.&amp;quot;
+  )&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;./post/2020-02-28-for-loops-for-quick-summaries-in-r_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Another thing to note that David Robinson got me hooked on is &lt;code&gt;scale_y_log10()&lt;/code&gt;; without it in this particular plot, it would be difficult to see how the smaller minority religions have changed across time.&lt;/p&gt;
+&lt;/div&gt;
+</description>
     </item>
     
     <item>
@@ -83,8 +730,20 @@ So I just bought a used MacBook Pro in order to learn Linux, bash, shell scripti
       <pubDate>Sun, 24 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/post/consulting-services/</guid>
-      <description>Hello all!
-I have not posted on this site since March, and I feel terrible about it. I know no one reads this, but personally it was a goal of mine to keep my skills up-to-date by forcing myself to blog about them.</description>
+      <description>
+
+
+&lt;p&gt;Hello all!&lt;/p&gt;
+&lt;p&gt;I have not posted on this site since March, and I feel terrible about it. I know no one reads this, but personally it was a goal of mine to keep my skills up-to-date by forcing myself to blog about them.&lt;/p&gt;
+&lt;p&gt;All that being said, I have spent the last year doing a few part-time consulting projects, and I have really enjoyed it! My plan is for this website to be a personal website for blogging and for advertising my services. I offer data-related services to companies and organizations in the following technologies:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;SQL (primarily SQL Server and Oracle)&lt;/li&gt;
+&lt;li&gt;Tableau&lt;/li&gt;
+&lt;li&gt;R&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If your company or organization needs data analysis servicies in these areas, please reach out!&lt;/p&gt;
+&lt;p&gt;Pete Talbert, &lt;em&gt;Data Analyst&lt;/em&gt; | &lt;a href=&#34;mailto:pete.talbert@gmail.com&#34; class=&#34;email&#34;&gt;pete.talbert@gmail.com&lt;/a&gt; | 612-578-5525&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -93,7 +752,18 @@ I have not posted on this site since March, and I feel terrible about it. I know
       <pubDate>Sun, 24 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/services/</guid>
-      <description>I am a data analyst in the Twin Cities, specializing in the K-12, higher education, and non-profit sectors. I have worked in the field for over four years, and know both the database and analytical/visualization components deeply.</description>
+      <description>&lt;p&gt;I am a data analyst in the Twin Cities, specializing in the K-12, higher education, and non-profit sectors. I have worked in the field for over four years, and know both the database and analytical/visualization components deeply. I work hard to understand business and end user needs, and build revealing and elegant solutions.&lt;/p&gt;
+&lt;p&gt;I offer data-related services to companies and organizations in the following technologies:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;SQL (primarily MS SQL Server and Oracle)&lt;/li&gt;
+&lt;li&gt;R&lt;/li&gt;
+&lt;li&gt;Python&lt;/li&gt;
+&lt;li&gt;Tableau&lt;/li&gt;
+&lt;li&gt;ETL&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Whether it&amp;rsquo;s an ad hoc research project or an on-going dashboard or reporting need, I am here to help!&lt;/p&gt;
+&lt;p&gt;Pete Talbert, &lt;em&gt;Data Analyst&lt;/em&gt; | &lt;a href=&#34;mailto:pete.talbert@gmail.com&#34;&gt;pete.talbert@gmail.com&lt;/a&gt; | 612-578-5525&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -102,7 +772,142 @@ I have not posted on this site since March, and I feel terrible about it. I know
       <pubDate>Sat, 02 Mar 2019 00:00:00 +0000</pubDate>
       
       <guid>/post/window-functions-in-sql-vs-r/</guid>
-      <description>Both MS SQL Server and R’s dplyr package offer window functions for different operations on a dataset. What are window functions? Window functions operate on a set of rows or “window” and return a value for each row, whether that’s something like a row number or percentile rank, or an aggregate result from a min, max, average, or sum.</description>
+      <description>
+
+
+&lt;p&gt;Both MS SQL Server and R’s &lt;code&gt;dplyr&lt;/code&gt; package offer window functions for different operations on a dataset. What are window functions? Window functions operate on a set of rows or “window” and return a value for each row, whether that’s something like a row number or percentile rank, or an aggregate result from a min, max, average, or sum.&lt;/p&gt;
+&lt;p&gt;The most common problem I have that window functions solve is when I have a set of records that I need to unduplicate. Let’s say I have student enrollment records where an individual student may have more than one enrollment; and let’s say I want to grab only the &lt;em&gt;latest&lt;/em&gt; enrollment record from each student. In this case, each student would be a partition or window in which I could create a function to label the latest record. Once the latest record is identified, I could then pull just that single row.&lt;/p&gt;
+&lt;div id=&#34;sql&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;SQL&lt;/h2&gt;
+&lt;p&gt;How would I do this in SQL? Below I connect to my MS SQL Server instance and print a very simple table of student enrollment records. You can see there are more than one per &lt;code&gt;studentID&lt;/code&gt;. How would I grab the latest from each per the &lt;code&gt;date&lt;/code&gt; column?&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
+library(DBI)
+library(odbc)
+library(knitr)
+
+con &amp;lt;- dbConnect(odbc::odbc(), &amp;quot;nicodemus&amp;quot;, database = &amp;quot;Demo&amp;quot;)
+
+enroll &amp;lt;- as_tibble(dbGetQuery(con, &amp;quot;select * from Demo.dbo.tbl_Enroll&amp;quot;))
+
+enroll&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 11 x 3
+##    studentID enrollmentType date               
+##    &amp;lt;chr&amp;gt;     &amp;lt;chr&amp;gt;          &amp;lt;dttm&amp;gt;             
+##  1 1000      D              2019-02-01 00:00:00
+##  2 1000      P              2019-01-20 00:00:00
+##  3 1001      D              2019-02-02 00:00:00
+##  4 1001      P              2018-12-01 00:00:00
+##  5 1001      P              2018-12-30 00:00:00
+##  6 1002      D              2019-01-15 00:00:00
+##  7 1002      D              2018-11-30 00:00:00
+##  8 1003      P              2018-10-31 00:00:00
+##  9 1003      P              2019-02-28 00:00:00
+## 10 1003      D              2018-09-30 00:00:00
+## 11 1003      P              2019-01-01 00:00:00&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;In the SQL below, I am using &lt;code&gt;ROW_NUMBER()&lt;/code&gt; to make this happen. I define the window by using the &lt;code&gt;partition by&lt;/code&gt; clause and then I use &lt;code&gt;order by&lt;/code&gt; to tell SQL in what I want the rows numbered. Here, I want &lt;code&gt;desc&lt;/code&gt; because I want the rows labeled &lt;code&gt;1&lt;/code&gt; to be the latest enrollment record per student.&lt;/p&gt;
+&lt;pre class=&#34;sql&#34;&gt;&lt;code&gt;select *
+  , ROW_NUMBER() over (partition by studentID order by [date] desc) as rowNum --SQL window function syntax
+from Demo.dbo.tbl_Enroll&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 11 x 4
+##    studentID enrollmentType date                rowNum         
+##    &amp;lt;chr&amp;gt;     &amp;lt;chr&amp;gt;          &amp;lt;dttm&amp;gt;              &amp;lt;S3: integer64&amp;gt;
+##  1 1000      D              2019-02-01 00:00:00 1              
+##  2 1000      P              2019-01-20 00:00:00 2              
+##  3 1001      D              2019-02-02 00:00:00 1              
+##  4 1001      P              2018-12-30 00:00:00 2              
+##  5 1001      P              2018-12-01 00:00:00 3              
+##  6 1002      D              2019-01-15 00:00:00 1              
+##  7 1002      D              2018-11-30 00:00:00 2              
+##  8 1003      P              2019-02-28 00:00:00 1              
+##  9 1003      P              2019-01-01 00:00:00 2              
+## 10 1003      P              2018-10-31 00:00:00 3              
+## 11 1003      D              2018-09-30 00:00:00 4&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;How would I then grab the latest record? Create an outer query that just selects &lt;code&gt;where rowNum = 1&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;sql&#34;&gt;&lt;code&gt;select * from (
+  select *
+    , ROW_NUMBER() over (partition by studentID order by [date] desc) as rowNum
+  from Demo.dbo.tbl_Enroll
+) t
+where rowNum = 1 --outer query to get just the latest record per student.&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 4 x 4
+##   studentID enrollmentType date                rowNum         
+##   &amp;lt;chr&amp;gt;     &amp;lt;chr&amp;gt;          &amp;lt;dttm&amp;gt;              &amp;lt;S3: integer64&amp;gt;
+## 1 1000      D              2019-02-01 00:00:00 1              
+## 2 1001      D              2019-02-02 00:00:00 1              
+## 3 1002      D              2019-01-15 00:00:00 1              
+## 4 1003      P              2019-02-28 00:00:00 1&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;r&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;R&lt;/h2&gt;
+&lt;p&gt;R’s dplyr package also has window functions to do the same operation. What happens when I just apply &lt;code&gt;rownumber()&lt;/code&gt; to the data?&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;enroll %&amp;gt;% 
+  mutate(rowNum = row_number())&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 11 x 4
+##    studentID enrollmentType date                rowNum
+##    &amp;lt;chr&amp;gt;     &amp;lt;chr&amp;gt;          &amp;lt;dttm&amp;gt;               &amp;lt;int&amp;gt;
+##  1 1000      D              2019-02-01 00:00:00      1
+##  2 1000      P              2019-01-20 00:00:00      2
+##  3 1001      D              2019-02-02 00:00:00      3
+##  4 1001      P              2018-12-01 00:00:00      4
+##  5 1001      P              2018-12-30 00:00:00      5
+##  6 1002      D              2019-01-15 00:00:00      6
+##  7 1002      D              2018-11-30 00:00:00      7
+##  8 1003      P              2018-10-31 00:00:00      8
+##  9 1003      P              2019-02-28 00:00:00      9
+## 10 1003      D              2018-09-30 00:00:00     10
+## 11 1003      P              2019-01-01 00:00:00     11&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Great, it gave the row number of each row in the dataset. What happens when I put the column I want partitioned inside &lt;code&gt;row_number()&lt;/code&gt;?&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;enroll %&amp;gt;% 
+  mutate(rowNum = row_number(studentID))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 11 x 4
+##    studentID enrollmentType date                rowNum
+##    &amp;lt;chr&amp;gt;     &amp;lt;chr&amp;gt;          &amp;lt;dttm&amp;gt;               &amp;lt;int&amp;gt;
+##  1 1000      D              2019-02-01 00:00:00      1
+##  2 1000      P              2019-01-20 00:00:00      2
+##  3 1001      D              2019-02-02 00:00:00      3
+##  4 1001      P              2018-12-01 00:00:00      4
+##  5 1001      P              2018-12-30 00:00:00      5
+##  6 1002      D              2019-01-15 00:00:00      6
+##  7 1002      D              2018-11-30 00:00:00      7
+##  8 1003      P              2018-10-31 00:00:00      8
+##  9 1003      P              2019-02-28 00:00:00      9
+## 10 1003      D              2018-09-30 00:00:00     10
+## 11 1003      P              2019-01-01 00:00:00     11&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;That did nothing. This is without reading the &lt;a href=&#34;https://dplyr.tidyverse.org/reference/ranking.html&#34;&gt;documentation&lt;/a&gt; obviously. What that did was just give a row number for the &lt;code&gt;studentID&lt;/code&gt; vector regardless of duplication; I could have put any of the columns inside the function and it would return the same result. Not what we want. What we want to do is put &lt;code&gt;studentID&lt;/code&gt; in a &lt;code&gt;group_by&lt;/code&gt; clause before mutating.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;enroll %&amp;gt;% 
+  group_by(studentID) %&amp;gt;%  #adding the group_by clause to partition by studentID.
+  mutate(rowNum = row_number())&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 11 x 4
+## # Groups:   studentID [4]
+##    studentID enrollmentType date                rowNum
+##    &amp;lt;chr&amp;gt;     &amp;lt;chr&amp;gt;          &amp;lt;dttm&amp;gt;               &amp;lt;int&amp;gt;
+##  1 1000      D              2019-02-01 00:00:00      1
+##  2 1000      P              2019-01-20 00:00:00      2
+##  3 1001      D              2019-02-02 00:00:00      1
+##  4 1001      P              2018-12-01 00:00:00      2
+##  5 1001      P              2018-12-30 00:00:00      3
+##  6 1002      D              2019-01-15 00:00:00      1
+##  7 1002      D              2018-11-30 00:00:00      2
+##  8 1003      P              2018-10-31 00:00:00      1
+##  9 1003      P              2019-02-28 00:00:00      2
+## 10 1003      D              2018-09-30 00:00:00      3
+## 11 1003      P              2019-01-01 00:00:00      4&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Sweet! But wait, this just listed the row number for each &lt;code&gt;studentID&lt;/code&gt; in whatever order it came in. We want it to list &lt;code&gt;1&lt;/code&gt; for the lastest record per the &lt;code&gt;date&lt;/code&gt; column.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;enroll %&amp;gt;% 
+  group_by(studentID) %&amp;gt;%  
+  mutate(rowNum = row_number(desc(date))) %&amp;gt;% #specify how to list row numbers here; desc for latest first.
+  filter(rowNum == 1) #lastly, filter to just the latest record.&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 4 x 4
+## # Groups:   studentID [4]
+##   studentID enrollmentType date                rowNum
+##   &amp;lt;chr&amp;gt;     &amp;lt;chr&amp;gt;          &amp;lt;dttm&amp;gt;               &amp;lt;int&amp;gt;
+## 1 1000      D              2019-02-01 00:00:00      1
+## 2 1001      D              2019-02-02 00:00:00      1
+## 3 1002      D              2019-01-15 00:00:00      1
+## 4 1003      P              2019-02-28 00:00:00      1&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Nice! I really wrote this to learn the nuances for how to do the same operation I do in SQL in R for my particular use case. The vignette provided by the tidyverse team did not really suit my needs in this instance, but others my find it helpful as &lt;a href=&#34;https://dplyr.tidyverse.org/articles/window-functions.html&#34;&gt;further reading&lt;/a&gt;. Cheers!&lt;/p&gt;
+&lt;/div&gt;
+</description>
     </item>
     
   </channel>
