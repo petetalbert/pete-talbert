@@ -1,0 +1,188 @@
+---
+title: Working with web data in R part II - APIs
+author: Pete Talbert
+date: '2021-07-04'
+slug: working-with-web-data-in-r-part-ii-apis
+categories:
+  - R
+tags:
+  - api
+  - httr
+  - json
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>Alright, this is a long overdue post: back in October, I promised a part II to show how to pull data from the web via an API. Well, better late than never!</p>
+<div id="web-apis" class="section level2">
+<h2>Web APIs</h2>
+<p>There is so much information on the internet about interacting with web APIs it can seem overwhelming. In this post, I am going to keep the explanation and demonstration extremely simple. We’ll use the R package <code>httr</code> for sending HTTP requests to an API server. And then we’ll use <code>jsonlite</code> for parsing the data we get back in the response.</p>
+<p><em>A note about authentication:</em> this tutorial will not touch on authentication. (That will be in part III where I deomonstrate how to pull running and cycling data from the <a href="https://www.strava.com/">Strava app</a>.). The most common way to authenticate by far is OAuth. I could spend an entire post on OAuth, but for now we are going to just use some API endpoints out on the web that do not require any authentication method to access.</p>
+</div>
+<div id="people-in-space-right-now" class="section level2">
+<h2>People in space right now</h2>
+<p><a href="http://api.open-notify.org/" class="uri">http://api.open-notify.org/</a> is a simple example of an API server. It has two end points: one that tells you where the International Space Station (ISS) is right now, and one that tells you who is in space at this moment. Let’s use the second endpoint.</p>
+<p>First, we’ll use the <code>GET</code> function from <code>httr</code> to send an HTTP request to the server; then we can inspect the object that comes back.</p>
+<pre class="r"><code>library(tidyverse)
+library(httr)
+library(jsonlite)
+
+# the name of the end point is called &quot;astros.&quot;
+req &lt;- GET(&quot;http://api.open-notify.org/astros&quot;)
+str(req)</code></pre>
+<pre><code>## List of 10
+##  $ url        : chr &quot;http://api.open-notify.org/astros&quot;
+##  $ status_code: int 200
+##  $ headers    :List of 6
+##   ..$ server                     : chr &quot;nginx/1.10.3&quot;
+##   ..$ date                       : chr &quot;Sun, 04 Jul 2021 18:47:44 GMT&quot;
+##   ..$ content-type               : chr &quot;application/json&quot;
+##   ..$ content-length             : chr &quot;494&quot;
+##   ..$ connection                 : chr &quot;keep-alive&quot;
+##   ..$ access-control-allow-origin: chr &quot;*&quot;
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;insensitive&quot; &quot;list&quot;
+##  $ all_headers:List of 1
+##   ..$ :List of 3
+##   .. ..$ status : int 200
+##   .. ..$ version: chr &quot;HTTP/1.1&quot;
+##   .. ..$ headers:List of 6
+##   .. .. ..$ server                     : chr &quot;nginx/1.10.3&quot;
+##   .. .. ..$ date                       : chr &quot;Sun, 04 Jul 2021 18:47:44 GMT&quot;
+##   .. .. ..$ content-type               : chr &quot;application/json&quot;
+##   .. .. ..$ content-length             : chr &quot;494&quot;
+##   .. .. ..$ connection                 : chr &quot;keep-alive&quot;
+##   .. .. ..$ access-control-allow-origin: chr &quot;*&quot;
+##   .. .. ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;insensitive&quot; &quot;list&quot;
+##  $ cookies    :&#39;data.frame&#39;: 0 obs. of  7 variables:
+##   ..$ domain    : logi(0) 
+##   ..$ flag      : logi(0) 
+##   ..$ path      : logi(0) 
+##   ..$ secure    : logi(0) 
+##   ..$ expiration: &#39;POSIXct&#39; num(0) 
+##   ..$ name      : logi(0) 
+##   ..$ value     : logi(0) 
+##  $ content    : raw [1:494] 7b 22 70 65 ...
+##  $ date       : POSIXct[1:1], format: &quot;2021-07-04 18:47:44&quot;
+##  $ times      : Named num [1:6] 0 0.00126 0.04706 0.0471 0.0919 ...
+##   ..- attr(*, &quot;names&quot;)= chr [1:6] &quot;redirect&quot; &quot;namelookup&quot; &quot;connect&quot; &quot;pretransfer&quot; ...
+##  $ request    :List of 7
+##   ..$ method    : chr &quot;GET&quot;
+##   ..$ url       : chr &quot;http://api.open-notify.org/astros&quot;
+##   ..$ headers   : Named chr &quot;application/json, text/xml, application/xml, */*&quot;
+##   .. ..- attr(*, &quot;names&quot;)= chr &quot;Accept&quot;
+##   ..$ fields    : NULL
+##   ..$ options   :List of 2
+##   .. ..$ useragent: chr &quot;libcurl/7.54.0 r-curl/4.3 httr/1.4.2&quot;
+##   .. ..$ httpget  : logi TRUE
+##   ..$ auth_token: NULL
+##   ..$ output    : list()
+##   .. ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;write_memory&quot; &quot;write_function&quot;
+##   ..- attr(*, &quot;class&quot;)= chr &quot;request&quot;
+##  $ handle     :Class &#39;curl_handle&#39; &lt;externalptr&gt; 
+##  - attr(*, &quot;class&quot;)= chr &quot;response&quot;</code></pre>
+<p>We get a large list back with complicated information about the server, the HTTP headers, a status code (which is important), details about the request specifically, and something called content. Content is where the data lives. The status code was 200, so we know it was successful. (<a href="https://restfulapi.net/http-status-codes/">Check out a list of status codes and their descriptions here.)</a></p>
+<p>We can wrap our <code>req</code> object around the <code>content()</code> function from the <code>httr</code> package. According to the documentation, the <code>content()</code> function has an <code>as =</code> argument that can take the following values: <code>"raw"</code>, <code>"text"</code>, or <code>"parsed"</code>. Let’s see what each gives with a for loop.</p>
+<pre class="r"><code>args &lt;- c(&quot;raw&quot;, &quot;text&quot;, &quot;parsed&quot;)
+
+for (arg in args) {
+  req_content &lt;- content(req, as = arg)
+  print(paste0(&quot;This is the &quot;, arg, &quot; content...&quot;))
+  if (typeof(req_content) == &quot;list&quot;) {
+    print(req_content[[1]][1:5]) # just cutting down the output by subsetting the list.
+  } else {
+    print(head(req_content, 5)) # just cutting down the output with head().
+  }
+}</code></pre>
+<pre><code>## [1] &quot;This is the raw content...&quot;
+## [1] 7b 22 70 65 6f
+## [1] &quot;This is the text content...&quot;
+## [1] &quot;{\&quot;people\&quot;: [{\&quot;name\&quot;: \&quot;Mark Vande Hei\&quot;, \&quot;craft\&quot;: \&quot;ISS\&quot;}, {\&quot;name\&quot;: \&quot;Oleg Novitskiy\&quot;, \&quot;craft\&quot;: \&quot;ISS\&quot;}, {\&quot;name\&quot;: \&quot;Pyotr Dubrov\&quot;, \&quot;craft\&quot;: \&quot;ISS\&quot;}, {\&quot;name\&quot;: \&quot;Thomas Pesquet\&quot;, \&quot;craft\&quot;: \&quot;ISS\&quot;}, {\&quot;name\&quot;: \&quot;Megan McArthur\&quot;, \&quot;craft\&quot;: \&quot;ISS\&quot;}, {\&quot;name\&quot;: \&quot;Shane Kimbrough\&quot;, \&quot;craft\&quot;: \&quot;ISS\&quot;}, {\&quot;name\&quot;: \&quot;Akihiko Hoshide\&quot;, \&quot;craft\&quot;: \&quot;ISS\&quot;}, {\&quot;name\&quot;: \&quot;Nie Haisheng\&quot;, \&quot;craft\&quot;: \&quot;Tiangong\&quot;}, {\&quot;name\&quot;: \&quot;Liu Boming\&quot;, \&quot;craft\&quot;: \&quot;Tiangong\&quot;}, {\&quot;name\&quot;: \&quot;Tang Hongbo\&quot;, \&quot;craft\&quot;: \&quot;Tiangong\&quot;}], \&quot;number\&quot;: 10, \&quot;message\&quot;: \&quot;success\&quot;}&quot;
+## [1] &quot;This is the parsed content...&quot;
+## [[1]]
+## [[1]]$name
+## [1] &quot;Mark Vande Hei&quot;
+## 
+## [[1]]$craft
+## [1] &quot;ISS&quot;
+## 
+## 
+## [[2]]
+## [[2]]$name
+## [1] &quot;Oleg Novitskiy&quot;
+## 
+## [[2]]$craft
+## [1] &quot;ISS&quot;
+## 
+## 
+## [[3]]
+## [[3]]$name
+## [1] &quot;Pyotr Dubrov&quot;
+## 
+## [[3]]$craft
+## [1] &quot;ISS&quot;
+## 
+## 
+## [[4]]
+## [[4]]$name
+## [1] &quot;Thomas Pesquet&quot;
+## 
+## [[4]]$craft
+## [1] &quot;ISS&quot;
+## 
+## 
+## [[5]]
+## [[5]]$name
+## [1] &quot;Megan McArthur&quot;
+## 
+## [[5]]$craft
+## [1] &quot;ISS&quot;</code></pre>
+<p>Depending on the data returned, you may want to use <code>as = "text"</code> or <code>as = "parsed"</code>; I don’t think you would ever want to use <code>as = "raw"</code> unless you were sending this to another process for encoding.</p>
+<p>Let’s use <code>as = "text"</code> to demonstrate how <code>jsonlite</code> is used.</p>
+<pre class="r"><code>req_content &lt;- content(req, as = &quot;text&quot;)
+people_list &lt;- fromJSON(req_content, flatten = TRUE)
+str(people_list)</code></pre>
+<pre><code>## List of 3
+##  $ people :&#39;data.frame&#39;: 10 obs. of  2 variables:
+##   ..$ name : chr [1:10] &quot;Mark Vande Hei&quot; &quot;Oleg Novitskiy&quot; &quot;Pyotr Dubrov&quot; &quot;Thomas Pesquet&quot; ...
+##   ..$ craft: chr [1:10] &quot;ISS&quot; &quot;ISS&quot; &quot;ISS&quot; &quot;ISS&quot; ...
+##  $ number : int 10
+##  $ message: chr &quot;success&quot;</code></pre>
+<p>This looks like the same list that we got with <code>as = "parsed"</code> but this option does not work with all API data. It’s best in most instances to have the function return text and then parse that text with the <code>fromJSON</code> function from <code>jsonlite</code>.</p>
+<p>Let’s subset this list and save it as a tibble. From there, we can begin working with the data!</p>
+<pre class="r"><code>people &lt;- as_tibble(people_list$people)
+people</code></pre>
+<pre><code>## # A tibble: 10 x 2
+##    name            craft   
+##    &lt;chr&gt;           &lt;chr&gt;   
+##  1 Mark Vande Hei  ISS     
+##  2 Oleg Novitskiy  ISS     
+##  3 Pyotr Dubrov    ISS     
+##  4 Thomas Pesquet  ISS     
+##  5 Megan McArthur  ISS     
+##  6 Shane Kimbrough ISS     
+##  7 Akihiko Hoshide ISS     
+##  8 Nie Haisheng    Tiangong
+##  9 Liu Boming      Tiangong
+## 10 Tang Hongbo     Tiangong</code></pre>
+<pre class="r"><code>theme_set(theme_minimal())
+
+people %&gt;% 
+  count(craft) %&gt;% 
+  ggplot(aes(x = craft, y = n, fill = craft)) +
+  geom_col() +
+  scale_fill_viridis_d(option = &quot;magma&quot;, begin = 0.4, end = 0.8) +
+  coord_flip() +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major.y = element_blank(),
+        plot.title = element_text(face = &quot;bold&quot;), 
+        legend.position = &quot;none&quot;) +
+  labs(
+    title = &quot;Number of people in space right now&quot;,
+    subtitle = &quot;By spacecraft&quot;,
+    x = element_blank(),
+    y = element_blank()
+  )</code></pre>
+<p><img src="/post/2021-07-04-working-with-web-data-in-r-part-ii-apis_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Tune in next time for how to get data from web APIs that <em>require</em> authentication!</p>
+</div>
