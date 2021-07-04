@@ -11,6 +11,8 @@ tags:
   - json
 ---
 
+(If you haven't read part I, you can find it [here](https://petetalbert.rbind.io/post/working-with-web-data-in-r-part-i-scraping-html-tables/).)
+
 Alright, this is a long overdue post: back in October, I promised a part II to show how to pull data from the web via an API. Well, better late than never!
 
 ## Web APIs
